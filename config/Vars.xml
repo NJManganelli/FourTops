@@ -9,7 +9,8 @@
 		<fileNameSys>config/Run2SingleLepton_samples_Sys74.xml</fileNameSys>
 		<!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/Craneen_</craneenPath-->
 		<!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/CraneenJets_</craneenPath-->
-		<craneenPath>/user/lbeck/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Mu/Craneens27_1_2016/merge_MLM/Craneen_</craneenPath> <!-- 17_9 no scale 
+
+		<craneenPath>/user/lbeck/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Mu/Craneens3_2_2016/merge/Craneen_</craneenPath> <!-- 17_9 no scale 
 		weights--> <!--22_10_2015_merge2 25ns    25_10 50ns v7 tag   17_12-->
 
 		<lumiScale lumi=5/>
