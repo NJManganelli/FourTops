@@ -49,13 +49,20 @@ if not os.path.exists("Submit_Scripts"):
 
 for i,row in enumerate(args):
     command = row[0]+" "+row[1]+" "+row[2]+" "+row[3]+" "+row[4]+" "+row[5]+" "+row[6]+" "+row[7]+" "+row[8]+" "+row[9]+" "+row[10]#+" "+row[11]
+    if i%2 == 1:
+        continue
     # print row[11]+'\n'
     # print row[12]+'\n'
     argsrow = row[11][len(row[11])-6]
     argsrow1 = row[11][len(row[11])-7]
     argsrow2 = row[11][len(row[11])-8]
+    # print i+1
+    # print len(args)
+    # print i+1<len(args)
+
+    # print args[i][11]
     f = open("Submit_Scripts/MuSubmit"+row[1]+argsrow2+argsrow1+argsrow+".sh",'w')
-    # print "Submit_Scripts/MuSubmit"+row[1]+argsrow2+argsrow1+argsrow+".sh"
+    print "Submit_Scripts/MuSubmit"+row[1]+argsrow2+argsrow1+argsrow+".sh"
     f.write('#PBS -q localgrid\n')
     f.write('#PBS -l walltime=1:00:00\n')
     # f.write('#PBS -l select=4:mpiprocs=8\n')
@@ -65,14 +72,28 @@ for i,row in enumerate(args):
     f.write('cd /user/lbeck/CMSSW_7_6_3/src/\n')
     f.write('echo ">> moved into directory"\n')
     f.write('eval `scramv1 runtime -sh`\n')
-    f.write('dccp '+row[11]+' $TMPDIR/TOPTREE_'+argsrow2+argsrow1+argsrow+'.root\n')
+    f.write('dccp '+args[i][11]+' $TMPDIR/TOPTREE_'+argsrow2+argsrow1+argsrow+'.root\n')   
+
+    if i+1<len(args): 
+        argsrow3 = args[i+1][11][len(args[i+1][11])-6]
+        argsrow4 = args[i+1][11][len(args[i+1][11])-7]
+        argsrow5 = args[i+1][11][len(args[i+1][11])-8]
+        f.write('dccp '+args[i+1][11]+' $TMPDIR/TOPTREE_'+argsrow5+argsrow4+argsrow3+'.root\n')
+        # print args[i+1][11][len(row[11])-8]+args[i+1][11][len(row[11])-7]+args[i+1][11][len(row[11])-6]+'.root'
     f.write('cp -pr ./TopBrussels $TMPDIR/.\n')
 #    f.write('cd TopBrussels/FourTops\n')
     f.write('echo $TMPDIR\n')
     f.write('echo ">> Copying work area"\n')
     f.write('cd $TMPDIR/TopBrussels/FourTops\n')
     f.write('ls -l $TMPDIR \n')
-    f.write(command+' $TMPDIR'+'/TOPTREE_'+argsrow2+argsrow1+argsrow+'.root\n')
+    # print str(len(args))+'     '+str(i)+"    "+str(args[i+1])
+    if i+1<len(args): 
+        argsrow3 = args[i+1][11][len(args[i+1][11])-6]
+        argsrow4 = args[i+1][11][len(args[i+1][11])-7]
+        argsrow5 = args[i+1][11][len(args[i+1][11])-8]
+        f.write(command+' $TMPDIR/TOPTREE_'+argsrow2+argsrow1+argsrow+'.root'+' $TMPDIR/TOPTREE_'+argsrow5+argsrow4+argsrow3+'.root\n')
+    else:
+        f.write(command+' $TMPDIR/TOPTREE_'+argsrow2+argsrow1+argsrow+'.root\n')
     f.write('echo ">> Training Complete"\n')
     f.write('ls -l\n')
     f.write('cp -pr $TMPDIR/TopBrussels/FourTops/Craneens_* /user/lbeck/batchoutput\n')
