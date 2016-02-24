@@ -104,6 +104,7 @@ int main (int argc, char *argv[])
     string fileName                 = argv[11];    
     const int startEvent            = batch ? 0 : strtol(argv[argc-2], NULL, 10);
     const int endEvent              = batch ? -1 : strtol(argv[argc-1], NULL, 10);
+    string inputChannel;
 
     int lenOfFileName = fileName.length();
     char numberOfRootFile = fileName.at(lenOfFileName-6); //to find number of root file before .root
@@ -111,7 +112,6 @@ int main (int argc, char *argv[])
     char numberOfRootFile2 = fileName.at(lenOfFileName-8); //to find number of root file before .root
 
     cout<<"!! number of root file"<<numberOfRootFile<<endl;
-
 
 
     vector<string> vecfileNames;
@@ -123,13 +123,17 @@ int main (int argc, char *argv[])
 
     if (batch){
         //Checking Passed Arguments to ensure proper execution of MACRO
+        inputChannel       = argv[argc-1];
+        cout<<"Input channel: "<<inputChannel<<endl;
+
+
         if(argc < 12)
         {
             std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
             return 1;
         }
 
-        for(int args = 11; args < argc; args++) 
+        for(int args = 11; args < argc-1; args++) 
         {
             vecfileNames.push_back(argv[args]);
         }        
@@ -203,7 +207,7 @@ int main (int argc, char *argv[])
     bool bTagCSVReweight  = true;
     bool bLeptonSF     = true;
     bool debug         = false;
-    bool applyJER      = false;
+    bool applyJER      = true;
     bool applyJEC      = false;
     bool JERNom        = false;
     bool JERUp         = false;
@@ -215,6 +219,14 @@ int main (int argc, char *argv[])
     float Luminosity   = 2460.0 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
     //bool split_ttbar = false;
 
+    if (batch && inputChannel=="Mu"){
+        Muon = true;
+        Electron = false;
+    }
+    if (batch && inputChannel=="El"){
+        Muon = false;
+        Electron = true;
+    }
     if(Muon && SingleLepton){
         cout<<" ***** USING SINGLE MUON CHANNEL  ******"<<endl;
         channelpostfix = "_Mu";
@@ -566,7 +578,7 @@ int main (int argc, char *argv[])
         
         string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
         TFile * tupfile    = new TFile(Ntupname.c_str(),"RECREATE");
-        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt");
+        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJetcsv1:csvJetcsv2:csvJetcsv3:csvJetcsv4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4");
        
         // string Ntup4j0bname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_4j0b_" + dataSetName + postfix + ".root";     
         // TFile * tup4j0bfile    = new TFile(Ntupname.c_str(),"RECREATE");
@@ -575,7 +587,7 @@ int main (int argc, char *argv[])
 
         string Ntupjetname = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenJets_" + dataSetName + postfix + ".root";
         TFile * tupjetfile = new TFile(Ntupjetname.c_str(),"RECREATE");
-        TNtuple * tupjet   = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "jetpT:csvDisc:jeteta:jetphi:jetLeptDR:ScaleFactor:NormFactor:Luminosity");
+        TNtuple * tupjet   = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "jetpT:csvDisc:jeteta:jetphi:jetLeptDR:ScaleFactor:NormFactor:Luminosity:SFlepton:SFbtag:SFPU:GenWeight");
         
         string NtupZname   = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenZ_" + dataSetName + postfix + ".root";
         TFile * tupZfile   = new TFile(NtupZname.c_str(),"RECREATE");
@@ -779,6 +791,7 @@ int main (int argc, char *argv[])
             }
             nEl = selectedElectrons.size(); //Number of Electrons in Event   
 
+            selectedExtraElectrons.clear();
             if(Electron){
                 for(int e_iter=0; e_iter<selectedOrigExtraElectrons.size();e_iter++){
                     if(selectedOrigExtraElectrons[e_iter]->Eta()<=1.4442 || selectedOrigExtraElectrons[e_iter]->Eta()>=1.5660){
@@ -786,7 +799,7 @@ int main (int argc, char *argv[])
                     }
                 }
                 nLooseEl = selectedExtraElectrons.size(); //Number of loose electrons
-             cout<<"nel: "<<nEl<<"  nLooseEl: "<<nLooseEl<<"  origel: "<<selectedOrigElectrons.size()<<"  origextra el: "<<selectedOrigExtraElectrons.size()<<endl;
+             // cout<<"nel: "<<nEl<<"  nLooseEl: "<<nLooseEl<<"  origel: "<<selectedOrigElectrons.size()<<"  origextra el: "<<selectedOrigExtraElectrons.size()<<endl;
             }
 
             ////////////////////////////////////////////////////////////
@@ -893,7 +906,7 @@ int main (int argc, char *argv[])
 
             trigged = trigger->checkIfFired(currentRun, datasets, d);
             // trigged=true;
-            tupCutfile->cd()
+            tupCutfile->cd();
             cutsTable->FillTable(d, normfactor, Luminosity, isGoodPV, trigged, scaleFactor, nMu, nLooseMu, nEl, nLooseEl, nJets, nLtags, nMtags, nTtags, cuttup);   if(debug) cout<<"cuts table filled"<<endl;
  
             /////////////////////////////////
@@ -984,7 +997,6 @@ int main (int argc, char *argv[])
                 
                 if(debug) cout<<"btag weight "<<btagWeight<<"  btag weight Up "<<btagWeightUp<<"   btag weight Down "<<btagWeightDown<<endl;
             }
-            scaleFactor *= btagWeight;
             // if(ievt<1000)
             // {
             //     cout<<"btagweight: "<<btagWeight<<endl;
@@ -1127,7 +1139,6 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //                                                                                 Baseline Event selection                                                                      //
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             if (Muon)
             {   
                 if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6 && nMtags >=2)) )continue; // Muon Channel Selection
@@ -1202,6 +1213,15 @@ int main (int argc, char *argv[])
             float diTopness = 0;
             if (debug) cout<<"TMVA mass reco"<<endl;
             sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
+            float csvJetcsv1 = 1, csvJetcsv2 = 1, csvJetcsv3 =1, csvJetcsv4 =1;
+
+            if (selectedJets.size()>4){
+                float csvJetcsv1 = selectedJets[0]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                float csvJetcsv2 = selectedJets[1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                float csvJetcsv3 = selectedJets[2]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                float csvJetcsv4 = selectedJets[3]->btag_combinedInclusiveSecondaryVertexV2BJetTags();                
+            }
+
 
             if (HadTopOn){
                 hadronicTopReco->SetCollections(selectedJets, selectedMuons, selectedElectrons, scaleFactor);
@@ -1283,6 +1303,15 @@ int main (int argc, char *argv[])
 
             }
 
+            float csvJetpt1 = 1, csvJetpt2 = 1, csvJetpt3 =1, csvJetpt4 =1;
+
+            if (selectedJets.size()>4){
+                float csvJetpt1 = selectedJets[0]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                float csvJetpt2 = selectedJets[1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                float csvJetpt3 = selectedJets[2]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                float csvJetpt4 = selectedJets[3]->btag_combinedInclusiveSecondaryVertexV2BJetTags();                
+            }
+
             HTH = HT/H;
             HTRat = HTHi/HT;
 
@@ -1308,12 +1337,12 @@ int main (int argc, char *argv[])
             //              Get lepton pt             //
             ////////////////////////////////////////////
             float selectedLeptonPt = 0 ;
-            if(Muon){
+            if(Muon&&selectedMuons.size()>0){
                 selectedLeptonPt = selectedMuons[0]->Pt();
                 leptoneta = selectedMuons[0]->Eta();
                 leptonphi = selectedMuons[0]->Phi();                
             }
-            else if(Electron){
+            else if(Electron&&selectedElectrons.size()>0){
                 selectedLeptonPt = selectedElectrons[0]->Pt();
                 leptoneta = selectedElectrons[0]->Eta();
                 leptonphi = selectedElectrons[0]->Phi();
@@ -1349,7 +1378,7 @@ int main (int argc, char *argv[])
                 else if (Electron){
                     jetLepDR = selectedJets[seljet1]->DeltaR(*selectedElectrons[0]);
                 }
-                float jetvals[8] = {jetpT,csvDisc,jeteta,jetphi,jetLepDR,scaleFactor,normfactor,Luminosity};
+                float jetvals[12] = {jetpT,csvDisc,jeteta,jetphi,jetLepDR,scaleFactor,normfactor,Luminosity, fleptonSF, btagWeight, lumiWeight, weight_0};//SFlepton:SFbtag:SFPU:GenWeight
                 tupjet->Fill(jetvals);
             }
 
@@ -1415,7 +1444,7 @@ int main (int argc, char *argv[])
             }
             float nOrigJets = (float)selectedOrigJets.size();
             float jet5and6Pt = jet5Pt+jet6Pt;
-            float vals[53] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fleptonSF,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt};
+            float vals[61] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fleptonSF,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt, csvJetcsv1, csvJetcsv2, csvJetcsv3, csvJetcsv4, csvJetpt1, csvJetpt2, csvJetpt3, csvJetpt4};
             tupfile->cd();
             tup->Fill(vals);
             // tupCutfile->cd();
