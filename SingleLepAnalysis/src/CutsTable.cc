@@ -4,8 +4,19 @@
 
 #include "../interface/CutsTable.h"
 
-CutsTable::CutsTable(bool isMuon, bool isElectron){
-	if (isMuon){
+CutsTable::CutsTable(bool isMuon, bool isElectron):
+    CutsselecTable(),
+    leptonChoice(""),
+    selecTable(),
+    cfTrigger(0),
+    cfPV(0),
+    cfLep1(0),
+    cfLep2(0),
+    cfJets(0),
+    cfTags(0),
+    cfHT(0) 
+{
+   	if (isMuon){
 		leptonChoice = "Muon";
 	}
 	else if (isElectron){
@@ -65,7 +76,7 @@ void CutsTable::CreateTable(vector < Dataset* > datasets, float Luminosity){
 
 }
 
-void CutsTable::FillTable(unsigned int d, bool isGoodPV, bool trigged, float scaleFactor, int nMu, int nLooseMu, int nEl, int nLooseEl, int nJets, int nLtags, int nMtags, int nTtags){
+void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bool isGoodPV, bool trigged, float scaleFactor, int nMu, int nLooseMu, int nEl, int nLooseEl, int nJets, int nLtags, int nMtags, int nTtags, TNtuple *cuttup ){
 
     selecTable->Fill(d,0,scaleFactor);
 
@@ -74,18 +85,22 @@ void CutsTable::FillTable(unsigned int d, bool isGoodPV, bool trigged, float sca
         if(isGoodPV)
         {
             selecTable->Fill(d,1,scaleFactor);
+            cfPV = 1;
             if(trigged)
             {	
                 selecTable->Fill(d,2,scaleFactor);	
+                cfTrigger = 1;
                 if (nMu==1)
             	{
                 	selecTable->Fill(d,3,scaleFactor);
+                    cfLep1 =1;
                 	if(nLooseMu==1)
                 	{
                         selecTable->Fill(d,4,scaleFactor);
                         if(nEl==0)
                         {
                             selecTable->Fill(d,5,scaleFactor);
+                            cfLep2 = 1;
                             if(nJets>=4)
                             {
                             	selecTable->Fill(d,6,scaleFactor);
@@ -95,11 +110,13 @@ void CutsTable::FillTable(unsigned int d, bool isGoodPV, bool trigged, float sca
                                 	if(nJets>=6)
                                 	{		
                                 		selecTable->Fill(d,8,scaleFactor);
+                                        cfJets = 1;
                                 		if(nMtags>=1)
                                 		{
                                 			selecTable->Fill(d,9,scaleFactor);
                                 			if(nMtags>=2)
                                 			{
+                                                cfTags = 1;
                                 				selecTable->Fill(d,10,scaleFactor);
                                             }
                                         }
@@ -118,17 +135,21 @@ void CutsTable::FillTable(unsigned int d, bool isGoodPV, bool trigged, float sca
         if(isGoodPV)
         {
             selecTable->Fill(d,1,scaleFactor);
+            cfPV =1;
             if(trigged)
             {
                 selecTable->Fill(d,2,scaleFactor);
+                cfTrigger =1;
                 if (nEl==1)
             	{
                 	selecTable->Fill(d,3,scaleFactor);
+                    cfLep1 =1;
                 	if(nLooseEl==1)
                 	{
                         selecTable->Fill(d,4,scaleFactor);
                         if(nMu==0)
                         {
+                            cfLep2 =1;
                             selecTable->Fill(d,5,scaleFactor);
                             if(nJets>=4)
                             {
@@ -139,12 +160,14 @@ void CutsTable::FillTable(unsigned int d, bool isGoodPV, bool trigged, float sca
                                     if(nJets>=6)
                                     {       
                                         selecTable->Fill(d,8,scaleFactor);
+                                        cfJets=1;
                                         if(nMtags>=1)
                                         {
                                             selecTable->Fill(d,9,scaleFactor);
                                             if(nMtags>=2)
                                             {
                                                 selecTable->Fill(d,10,scaleFactor);
+                                                cfTags=1;
                                             }
                                         }
                                     }       
@@ -156,6 +179,7 @@ void CutsTable::FillTable(unsigned int d, bool isGoodPV, bool trigged, float sca
             }
         }         
     }
+    cuttup->Fill(scaleFactor,normfactor,Luminosity,cfTrigger,cfPV,cfLep1,cfLep2,cfJets,cfTags,cfHT);
 }
 void CutsTable::FillTableMuons(unsigned int d, float scaleFactor, vector < TRootMuon* > init_muons){
 
@@ -191,7 +215,6 @@ void CutsTable::FillTableMuons(unsigned int d, float scaleFactor, vector < TRoot
 
                                             selecTable->Fill(d,9,scaleFactor);
                                             if((init_muons[i]->nofMatchedStations())>1){
-
                                                 selecTable->Fill(d,10,scaleFactor);
                                             }
                                         }
