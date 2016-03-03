@@ -24,8 +24,8 @@ date = dd+"_"+mm+"_"+yyyy
 
 
 # pick one of the following
-channels = ["Mu","El"] 
-# channels = ["Mu"] 
+# channels = ["Mu","El"] 
+channels = ["Mu"] 
 # channels = ["El"] 
 #channels=["test"]
 
@@ -86,9 +86,11 @@ for chan in channels:
             # setting the number of file per job depending whether it is data sample or not
             # this ca be tweaked
             if "Data" in str(d.attrib['name']):
-                FilePerJob=30
+                FilePerJob=40
+            elif "tttt" in str(d.attrib['name']):
+                FilePerJob=1
             else:
-                FilePerJob=3
+                FilePerJob=4
 
             # create a test job for each dataset
             # create a file for this job 
