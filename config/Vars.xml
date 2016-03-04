@@ -9,7 +9,7 @@
 		<fileNameSys>config/Run2SingleLepton_samples_Sys74.xml</fileNameSys>
 		<!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/Craneen_</craneenPath-->
 		<!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/CraneenJets_</craneenPath-->
-		<craneenPath>/user/lbeck/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Mu/Craneens1_3_2016/merge3/Craneen_</craneenPath> <!-- 17_9 no scale 
+		<craneenPath>/user/lbeck/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Mu/Craneens3_3_2016/merge/Craneen_</craneenPath> <!-- 17_9 no scale 
 		weights--> <!--22_10_2015_merge2 25ns    25_10 50ns v7 tag   17_12-->
 
 		<lumiScale lumi=5/>
@@ -50,13 +50,13 @@
 		<var lBound= -0.5 uBound=30.5 nBins=31>PU</var>
 		<var lBound= 0 uBound=400 nBins=15 >jet5and6pt</var>	
 		<var lBound= 0 uBound=300 nBins=10 >5thjetpt</var>
-		<var lBound= 0 uBound=250 nBins=10 >6thjetpt</var-->
+		<var lBound= 0 uBound=250 nBins=10 >6thjetpt</var>
 
 		<var lBound= -1 uBound=1.5 nBins=60 >csvJetcsv1</var>
 		<var lBound= -1 uBound=1.5 nBins=60 >csvJetcsv2</var>
 		<var lBound= -1 uBound=1.5 nBins=60 >csvJetcsv3</var>
 		<var lBound= -1 uBound=1.5 nBins=60 >csvJetcsv4</var>
-		<!--var lBound= -1 uBound=1.5 nBins=60 >csvJetpt1</var>
+		<var lBound= -1 uBound=1.5 nBins=60 >csvJetpt1</var>
 		<var lBound= -1 uBound=1.5 nBins=60 >csvJetpt2</var>
 		<var lBound= -1 uBound=1.5 nBins=60 >csvJetpt3</var>
 		<var lBound= -1 uBound=1.5 nBins=60 >csvJetpt4</var-->
@@ -64,7 +64,7 @@
 
 		<!--var lBound= 0 uBound=1600 nBins=16 >HTX</var>
 		<var lBound= 0 uBound=1600 nBins=16 >SumJetMassX</var-->
-		<!--var lBound= -0.5 uBound=1.0 nBins=15 >BDT</var-->
+		<var lBound= -0.5 uBound=1.0 nBins=15 >BDT</var>
 
 
 		<!-- for craneenJets -->
