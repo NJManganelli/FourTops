@@ -104,6 +104,7 @@ int main (int argc, char *argv[])
     string fileName                 = argv[11];    
     const int startEvent            = batch ? 0 : strtol(argv[argc-2], NULL, 10);
     const int endEvent              = batch ? -1 : strtol(argv[argc-1], NULL, 10);
+    string inputChannel;
 
     int lenOfFileName = fileName.length();
     char numberOfRootFile = fileName.at(lenOfFileName-6); //to find number of root file before .root
@@ -111,7 +112,6 @@ int main (int argc, char *argv[])
     char numberOfRootFile2 = fileName.at(lenOfFileName-8); //to find number of root file before .root
 
     cout<<"!! number of root file"<<numberOfRootFile<<endl;
-
 
 
     vector<string> vecfileNames;
@@ -123,13 +123,17 @@ int main (int argc, char *argv[])
 
     if (batch){
         //Checking Passed Arguments to ensure proper execution of MACRO
+        inputChannel       = argv[argc-1];
+        cout<<"Input channel: "<<inputChannel<<endl;
+
+
         if(argc < 12)
         {
             std::cerr << "INVALID INPUT FROM XMLFILE.  CHECK XML IMPUT FROM SCRIPT.  " << argc << " ARGUMENTS HAVE BEEN PASSED." << std::endl;
             return 1;
         }
 
-        for(int args = 11; args < argc; args++) 
+        for(int args = 11; args < argc-1; args++) 
         {
             vecfileNames.push_back(argv[args]);
         }        
@@ -192,29 +196,37 @@ int main (int argc, char *argv[])
     //      Configuration                //
     ///////////////////////////////////////
 
-    bool SingleLepton  = true;
-    bool Muon          = true;
-    bool Electron      = false;
-    bool HadTopOn      = true;
-    bool EventBDTOn    = true;
-    bool TrainMVA      = false; // If false, the previously trained MVA will be used to calculate stuff
-    bool bx25          = true;
-    bool bTagReweight  = false;    
-    bool bTagCSVReweight  = true;
-    bool bLeptonSF     = true;
-    bool debug         = false;
-    bool applyJER      = false;
-    bool applyJEC      = false;
-    bool JERNom        = false;
-    bool JERUp         = false;
-    bool JERDown       = false;
-    bool JESUp         = false;
-    bool JESDown       = false;
+    bool SingleLepton      = true;
+    bool Muon              = true;
+    bool Electron          = false;
+    bool HadTopOn          = true;
+    bool EventBDTOn        = true;
+    bool TrainMVA          = false; // If false, the previously trained MVA will be used to calculate stuff
+    bool bx25              = true;
+    bool bTagReweight      = true;
+    bool bTagCSVReweight   = false;
+    bool bLeptonSF         = true;
+    bool debug             = false;
+    bool applyJER          = true;
+    bool applyJEC          = false;
+    bool JERNom            = false;
+    bool JERUp             = false;
+    bool JERDown           = false;
+    bool JESUp             = false;
+    bool JESDown           = false;
     bool fillingbTagHistos = false;
-    string MVAmethod   = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
-    float Luminosity   = 2460.0 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
-    //bool split_ttbar = false;
+    string MVAmethod       = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
+    float Luminosity       = 2628.0 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
+    //bool split_ttbar     = false;
 
+    if (batch && inputChannel=="Mu"){
+        Muon = true;
+        Electron = false;
+    }
+    if (batch && inputChannel=="El"){
+        Muon = false;
+        Electron = true;
+    }
     if(Muon && SingleLepton){
         cout<<" ***** USING SINGLE MUON CHANNEL  ******"<<endl;
         channelpostfix = "_Mu";
@@ -273,7 +285,7 @@ int main (int argc, char *argv[])
     BTagCalibrationReader * bTagReader;
     BTagCalibrationReader * bTagReaderUp;
     BTagCalibrationReader * bTagReaderDown;
-    BTagCalibrationReader * reader_csvv2;
+    BTagCalibrationReader * reader_csvv2; //for csv reshaping 
 
     BTagWeightTools *btwt;
     BTagWeightTools *btwtUp;
@@ -285,39 +297,33 @@ int main (int argc, char *argv[])
 
     if(bTagReweight && dataSetName.find("Data")==string::npos){
         //Btag documentation : http://mon.iihe.ac.be/~smoortga/TopTrees/BTagSF/BTaggingSF_inTopTrees.pdf //v2 or _v2
-        bTagCalib = new BTagCalibration("CSVv2","../TopTreeAnalysisBase/Calibrations/BTagging/CSVv2_13TeV_25ns_combToMujets.csv");
+        bTagCalib = new BTagCalibration("CSVv2","../TopTreeAnalysisBase/Calibrations/BTagging/CSVv2_76X_combToMujets.csv");
         bTagReader = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"mujets","central"); //mujets
         bTagReaderUp = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"mujets","up"); //mujets
         bTagReaderDown = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"mujets","down"); //mujets
 
         if(fillingbTagHistos) {
             if (Muon) {
-                btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+"_Mu.root",false,30,500,2.4);
-                btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+"_Mu_Up.root",false,30,500,2.4);
-                btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+"_Mu_Down.root",false,30,500,2.4);
+                btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu.root",false,30,500,2.4);
+                btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Up.root",false,30,500,2.4);
+                btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Down.root",false,30,500,2.4);
             }
             else if (Electron) {
-                btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+"_El.root",false,30,500,2.4);
-                btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+"_El_Up.root",false,30,500,2.4);
-                btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+"_El_Down.root",false,30,500,2.4);
+                btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El.root",false,30,500,2.4);
+                btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Up.root",false,30,500,2.4);
+                btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Down.root",false,30,500,2.4);
             }
         }    
         else {
-            if(Muon){
-                btwt = new BTagWeightTools(bTagReader,"btaghistos/btaghistosNom.root",false,30,500,2.4); 
-                btwtUp = new BTagWeightTools(bTagReaderUp,"btaghistos/btaghistosUp.root",false,30,500,2.4); 
-                btwtDown = new BTagWeightTools(bTagReaderDown,"btaghistos/btaghistosDown.root",false,30,500,2.4); 
-            }
-            else if (Electron){
-                btwt = new BTagWeightTools(bTagReader,"btaghistos/HistosPtEta_TTJets_MLM_El_4j_2.root",false,30,500,2.4); 
-                btwtUp = new BTagWeightTools(bTagReaderUp,"btaghistos/HistosPtEta_TTJets_MLM_El_4j_2_Up.root",false,30,500,2.4); 
-                btwtDown = new BTagWeightTools(bTagReaderDown,"btaghistos/HistosPtEta_TTJets_MLM_El_4j_2_Down.root",false,30,500,2.4); 
-            }
+            btwt = new BTagWeightTools(bTagReader,"histos/Histo_powheg_76X.root",false,30,500,2.4); 
+            btwtUp = new BTagWeightTools(bTagReaderUp,"histos/Histo_powheg_76X.root",false,30,500,2.4); 
+            btwtDown = new BTagWeightTools(bTagReaderDown,"histos/Histo_powheg_76X.root",false,30,500,2.4); 
         }
     }
 
     if(bTagCSVReweight && !isData){
-        BTagCalibration calib_csvv2("csvv2", "../TopTreeAnalysisBase/Calibrations/BTagging/ttH_BTV_CSVv2_13TeV_2015D_20151120.csv");
+        // BTagCalibration calib_csvv2("csvv2", "../TopTreeAnalysisBase/Calibrations/BTagging/ttH_BTV_CSVv2_13TeV_2015D_20151120.csv");
+        BTagCalibration calib_csvv2("csvv2", "../TopTreeAnalysisBase/Calibrations/BTagging/CSVv2_76X_combToMujets.csv");
         reader_csvv2 = new BTagCalibrationReader(&calib_csvv2, // calibration instance
               BTagEntry::OP_RESHAPING, // operating point
               "iterativefit", // measurement type
@@ -338,12 +344,12 @@ int main (int argc, char *argv[])
     if(bLeptonSF){
         if(Muon){ 
             // muonSFWeight = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/Muon_SF_TopEA.root","SF_totErr",false,false);  OLD SF WEIGHT
-            muonSFWeightID_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/MuonID_Z_RunD_Reco74X_Nov20.root", "NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio", true, false, false);
-            muonSFWeightIso_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/MuonIso_Z_RunD_Reco74X_Nov20.root", "NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio", true, false, false);  // Tight RelIso, Tight ID
-            muonSFWeightTrigC_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.root", "runCreRECO_IsoMu20_OR_IsoTkMu20_PtEtaBins/abseta_pt_ratio", true, false, false);
-            muonSFWeightTrigD1_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.root", "runD_IsoMu20_OR_IsoTkMu20_HLTv4p2_PtEtaBins/abseta_pt_ratio", true, false, false);
-            muonSFWeightTrigD2_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.root", "runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins/abseta_pt_ratio", true, false, false);
-
+            muonSFWeightID_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/MuonID_Z_RunCD_Reco76X_Feb15.root", "MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio", true, false, false);
+            muonSFWeightIso_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/MuonIso_Z_RunCD_Reco76X_Feb15.root", "MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/abseta_pt_ratio", true, false, false);  // Tight RelIso, Tight ID
+            muonSFWeightTrigC_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root", "runC_IsoMu20_OR_IsoTkMu20_PtEtaBins/abseta_pt_ratio", true, false, false);
+            muonSFWeightTrigD1_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root", "runD_IsoMu20_OR_IsoTkMu20_HLTv4p2_PtEtaBins/abseta_pt_ratio", true, false, false);
+            muonSFWeightTrigD2_TT = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root", "runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins/abseta_pt_ratio", true, false, false);
+            // cout<<"ID: "<<muonSFWeightID_TT<<" Iso: "<<muonSFWeightIso_TT<<"  TrigC: "<<muonSFWeightTrigC_TT<<" TrigD1: "<< muonSFWeightTrigD1_TT<<" TrigD2: "<< muonSFWeightTrigD2_TT<<endl;
         }
         else if(Electron){
             electronSFWeight = new ElectronSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/Elec_SF_TopEA.root","GlobalSF",false,false);    
@@ -464,7 +470,12 @@ int main (int argc, char *argv[])
     /////////////////////////////////////////////////
     cout<<"Getting lumi weights"<<endl;
     LumiReWeighting LumiWeights;
-    LumiWeights = LumiReWeighting("/user/lbeck/CMSSW_7_6_3/src/TopBrussels/TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIIFall15DR76-Asympt25ns.root", "/user/lbeck/CMSSW_7_6_3/src/TopBrussels/TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data74X_25ns-Run246908-260627Cert_Silver.root", "pileup", "pileup");    
+    LumiReWeighting LumiWeights_up;
+    LumiReWeighting LumiWeights_down;
+
+    LumiWeights = LumiReWeighting("../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIIFall15DR76-Asympt25ns.root", "../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data76X_25ns-Run246908-260627Cert_Silver.root", "pileup", "pileup");    
+    LumiWeights_up = LumiReWeighting("../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIIFall15DR76-Asympt25ns.root", "../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data76X_25ns-Run246908-260627Cert_Silver_up.root", "pileup", "pileup");    
+    LumiWeights_down = LumiReWeighting("../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIIFall15DR76-Asympt25ns.root", "../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data76X_25ns-Run246908-260627Cert_Silver_down.root", "pileup", "pileup");    
 
     ///////////////////////////////////////////
     ///  Initialise Jet Energy Corrections  ///
@@ -475,25 +486,25 @@ int main (int argc, char *argv[])
 
     if(isData)
     {
-        JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters(pathCalJEC+"Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt");
+        JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters(pathCalJEC+"Fall15_25nsV2_DATA_L1FastJet_AK4PFchs.txt");
         vCorrParam.push_back(*L1JetCorPar);
-        JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters(pathCalJEC+"Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt");
+        JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters(pathCalJEC+"Fall15_25nsV2_DATA_L2Relative_AK4PFchs.txt");
         vCorrParam.push_back(*L2JetCorPar);
-        JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters(pathCalJEC+"Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt");
+        JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters(pathCalJEC+"Fall15_25nsV2_DATA_L3Absolute_AK4PFchs.txt");
         vCorrParam.push_back(*L3JetCorPar);
-        JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters(pathCalJEC+"Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt");
+        JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters(pathCalJEC+"Fall15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt");
         vCorrParam.push_back(*L2L3ResJetCorPar);
     }
     else
     {
-        JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters(pathCalJEC+"Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt");
+        JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters(pathCalJEC+"Fall15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
         vCorrParam.push_back(*L1JetCorPar);
-        JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters(pathCalJEC+"Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt");
+        JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters(pathCalJEC+"Fall15_25nsV2_MC_L2Relative_AK4PFchs.txt");
         vCorrParam.push_back(*L2JetCorPar);
-        JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters(pathCalJEC+"Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt");
+        JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters(pathCalJEC+"Fall15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
         vCorrParam.push_back(*L3JetCorPar);
     }
-    JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(pathCalJEC+"Summer15_25nsV6_MC_Uncertainty_AK4PFchs.txt");
+    JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(pathCalJEC+"Fall15_25nsV2_MC_Uncertainty_AK4PFchs.txt");
 
     JetTools *jetTools = new JetTools(vCorrParam, jecUnc, true); //true means redo also L1
 
@@ -534,7 +545,7 @@ int main (int argc, char *argv[])
         }    
 
         ofstream MLoutput;
-        MLoutput.open(("MLvariables"+dataSetName+".csv").c_str());
+        MLoutput.open(("MLvariables"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+".csv").c_str());
 
         if(dataSetName.find("bx50") != std::string::npos) bx25 = false;
         else bx25 = true;
@@ -566,7 +577,7 @@ int main (int argc, char *argv[])
         
         string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
         TFile * tupfile    = new TFile(Ntupname.c_str(),"RECREATE");
-        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt");
+        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:SFPU_up:SFPU_down:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJetcsv1:csvJetcsv2:csvJetcsv3:csvJetcsv4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4");
        
         // string Ntup4j0bname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_4j0b_" + dataSetName + postfix + ".root";     
         // TFile * tup4j0bfile    = new TFile(Ntupname.c_str(),"RECREATE");
@@ -575,7 +586,7 @@ int main (int argc, char *argv[])
 
         string Ntupjetname = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenJets_" + dataSetName + postfix + ".root";
         TFile * tupjetfile = new TFile(Ntupjetname.c_str(),"RECREATE");
-        TNtuple * tupjet   = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "jetpT:csvDisc:jeteta:jetphi:jetLeptDR:ScaleFactor:NormFactor:Luminosity");
+        TNtuple * tupjet   = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "jetpT:csvDisc:jeteta:jetphi:jetLeptDR:ScaleFactor:NormFactor:Luminosity:SFlepton:SFbtag:SFPU:GenWeight");
         
         string NtupZname   = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenZ_" + dataSetName + postfix + ".root";
         TFile * tupZfile   = new TFile(NtupZname.c_str(),"RECREATE");
@@ -779,6 +790,7 @@ int main (int argc, char *argv[])
             }
             nEl = selectedElectrons.size(); //Number of Electrons in Event   
 
+            selectedExtraElectrons.clear();
             if(Electron){
                 for(int e_iter=0; e_iter<selectedOrigExtraElectrons.size();e_iter++){
                     if(selectedOrigExtraElectrons[e_iter]->Eta()<=1.4442 || selectedOrigExtraElectrons[e_iter]->Eta()>=1.5660){
@@ -786,7 +798,7 @@ int main (int argc, char *argv[])
                     }
                 }
                 nLooseEl = selectedExtraElectrons.size(); //Number of loose electrons
-             cout<<"nel: "<<nEl<<"  nLooseEl: "<<nLooseEl<<"  origel: "<<selectedOrigElectrons.size()<<"  origextra el: "<<selectedOrigExtraElectrons.size()<<endl;
+             // cout<<"nel: "<<nEl<<"  nLooseEl: "<<nLooseEl<<"  origel: "<<selectedOrigElectrons.size()<<"  origextra el: "<<selectedOrigExtraElectrons.size()<<endl;
             }
 
             ////////////////////////////////////////////////////////////
@@ -832,14 +844,14 @@ int main (int argc, char *argv[])
             float HTb = 0.;  //calculate assigning loose, medium and tight tags
             for (Int_t seljet =0; seljet < selectedJets.size(); seljet++ )
             {
-                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.605   )
+                if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.46   ) //0.605
                 {
                     selectedLBJets.push_back(selectedJets[seljet]);
-                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.890)
+                    if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.80) //0.890
                     {
                         HTb += selectedJets[seljet]->Pt();
                         selectedMBJets.push_back(selectedJets[seljet]);
-                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.970)
+                        if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.935) //0.970
                         {
                             selectedTBJets.push_back(selectedJets[seljet]);
                         }
@@ -893,7 +905,7 @@ int main (int argc, char *argv[])
 
             trigged = trigger->checkIfFired(currentRun, datasets, d);
             // trigged=true;
-            tupCutfile->cd()
+            tupCutfile->cd();
             cutsTable->FillTable(d, normfactor, Luminosity, isGoodPV, trigged, scaleFactor, nMu, nLooseMu, nEl, nLooseEl, nJets, nLtags, nMtags, nTtags, cuttup);   if(debug) cout<<"cuts table filled"<<endl;
  
             /////////////////////////////////
@@ -918,14 +930,19 @@ int main (int argc, char *argv[])
             //               Pu reweighting                //
             /////////////////////////////////////////////////
 
-            float lumiWeight;
+            float lumiWeight, lumiWeight_up, lumiWeight_down;
             if(dataSetName.find("Data") !=string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos)
             {
                 lumiWeight=1;
+                lumiWeight_up=1;
+                lumiWeight_down=1;
             }
             else{
                 // lumiWeight = LumiWeights.ITweight( vertex.size() ); 
-                lumiWeight = LumiWeights.ITweight( (int)event->nTruePU()); 
+                lumiWeight = LumiWeights.ITweight( (int)event->nTruePU());
+                lumiWeight_up = LumiWeights_up.ITweight( (int)event->nTruePU()); 
+                lumiWeight_down = LumiWeights_down.ITweight( (int)event->nTruePU()); 
+ 
                 
             }
             // if(lumiWeight<0.2)     cout<<"PU:  "<<(int)event->nTruePU()<<"    LUMI WEIGHT   :   "<<lumiWeight<<" ! "<<endl;
@@ -984,7 +1001,6 @@ int main (int argc, char *argv[])
                 
                 if(debug) cout<<"btag weight "<<btagWeight<<"  btag weight Up "<<btagWeightUp<<"   btag weight Down "<<btagWeightDown<<endl;
             }
-            scaleFactor *= btagWeight;
             // if(ievt<1000)
             // {
             //     cout<<"btagweight: "<<btagWeight<<endl;
@@ -1045,7 +1061,7 @@ int main (int argc, char *argv[])
                     trigSFC = muonSFWeightTrigC_TT->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
                     trigSFD1 = muonSFWeightTrigD1_TT->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
                     trigSFD2 = muonSFWeightTrigD2_TT->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);       
-                    trigSFTot =( (trigSFC*17.2) + (trigSFD1*923.88) + (trigSFD2*1639.20) )/Luminosity;  
+                    trigSFTot =( (trigSFC*17.2) + (trigSFD1*947.544) + (trigSFD2*1681.2) )/Luminosity;  
                 }
                 fleptonSF*=trigSFTot;
             }
@@ -1127,13 +1143,12 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //                                                                                 Baseline Event selection                                                                      //
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             if (Muon)
             {   
-                if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6 && nMtags >=2)) )continue; // Muon Channel Selection
+                if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6 && nMtags >=0)) )continue; // Muon Channel Selection
             }
             else if(Electron){
-                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=6 && nMtags >=2)) continue; // Electron Channel Selection
+                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=6 && nMtags >=0)) continue; // Electron Channel Selection
             }
             else{
                 cerr<<"Correct Channel not selected."<<endl;
@@ -1195,6 +1210,13 @@ int main (int argc, char *argv[])
                 ttbar_flav = 0;
             }
 
+            //temporary to calculate heavy flav 
+
+            // float vals[63] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fleptonSF,btagWeight,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+            // tupfile->cd();
+            // tup->Fill(vals);
+
+            // continue;
 
             //////////////////////////////////////////
             //     TMVA for mass Reconstruction     //
@@ -1202,6 +1224,15 @@ int main (int argc, char *argv[])
             float diTopness = 0;
             if (debug) cout<<"TMVA mass reco"<<endl;
             sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
+            float csvJetcsv1 = 1, csvJetcsv2 = 1, csvJetcsv3 =1, csvJetcsv4 =1;
+
+            if (selectedJets.size()>4){
+                csvJetcsv1 = selectedJets[0]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                csvJetcsv2 = selectedJets[1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                csvJetcsv3 = selectedJets[2]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                csvJetcsv4 = selectedJets[3]->btag_combinedInclusiveSecondaryVertexV2BJetTags();                
+            }
+            // cout<<"csv: "<<csvJetcsv1<<endl;
 
             if (HadTopOn){
                 hadronicTopReco->SetCollections(selectedJets, selectedMuons, selectedElectrons, scaleFactor);
@@ -1283,6 +1314,15 @@ int main (int argc, char *argv[])
 
             }
 
+            float csvJetpt1 = 1, csvJetpt2 = 1, csvJetpt3 =1, csvJetpt4 =1;
+
+            if (selectedJets.size()>4){
+                csvJetpt1 = selectedJets[0]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                csvJetpt2 = selectedJets[1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                csvJetpt3 = selectedJets[2]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                csvJetpt4 = selectedJets[3]->btag_combinedInclusiveSecondaryVertexV2BJetTags();                
+            }
+            // cout<<"pt : "<<csvJetpt1<<endl;
             HTH = HT/H;
             HTRat = HTHi/HT;
 
@@ -1308,12 +1348,12 @@ int main (int argc, char *argv[])
             //              Get lepton pt             //
             ////////////////////////////////////////////
             float selectedLeptonPt = 0 ;
-            if(Muon){
+            if(Muon&&selectedMuons.size()>0){
                 selectedLeptonPt = selectedMuons[0]->Pt();
                 leptoneta = selectedMuons[0]->Eta();
                 leptonphi = selectedMuons[0]->Phi();                
             }
-            else if(Electron){
+            else if(Electron&&selectedElectrons.size()>0){
                 selectedLeptonPt = selectedElectrons[0]->Pt();
                 leptoneta = selectedElectrons[0]->Eta();
                 leptonphi = selectedElectrons[0]->Phi();
@@ -1349,7 +1389,7 @@ int main (int argc, char *argv[])
                 else if (Electron){
                     jetLepDR = selectedJets[seljet1]->DeltaR(*selectedElectrons[0]);
                 }
-                float jetvals[8] = {jetpT,csvDisc,jeteta,jetphi,jetLepDR,scaleFactor,normfactor,Luminosity};
+                float jetvals[12] = {jetpT,csvDisc,jeteta,jetphi,jetLepDR,scaleFactor,normfactor,Luminosity, fleptonSF, btagWeight, lumiWeight, weight_0};//SFlepton:SFbtag:SFPU:GenWeight
                 tupjet->Fill(jetvals);
             }
 
@@ -1415,7 +1455,7 @@ int main (int argc, char *argv[])
             }
             float nOrigJets = (float)selectedOrigJets.size();
             float jet5and6Pt = jet5Pt+jet6Pt;
-            float vals[53] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fleptonSF,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt};
+            float vals[63] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fleptonSF,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,lumiWeight_up,lumiWeight_down,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt, csvJetcsv1, csvJetcsv2, csvJetcsv3, csvJetcsv4, csvJetpt1, csvJetpt2, csvJetpt3, csvJetpt4};
             tupfile->cd();
             tup->Fill(vals);
             // tupCutfile->cd();

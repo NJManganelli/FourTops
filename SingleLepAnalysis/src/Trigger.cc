@@ -28,13 +28,10 @@ void Trigger::bookTriggers(){
 	    // triggerListDataD.push_back("HLT_IsoMu18_v*");
 	    // triggerListDataD.push_back("HLT_IsoMu18_TriCentralPFJet50_40_30_v*");	
 
-	    triggerListDataC.push_back("HLT_IsoTkMu20_v*");
-   	    triggerListDataC.push_back("HLT_IsoMu20_v*");
-	    triggerListDataD.push_back("HLT_IsoTkMu20_v*");
-   	    triggerListDataD.push_back("HLT_IsoMu20_v*");
+   	    triggerListDataC.push_back("HLT_IsoMu18_v*");
+   	    triggerListDataD.push_back("HLT_IsoMu18_v*");
 
-	    triggerListMC.push_back("HLT_IsoTkMu20_v*");
-   	    triggerListMC.push_back("HLT_IsoMu20_v*");
+   	    triggerListMC.push_back("HLT_IsoMu18_v*");
 	    // triggerListMC.push_back("HLT_IsoMu17_eta2p1_v*");
    	    // triggerListMC.push_back("HLT_IsoMu20_eta2p1_v*");
    	    // triggerListMC.push_back("HLT_IsoMu20_eta2p1_TriCentralPFJet30_v*");
@@ -52,17 +49,8 @@ void Trigger::bookTriggers(){
 
     if (electron){
 	    triggerListDataC.push_back("HLT_Ele23_WPLoose_Gsf_v*");    	
-	    triggerListDataC.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_v*");
-	    triggerListDataC.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet30_v*");
-	    triggerListDataC.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet50_40_30_v*");
-
 	    triggerListDataD.push_back("HLT_Ele23_WPLoose_Gsf_v*"); 
-	    triggerListDataD.push_back("HLT_Ele23_WPLoose_Gsf_TriCentralPFJet50_40_30_v*");    	
-
-
-	    triggerListMC.push_back("HLT_Ele27_eta2p1_WP75_Gsf_v*");
-	    triggerListMC.push_back("HLT_Ele27_eta2p1_WP75_Gsf_TriCentralPFJet30_v*");
-	    triggerListMC.push_back("HLT_Ele27_eta2p1_WP75_Gsf_TriCentralPFJet50_40_30_v*");    
+	    triggerListMC.push_back("HLT_Ele23_WPLoose_Gsf_v*");
 
 	    // triggerList.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_v1");
 	    // triggerList.push_back("HLT_Ele27_eta2p1_WPLoose_Gsf_TriCentralPFJet30_v1");
