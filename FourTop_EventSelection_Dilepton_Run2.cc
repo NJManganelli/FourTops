@@ -183,17 +183,17 @@ int main (int argc, char *argv[])
     float weightCount = 0.0;
     int eventCount = 0, trigCount = 0;
 
-    string btagger = "CSVL";
+    string btagger = "CSVM";
     float scalefactorbtageff, mistagfactor;
-    float workingpointvalue = 0.679; //working points updated to 2012 BTV-POG recommendations.
+    float workingpointvalue = 0.800; //working points updated to 2012 BTV-POG recommendations.
     bool bx25 = false;
 
     if(btagger == "CSVL")
-        workingpointvalue = .244;
+        workingpointvalue = .460;
     else if(btagger == "CSVM")
-        workingpointvalue = .679;
+        workingpointvalue = .800;
     else if(btagger == "CSVT")
-        workingpointvalue = .898;
+        workingpointvalue = .935;
 
     clock_t start = clock();
 
@@ -273,21 +273,21 @@ int main (int argc, char *argv[])
         cout << " --> Using the Muon-Electron channel..." << endl;
         channelpostfix = "_MuEl";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2581.340;
+        Luminosity = 2629.548;
     }
     else if(Muon && !Electron && dilepton)
     {
         cout << " --> Using the Muon-Muon channel..." << endl;
         channelpostfix = "_MuMu";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2581.340;
+        Luminosity = 2629.406;
     }
     else if(!Muon && Electron && dilepton)
     {
         cout << " --> Using the Electron-Electron channel..." << endl;
         channelpostfix = "_ElEl";
         xmlFileName = "config/Run2_Samples.xml";
-        Luminosity = 2581.515;
+        Luminosity = 2627.712;
     }
     else
     {
@@ -359,7 +359,7 @@ int main (int argc, char *argv[])
     if(bTagReweight && dataSetName.find("Data")==string::npos)
     {
         //Btag documentation : http://mon.iihe.ac.be/~smoortga/TopTrees/BTagSF/BTaggingSF_inTopTrees.pdf
-        bTagCalib = new BTagCalibration("CSVv2","../TopTreeAnalysisBase/Calibrations/BTagging/CSVv2_13TeV_25ns_combToMujets.csv");
+        bTagCalib = new BTagCalibration("CSVv2","../TopTreeAnalysisBase/Calibrations/BTagging/CSVv2_76X_combToMujets.csv");
         bTagReader = new BTagCalibrationReader(bTagCalib,BTagEntry::OP_MEDIUM,"mujets","central"); //mujets
         if(fillingbTagHistos) btwt = new BTagWeightTools(bTagReader,"bTagWeightHistosPtEta_"+dataSetName+".root",false,30,670,2.4);
         else btwt = new BTagWeightTools(bTagReader,"bTagWeightHistosPtEta_Dilep_Comb.root",false,30,670,2.4);
@@ -367,13 +367,15 @@ int main (int argc, char *argv[])
 
     }
 
-    MuonSFWeight* muonSFWeight;
+    MuonSFWeight* muonSFWeightID;
+    MuonSFWeight* muonSFWeightIso;
     ElectronSFWeight* electronSFWeight;
     if(bLeptonSF)
     {
         if(Muon)
         {
-            muonSFWeight = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/Muon_SF_TopEA.root","SF_totErr",true,false,false);
+            muonSFWeightID = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/MuonID_Z_RunCD_Reco76X_Feb15.root", "MC_NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1/abseta_pt_ratio", true, false, false);
+	    muonSFWeightIso = new MuonSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/MuonIso_Z_RunCD_Reco76X_Feb15.root", "MC_NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1/abseta_pt_ratio", true, false, false);
         }
         if(Electron)
         {
@@ -382,9 +384,12 @@ int main (int argc, char *argv[])
     }
 
     LumiReWeighting LumiWeights;
-    LumiWeights = LumiReWeighting("../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIISpring15DR74-Asympt25ns.root", "../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data74X_25ns-Run246908-260627Cert_Silver.root", "pileup60", "pileup");
+    LumiWeights = LumiReWeighting("../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_MC_RunIIFall15DR76-Asympt25ns.root", "../TopTreeAnalysisBase/Calibrations/PileUpReweighting/pileup_2015Data74X_25ns-Run246908-260627Cert_Silver.root", "pileup", "pileup");
 
 //cin.get();
+
+    TFile *ISRSFFile = TFile::Open("SFHist.root");
+    TH1F* ISRSFHist = (TH1F*)ISRSFFile->Get("nISRJets_TT_Powheg_ScaleUp__1");
 
     vector<string> MVAvars;
 
@@ -448,11 +453,11 @@ int main (int argc, char *argv[])
     /////////////////////////////////
 
     cout <<"found sample with equivalent lumi "<<  theDataset->EquivalentLumi() <<endl;
-    if(dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0)
-    {
-        Luminosity = theDataset->EquivalentLumi();
-        cout <<"found DATA sample with equivalent lumi "<<  theDataset->EquivalentLumi() <<endl;
-    }
+//    if(dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0)
+//    {
+//        Luminosity = theDataset->EquivalentLumi();
+//        cout <<"found DATA sample with equivalent lumi "<<  theDataset->EquivalentLumi() <<endl;
+//    }
 
     cout << "Rescaling to an integrated luminosity of "<< Luminosity <<" pb^-1" << endl;
     int ndatasets = datasets.size() - 1 ;
@@ -543,6 +548,9 @@ int main (int argc, char *argv[])
     MSPlot["CloseJetLepRat"]                                = new MultiSamplePlot(datasets, "CloseJetLepRat", 20, 0, 10, "p^{jet}_{T}/p^{l}_{T}");
     MSPlot["CloseJetMC"]                                    = new MultiSamplePlot(datasets, "CloseJetMC", 28, -6, 22, "PDG ID");
     MSPlot["CloseJetHOverE"]                                = new MultiSamplePlot(datasets, "CloseJetHOverE", 25, -0, 1.0, "Jet H/E");
+    //Init Jet Plots
+    MSPlot["ISRJetPt"]                                      = new MultiSamplePlot(datasets, "ISRJetPt", 30, 0, 300, "PT");
+    MSPlot["nISRJets"]                                      = new MultiSamplePlot(datasets, "nISRJets", 25, 0, 25, "nJets_{ISR}");
     //MET
     MSPlot["MET"]                                           = new MultiSamplePlot(datasets, "MET", 70, 0, 700, "MET");
     MSPlot["METCutAcc"]                                     = new MultiSamplePlot(datasets, "METCutAcc", 30, 0, 150, "MET cut pre-jet selection");
@@ -577,7 +585,7 @@ int main (int argc, char *argv[])
     ///////////////////
     // 1D histograms //
     ///////////////////
-
+//	TH1F* puHisto = new TH1F("pileup","pileup",60,0,60);
     ///////////////////
     // 2D histograms //
     ///////////////////
@@ -746,14 +754,14 @@ int main (int argc, char *argv[])
 
         // TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:3rdJetPt:4thJetPt:MET:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:diLepMass");
-        TNtuple * eltup = new TNtuple(elTuptitle.c_str(),elTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:ElSuperclusterEta:Elfull5x5:EldEdatIn:EldPhiIn:ElhOverE:ElRelIso:ElEmP:Eld0:Eldz:ElMissingHits:ElE:ElP");
-	TNtuple * mutup = new TNtuple(muTuptitle.c_str(),muTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:MuPt:MuEta:MuRelIso");
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:1stJetPt:2ndJetPt:3rdJetPt:4thJetPt:MET:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:sfLep1:sfLep2:sfBtag:sfPU:sfTopPt:sfISR:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:diLepMass");
+        TNtuple * eltup = new TNtuple(elTuptitle.c_str(),elTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:ElSuperclusterEta:Elfull5x5:EldEdatIn:EldPhiIn:ElhOverE:ElRelIso:ElEmP:Eld0:Eldz:ElMissingHits:ElPt");
+	TNtuple * mutup = new TNtuple(muTuptitle.c_str(),muTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:MuPt:MuEta:MuRelIso:nMuons");
 	TNtuple * jettup = new TNtuple(jetTuptitle.c_str(),jetTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:NHF:NEMF:nConstituents:CHF:CMultiplicity:CEMF");
-	TNtuple * cuttup = new TNtuple(cutTuptitle.c_str(),cutTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:trigger:isGoodPV:Lep1:Lep2:nJets:nTags:HT");
+	TNtuple * cuttup = new TNtuple(cutTuptitle.c_str(),cutTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:trigger:isGoodPV:Lep1:Lep2:nJets2:nJets3:nJets4:nTags:HT");
         TNtuple * posTup = new TNtuple(posTuptitle.c_str(),posTuptitle.c_str(),"nJets:HT:ScaleFactor:NormFactor:Luminosity:CentralWeight");
         TNtuple * negTup = new TNtuple(negTuptitle.c_str(),negTuptitle.c_str(),"nJets:HT:ScaleFactor:NormFactor:Luminosity:CentralWeight");
-        TNtuple * sfTup = new TNtuple(sfTuptitle.c_str(),sfTuptitle.c_str(),"sfLep1:sfLep2:sfBtag:sfPU:ScaleFactor:NormFactor:Luminosity");
+        TNtuple * sfTup = new TNtuple(sfTuptitle.c_str(),sfTuptitle.c_str(),"sfLep1:sfLep2:sfBtag:sfPU:sfTopPt:sfISR:ScaleFactor:NormFactor:Luminosity");
 
 
         //////////////////////////////////////////////////
@@ -763,17 +771,17 @@ int main (int argc, char *argv[])
         vector<JetCorrectorParameters> vCorrParam;
         JetCorrectionUncertainty *jecUnc;
 
-        if((dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0) && bx25) // 25ns Data!
+        if((dataSetName.find("Data")!=std::string::npos || dataSetName.find("data")!=std::string::npos || dataSetName.find("DATA")!=std::string::npos) && bx25) // 25ns Data!
         {
-            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_L1FastJet_AK4PFchs.txt");
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_DATA_L1FastJet_AK4PFchs.txt");
             vCorrParam.push_back(*L1JetCorPar);
-            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_L2Relative_AK4PFchs.txt");
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_DATA_L2Relative_AK4PFchs.txt");
             vCorrParam.push_back(*L2JetCorPar);
-            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_L3Absolute_AK4PFchs.txt");
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_DATA_L3Absolute_AK4PFchs.txt");
             vCorrParam.push_back(*L3JetCorPar);
-            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt");
+            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt");
             vCorrParam.push_back(*L2L3ResJetCorPar);
-            jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_DATA_Uncertainty_AK4PFchs.txt");
+            jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_DATA_Uncertainty_AK4PFchs.txt");
         }
         else if((dataSetName.find("Data")<=0 || dataSetName.find("data")<=0 || dataSetName.find("DATA")<=0) && !bx25) // 50ns Data!
         {
@@ -789,15 +797,15 @@ int main (int argc, char *argv[])
         }
         else if(bx25) // 25ns MC!
         {
-            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
+            JetCorrectorParameters *L1JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_MC_L1FastJet_AK4PFchs.txt");
             vCorrParam.push_back(*L1JetCorPar);
-            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_L2Relative_AK4PFchs.txt");
+            JetCorrectorParameters *L2JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_MC_L2Relative_AK4PFchs.txt");
             vCorrParam.push_back(*L2JetCorPar);
-            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
+            JetCorrectorParameters *L3JetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_MC_L3Absolute_AK4PFchs.txt");
             vCorrParam.push_back(*L3JetCorPar);
-            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_L2L3Residual_AK4PFchs.txt");
+            JetCorrectorParameters *L2L3ResJetCorPar = new JetCorrectorParameters("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_MC_L2L3Residual_AK4PFchs.txt");
             vCorrParam.push_back(*L2L3ResJetCorPar);
-            jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Summer15_25nsV2_MC_Uncertainty_AK4PFchs.txt");
+            jecUnc = new JetCorrectionUncertainty("../TopTreeAnalysisBase/Calibrations/JECFiles/Fall15_25nsV2_MC_Uncertainty_AK4PFchs.txt");
         }
         else //50ns MC
         {
@@ -867,12 +875,12 @@ int main (int argc, char *argv[])
 
             //define object containers
             vector<TRootElectron*> selectedElectrons, selectedLooseElectrons, selectedMediumElectrons, selectedTightElectrons;
-            vector<TRootElectron*> selectedLooseXElectrons, selectedMediumXElectrons;
+            vector<TRootElectron*> selectedLooseXElectrons, selectedMediumXElectrons, selectedPosTightElectrons, selectedNegTightElectrons, selectedPosNTightElectrons, selectedNegNTightElectrons;
             vector<TRootPFJet*>    selectedJets, selectedUncleanedJets;
             vector<TRootPFJet*>    selectedLooseJets;
             vector<TRootSubstructureJet*>    selectedFatJets;
             vector<TRootPFJet*>    MVASelJets1;
-            vector<TRootMuon*>     selectedMuons;
+            vector<TRootMuon*>     selectedMuons, selectedPosMuons, selectedNegMuons;
             vector<TRootElectron*> selectedExtraElectrons;
             vector<TRootMuon*>     selectedExtraMuons;
             selectedElectrons.reserve(10);
@@ -906,13 +914,21 @@ int main (int argc, char *argv[])
                 cout<<"File changed!!! => "<<currentFilename<<endl;
             }
 
+//	    if(dataSetName.find("Data")!=std::string::npos) 
+//	    {
+//		puHisto->Fill((int)nvertices);
+//	    }
+//	    else
+//	    {
+//		puHisto->Fill((int)event->nTruePU());
+//	    }
 
             //cout<<"SetBranchAddress(runInfos,&runInfos) : "<<datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos)<<endl;
             int rBytes = datasets[d]->runTree()->GetEntry(iFile);
 
             int currentRun = event->runId();
 
-            if(dataSetName.find("TTJets")!=std::string::npos)
+            if(dataSetName.find("TTDileptMG")!=std::string::npos || dataSetName.find("TTJetsMG")!=std::string::npos)
             {
                 centralWeight = (event->getWeight(1))/(abs(event->originalXWGTUP()));
 		weight1 = event->getWeight(2)/(abs(event->originalXWGTUP()));
@@ -950,11 +966,11 @@ int main (int argc, char *argv[])
 
             if(dataSetName.find("scaleup") != std::string::npos)
             {
-                scaleFactor *= scaleUp;
+                scaleFactor *= weight4;
             }
             else if(dataSetName.find("scaledown") != std::string::npos)
             {
-                scaleFactor *= scaleDown;
+                scaleFactor *= weight8;
             }
             else
             {
@@ -1106,7 +1122,7 @@ int main (int argc, char *argv[])
             //////////////////
 
             vector<TRootGenJet*> genjets;
-            if( ! (dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA" ) )
+            if(!(dataSetName.find("Data") !=string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos))
             {
                 // loading GenJets as I need them for JER
                 genjets = treeLoader.LoadGenJet(ievt, false);
@@ -1166,7 +1182,7 @@ int main (int argc, char *argv[])
                     else if( Muon && !Electron )
                     {
                         itrigger.push_back(treeLoader.iTrigger ("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*", currentRun, iFile));
-                        itrigger.push_back(treeLoader.iTrigger ("HLT_IsoMu20_v*", currentRun, iFile));
+                        //itrigger.push_back(treeLoader.iTrigger ("HLT_IsoMu20_v*", currentRun, iFile));
                     }
 
                     else if( !Muon && Electron )
@@ -1193,7 +1209,7 @@ int main (int argc, char *argv[])
                     else if( Muon && !Electron )
                     {
                         itrigger.push_back(treeLoader.iTrigger ("HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*", currentRun, iFile));
-                        itrigger.push_back(treeLoader.iTrigger ("HLT_IsoMu20_v*", currentRun, iFile));
+                        //itrigger.push_back(treeLoader.iTrigger ("HLT_IsoMu20_v*", currentRun, iFile));
                     }
                     else if( !Muon && Electron )
                         itrigger.push_back(treeLoader.iTrigger ("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*", currentRun, iFile));
@@ -1214,28 +1230,51 @@ int main (int argc, char *argv[])
             // JER smearing
             //////////////////////
 
-//            if( ! (dataSetName == "Data" || dataSetName == "data" || dataSetName == "DATA" ) )
+            if(!(dataSetName.find("Data") !=string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos))
+            {
+                //JER
+                doJERShift == 0;
+                if(doJERShift == 1)
+                    jetTools->correctJetJER(init_jets, genjets, mets[0], "minus", false);
+                else if(doJERShift == 2)
+                    jetTools->correctJetJER(init_jets, genjets, mets[0], "plus", false);
+                else
+                    jetTools->correctJetJER(init_jets, genjets, mets[0], "nominal", false);
+
+                //     coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"After JER correction:");
+
+		//JES
+		jetTools->correctJets(init_jets, event->fixedGridRhoFastjetAll(), false);
+
+                // JES sysematic!
+                if (doJESShift == 1)
+                    jetTools->correctJetJESUnc(init_jets, "minus", 1);
+                else if (doJESShift == 2)
+                    jetTools->correctJetJESUnc(init_jets, "plus", 1);
+
+                //            coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"Before JES correction:");
+
+            }
+
+	    /////////////////////////////////////
+	    // Init Jet Plots for ISR reweight //
+	    /////////////////////////////////////
+
+	    int nInitJets = 0;
+	    float ISRsf = 1.0;
+	    //cout << "Number of initJets : " << init_jets.size() << endl;
+
+	    for(int iJet = 0; iJet < init_jets.size(); iJet++)
+	    {
+		if(init_jets[iJet]->genParticleIndex() == -1) {MSPlot["ISRJetPt"]->Fill(init_jets[iJet]->Pt(), datasets[d], true, Luminosity*scaleFactor); nInitJets++;}
+	    }
+	    MSPlot["nISRJets"]->Fill(nInitJets, datasets[d], true, Luminosity*scaleFactor);
+
+//	    if(dataSetName.find("TTJets")!=string::npos || dataSetName.find("TTDilept")!=string::npos || dataSetName.find("TT_")!=string::npos)
 //            {
-//                //JER
-//                doJERShift == 0;
-//                if(doJERShift == 1)
-//                    jetTools->correctJetJER(init_jets, genjets, mets[0], "minus");
-//                else if(doJERShift == 2)
-//                    jetTools->correctJetJER(init_jets, genjets, mets[0], "plus");
-//                else
-//                    jetTools->correctJetJER(init_jets, genjets, mets[0], "nominal");
-//
-//                //     coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"After JER correction:");
-//
-//                // JES sysematic!
-//                if (doJESShift == 1)
-//                    jetTools->correctJetJESUnc(init_jets, mets[0], "minus");
-//                else if (doJESShift == 2)
-//                    jetTools->correctJetJESUnc(init_jets, mets[0], "plus");
-//
-//                //            coutObjectsFourVector(init_muons,init_electrons,init_jets,mets,"Before JES correction:");
-//
-//            }
+//	        ISRsf = ISRSFHist->GetBinContent(nInitJets);
+//	        scaleFactor *= ISRsf;
+//	    }
 
             ///////////////////////////////////////////////////////////
             // Event selection
@@ -1304,7 +1343,12 @@ int main (int argc, char *argv[])
                 {
                     if(selectedElectrons[l]->Pt() == selectedMediumElectrons[m]->Pt() && selectedElectrons[l]->Eta() == selectedMediumElectrons[m]->Eta()) isMed = true;
                 }
-                if(!isMed) selectedLooseXElectrons.push_back(selectedElectrons[l]);
+                if(!isMed) 
+		{
+		    selectedLooseXElectrons.push_back(selectedElectrons[l]);
+		    if(selectedElectrons[l]->charge() == 1) selectedPosNTightElectrons.push_back(selectedElectrons[l]);
+                    else if(selectedElectrons[l]->charge() == -1) selectedNegNTightElectrons.push_back(selectedElectrons[l]);
+		}
             }
             for(int m=0; m<selectedMediumElectrons.size(); m++)
             {
@@ -1313,7 +1357,17 @@ int main (int argc, char *argv[])
                 {
                     if(selectedTightElectrons[t]->Pt() == selectedMediumElectrons[m]->Pt() && selectedTightElectrons[t]->Eta() == selectedMediumElectrons[m]->Eta()) isTight = true;
                 }
-                if(!isTight) selectedMediumXElectrons.push_back(selectedMediumElectrons[m]);
+                if(!isTight)
+		{
+		    selectedMediumXElectrons.push_back(selectedMediumElectrons[m]);
+		    if(selectedMediumElectrons[m]->charge() == 1) selectedPosNTightElectrons.push_back(selectedMediumElectrons[m]);
+                    else if(selectedMediumElectrons[m]->charge() == -1) selectedNegNTightElectrons.push_back(selectedMediumElectrons[m]);
+		}
+            }
+            for(int t=0; t<selectedTightElectrons.size(); t++)
+            {
+                if(selectedTightElectrons[t]->charge() == 1) selectedPosTightElectrons.push_back(selectedTightElectrons[t]);
+                else if(selectedTightElectrons[t]->charge() == -1) selectedNegTightElectrons.push_back(selectedTightElectrons[t]);
             }
 
             if (debug)cout<<"Getting Jets"<<endl;
@@ -1367,13 +1421,17 @@ int main (int argc, char *argv[])
             float diLepMass = 0, diMuMass = 0;
             bool ZVeto = false, sameCharge = false;
             float ZMass = 91, ZMassWindow = 15;
-            int cj1 = 0, cj2 = 0;
+            int cj1 = 0, cj2 = 0, lidx1 = 0, lidx2 = 0;
             TLorentzVector lep1, lep2, diLep;
 
             for(int selmu = 0; selmu < selectedMuons.size(); selmu++)
             {
+		if(selectedMuons[selmu]->charge() == 1) selectedPosMuons.push_back(selectedMuons[selmu]);
+		else if(selectedMuons[selmu]->charge() == -1) selectedNegMuons.push_back(selectedMuons[selmu]);
                 selectedMuonsTLV_JC.push_back(*selectedMuons[selmu]);
             }
+	    sort(selectedPosMuons.begin(),selectedPosMuons.end(),HighestPt());
+	    sort(selectedNegMuons.begin(),selectedNegMuons.end(),HighestPt());
             for(int selel = 0; selel < selectedElectrons.size(); selel++)
             {
                 selectedElectronsTLV_JC.push_back(*selectedElectrons[selel]);
@@ -1384,29 +1442,54 @@ int main (int argc, char *argv[])
             }
             if(nMu >= 2 && nEl == 0 && Muon && !Electron) //Di-Muon Selection
             {
-                lep1 = selectedMuonsTLV_JC[0];
-                lep2 = selectedMuonsTLV_JC[1];
-                if(selectedMuons[0]->charge() == selectedMuons[1]->charge()) sameCharge = true;
+		if(selectedPosMuons.size() > 0 && selectedNegMuons.size() > 0)
+		{
+                    lep1 = (TLorentzVector)*selectedPosMuons[0];
+                    lep2 = (TLorentzVector)*selectedNegMuons[0];
+                    sameCharge = true;
+		}
+		else
+		{
+		    lep1 = selectedMuonsTLV_JC[0];
+                    lep2 = selectedMuonsTLV_JC[1];
+		}
             }
             else if(nTightEl >= 1 && nEl >= 2 && nMu == 0 && Electron && !Muon) //Di-Electron Selection criteria
             {
-                lep1 = (TLorentzVector)*selectedTightElectrons[0]; //Always set the first lepton to the highest Pt Tight Electron
-                if(nTightEl >= 2) //If there is a second Tight Electron use that one
-                {
-                    lep2 = (TLorentzVector)*selectedTightElectrons[1];
-                    if(selectedTightElectrons[0]->charge() == selectedTightElectrons[1]->charge()) sameCharge = true;
-                }
-                else if(nMedEl >= 1) //If no second Tight electron use the highest Pt Medium if present
-                {
-                    lep2 = (TLorentzVector)*selectedMediumXElectrons[0];
-                    if(selectedTightElectrons[0]->charge() == selectedMediumXElectrons[0]->charge()) sameCharge = true;
-                }
-                else //In the absence of other second electrons use the highest Pt Loose one
-                {
-                    lep2 = (TLorentzVector)*selectedLooseXElectrons[0];
-                    if(selectedTightElectrons[0]->charge() == selectedLooseXElectrons[0]->charge()) sameCharge = true;
-                }
-
+		if(selectedPosTightElectrons.size() > 0 && selectedNegTightElectrons.size() > 0)
+		{
+                    lep1 = (TLorentzVector)*selectedPosTightElectrons[0];
+                    lep2 = (TLorentzVector)*selectedNegTightElectrons[0];
+                    sameCharge = true;
+		}
+		else if(selectedPosTightElectrons.size() > 0 && selectedNegNTightElectrons.size() > 0)
+		{
+                    lep1 = (TLorentzVector)*selectedPosTightElectrons[0];
+                    lep2 = (TLorentzVector)*selectedNegNTightElectrons[0];
+                    sameCharge = true;
+		}
+		else if(selectedNegTightElectrons.size() > 0 && selectedPosNTightElectrons.size() > 0)
+		{
+                    lep1 = (TLorentzVector)*selectedNegTightElectrons[0];
+                    lep2 = (TLorentzVector)*selectedPosNTightElectrons[0];
+                    sameCharge = true;
+		}
+		else
+		{
+                    lep1 = (TLorentzVector)*selectedTightElectrons[0]; //Always set the first lepton to the highest Pt Tight Electron
+                    if(nTightEl >= 2) //If there is a second Tight Electron use that one
+                    {
+                        lep2 = (TLorentzVector)*selectedTightElectrons[1];
+                    }
+                    else if(nMedEl >= 1) //If no second Tight electron use the highest Pt Medium if present
+                    {
+                        lep2 = (TLorentzVector)*selectedMediumXElectrons[0];
+                    }
+                    else //In the absence of other second electrons use the highest Pt Loose one
+                    {
+                        lep2 = (TLorentzVector)*selectedLooseXElectrons[0];
+                    }
+		}
             }
             else if(nTightEl >= 1 && nEl >= 1 && nMu >= 1 && Electron && Muon) //Muon-Electron Selection
             {
@@ -1486,8 +1569,10 @@ int main (int argc, char *argv[])
             {
                 if( Muon && !Electron && nMu >= 2)
                 {
-                    fleptonSF1 = muonSFWeight->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
-                    fleptonSF2 = muonSFWeight->at(selectedMuons[1]->Eta(), selectedMuons[1]->Pt(), 0);
+                    fleptonSF1 = muonSFWeightID->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
+                    fleptonSF2 = muonSFWeightID->at(selectedMuons[1]->Eta(), selectedMuons[1]->Pt(), 0);
+                    fleptonSF1 *= muonSFWeightIso->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
+                    fleptonSF2 *= muonSFWeightIso->at(selectedMuons[1]->Eta(), selectedMuons[1]->Pt(), 0);
                 }
 		else if(nTightEl >= 1 && nEl >= 2 && nMu == 0 && Electron && !Muon) //Di-Electron Selection criteria
                 {
@@ -1510,7 +1595,8 @@ int main (int argc, char *argv[])
                 {
 		    scaleFactor *= 0.91;  //Trigger scale factor for EMu channel
                     fleptonSF1 = electronSFWeight->at(selectedTightElectrons[0]->Eta(),selectedTightElectrons[0]->Pt(),0);
-                    fleptonSF2 = muonSFWeight->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
+                    fleptonSF2 = muonSFWeightID->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
+                    fleptonSF2 *= muonSFWeightIso->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
                 }
             }
             if(debug) cout<<"lepton1 SF:  "<<fleptonSF1<<endl;
@@ -1518,7 +1604,73 @@ int main (int argc, char *argv[])
             scaleFactor *= (fleptonSF1*fleptonSF2);
             scaleFactor *= btagWeight;
 
-            sfTup->Fill(fleptonSF1, fleptonSF2, btagWeight, lumiWeight, scaleFactor, normfactor, Luminosity);
+            ///////////////////////
+            // Getting Gen Event //
+            ///////////////////////
+
+
+            if(!(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos))
+            {
+                vector<TRootMCParticle*> mcParticles;
+                vector<TRootMCParticle*> mcTops;
+                mcParticlesMatching_.clear();
+                mcParticlesTLV.clear();
+                //selectedJetsTLV.clear();
+                mcParticles.clear();
+                mcTops.clear();
+
+                int leptonPDG, muonPDG = 13, electronPDG = 11;
+                leptonPDG = muonPDG;
+
+                treeLoader.LoadMCEvent(ievt, 0, mcParticlesMatching_,false);
+                if (debug) cout <<"size   "<< mcParticlesMatching_.size()<<endl;
+            }
+
+	    ///////////////////////
+            //  Top PT Reweight  //
+            ///////////////////////
+
+	    float fTopPtsf = 1, fAntitopPtsf = 1, fTopPtReWeightsf = 1;
+	    int nTops = 0;
+
+	    if(dataSetName.find("TTJets")!=string::npos || dataSetName.find("TTDilept")!=string::npos || dataSetName.find("TT_")!=string::npos)
+            {
+		for(int part = 0; part < mcParticlesMatching_.size(); part++)
+		{
+//		    if(abs(mcParticlesMatching_[part]->type()) == 6 && mcParticlesMatching_[part]->status() < 30) cout << "Type: " << mcParticlesMatching_[part]->type() << " Status: " << mcParticlesMatching_[part]->status() << endl;
+//		    if(abs(mcParticlesMatching_[part]->type()) == 5) cout << "Type: " << mcParticlesMatching_[part]->type() << " Status: " << mcParticlesMatching_[part]->status() << endl;
+//		    if(abs(mcParticlesMatching_[part]->type()) <= 6 || abs(mcParticlesMatching_[part]->type()) == 21) cout << "Type: " << mcParticlesMatching_[part]->type() << " Status: " << mcParticlesMatching_[part]->status() << endl;
+//		    if(abs(mcParticlesMatching_[part]->status()) <= 59 && abs(mcParticlesMatching_[part]->status()) >=30) cout << "Type: " << mcParticlesMatching_[part]->type() << " Status: " << mcParticlesMatching_[part]->status() << endl;
+		    if(mcParticlesMatching_[part]->type() == 6 && mcParticlesMatching_[part]->status() == 22)
+		    {
+			if(mcParticlesMatching_[part]->Pt() < 400) fTopPtsf = exp(0.148-(0.00129*mcParticlesMatching_[part]->Pt()));
+			else fTopPtsf = exp(0.148-(0.00129*400));
+			nTops++;
+		    }
+		    else if(mcParticlesMatching_[part]->type() == -6 && mcParticlesMatching_[part]->status() == 22)
+		    {
+			if(mcParticlesMatching_[part]->Pt() < 400) fAntitopPtsf = exp(0.148-(0.00129*mcParticlesMatching_[part]->Pt()));
+			else fAntitopPtsf = exp(0.148-(0.00129*400));
+			nTops++;
+		    }
+		}
+//		cin.get();
+		fTopPtReWeightsf = sqrt(fTopPtsf*fAntitopPtsf);
+		scaleFactor *= fTopPtReWeightsf;
+//		if(nTops > 2)
+//		{
+//		    cout << fTopPtsf << " " << fAntitopPtsf << " " << fTopPtReWeightsf <<" nTops: " << nTops << endl;
+//		    for(int part = 0; part < mcParticlesMatching_.size(); part++)
+//		    {
+//			cout << "Type: " << mcParticlesMatching_[part]->type() << " Status: " << mcParticlesMatching_[part]->status() << endl;
+//		    }
+//		    cin.get();
+//		}
+	    }
+
+//	    if((dataSetName.find("TTJets")!=string::npos || dataSetName.find("TTDilept")!=string::npos) && nTops != 2) continue;            //If there are not 2 top partons, skip this event.
+
+            sfTup->Fill(fleptonSF1, fleptonSF2, btagWeight, lumiWeight, fTopPtReWeightsf, ISRsf, scaleFactor, normfactor, Luminosity);
 
 
 
@@ -1757,7 +1909,7 @@ int main (int argc, char *argv[])
             eventCount++;
             if(trigged) trigCount++;
 
-	    int cfTrigger=0,cfPV=0,cfLep1=0,cfLep2=0,cfJets=0,cfTags=0,cfHT=0;
+	    int cfTrigger=0,cfPV=0,cfLep1=0,cfLep2=0,cfJets2=0,cfJets3=0,cfJets4=0,cfTags=0,cfHT=0;
             if(Muon && Electron && dilepton)   //Muon-Electron Selection Table
             {
 		if(trigged)
@@ -1772,24 +1924,32 @@ int main (int argc, char *argv[])
                         if(nTightEl>=1 && nEl>=1)
                         {
                             cfLep2=1;
-                            if(nJets>=4)
+                            if(nJets>=2)
                             {
-                                cfJets=1;
-                                if(nMtags>=2)
-                                {
-                                    cfTags=1;
-                                    if(temp_HT>=500)
-                                    {
-                                        cfHT=1;
+                                cfJets2=1;
+				if(nJets>=3)
+                            	{
+                                    cfJets3=1;
+				    if(nJets>=4)
+                            	    {
+                                        cfJets4=1;
+                                        if(nMtags>=2)
+                                        {
+                                            cfTags=1;
+                                            if(temp_HT>=500)
+                                                {
+                                                    cfHT=1;
+                                                }
+                                        }
                                     }
-                                }
+                               }
                             }
                         }
                     }
                 }
 		}
             }
-            if(Muon && !Electron && dilepton)   //Muon-Electron Selection Table
+            if(Muon && !Electron && dilepton)   //Muon-Muon Selection Table
             {
                 if(sameCharge && (diLepMass < 20 || (diLepMass > (ZMass-ZMassWindow) && diLepMass < (ZMass+ZMassWindow)))) ZVeto = true;
                 if(trigged)
@@ -1804,24 +1964,32 @@ int main (int argc, char *argv[])
                             if(!ZVeto)
                             {
                                 cfLep2=1;
-                                if(nJets>=4)
-                                {
-                                    cfJets=1;
-                                    if(nMtags>=2)
-                                    {
-                                        cfTags=1;
-                                        if(temp_HT>=500)
+                            if(nJets>=2)
+                            {
+                                cfJets2=1;
+				if(nJets>=3)
+                            	{
+                                    cfJets3=1;
+				    if(nJets>=4)
+                            	    {
+                                        cfJets4=1;
+                                        if(nMtags>=2)
                                         {
-                                            cfHT=1;
+                                            cfTags=1;
+                                            if(temp_HT>=500)
+                                                {
+                                                    cfHT=1;
+                                                }
                                         }
                                     }
-                                }
+                               }
+                            }
                             }
                         }
                     }
                 }
             }
-            if(!Muon && Electron && dilepton)   //Muon-Electron Selection Table
+            if(!Muon && Electron && dilepton)   //Electron-Electron Selection Table
             {
                 if(sameCharge && (diLepMass < 20 || (diLepMass > (ZMass-ZMassWindow) && diLepMass < (ZMass+ZMassWindow)))) ZVeto = true;
                 if(trigged)
@@ -1836,24 +2004,34 @@ int main (int argc, char *argv[])
                             if(!ZVeto)
                             {
                                 cfLep2=1;
-                                if(nJets>=4)
-                                {
-                                    cfJets=1;
-                                    if(nMtags>=2)
-                                    {
-                                        cfTags=1;
-                                        if(temp_HT>=500)
+                            if(nJets>=2)
+                            {
+                                cfJets2=1;
+				if(nJets>=3)
+                            	{
+                                    cfJets3=1;
+				    if(nJets>=4)
+                            	    {
+                                        cfJets4=1;
+                                        if(nMtags>=2)
                                         {
-                                            cfHT=1;
+                                            cfTags=1;
+                                            if(temp_HT>=500)
+                                                {
+                                                    cfHT=1;
+                                                }
                                         }
                                     }
-                                }
+                               }
+                            }
                             }
                         }
                     }
                 }
             }
-	    cuttup->Fill(scaleFactor,normfactor,Luminosity,cfTrigger,cfPV,cfLep1,cfLep2,cfJets,cfTags,cfHT);
+	    cuttup->Fill(scaleFactor,normfactor,Luminosity,cfTrigger,cfPV,cfLep1,cfLep2,cfJets2,cfJets3,cfJets4,cfTags,cfHT);
+
+
 
             //////////////
             // N-1 Plot //
@@ -1956,20 +2134,23 @@ int main (int argc, char *argv[])
 
             if (dilepton && Muon && Electron)
             {
-                if (!(nJets>=4 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
-                if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                if (!(nJets>=2 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+//                if (!(nJets>=4 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+//                if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
                 selectedLeptonTLV_JC.push_back(selectedMuons[0]);
             }
             else if (dilepton && Muon && !Electron)
             {
-                if (!(nJets>=4 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
-                if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+                if (!(nJets>=2 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+//                if (!(nJets>=4 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+//                if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
                 selectedLeptonTLV_JC.push_back(selectedMuons[0]);
             }
             else if (dilepton && !Muon && Electron)
             {
                 if (!(nJets>=2 && nMtags >=2 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
-                //if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+//                if (!(nJets>=4 )) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
+//                if (!(temp_HT >= 500)) continue; //Jet Tag Event Selection Requirements for Mu-El dilepton channel
                 selectedLeptonTLV_JC.push_back(selectedElectrons[0]);
             }
             if(debug)
@@ -1984,29 +2165,8 @@ int main (int argc, char *argv[])
 
 
 
-            ///////////////////////
-            // Getting Gen Event //
-            ///////////////////////
 
-
-            if(dataSetName != "data" && dataSetName != "Data" && dataSetName != "Data")
-            {
-                vector<TRootMCParticle*> mcParticles;
-                vector<TRootMCParticle*> mcTops;
-                mcParticlesMatching_.clear();
-                mcParticlesTLV.clear();
-                //selectedJetsTLV.clear();
-                mcParticles.clear();
-                mcTops.clear();
-
-                int leptonPDG, muonPDG = 13, electronPDG = 11;
-                leptonPDG = muonPDG;
-
-                treeLoader.LoadMCEvent(ievt, 0, mcParticlesMatching_,false);
-                if (debug) cout <<"size   "<< mcParticlesMatching_.size()<<endl;
-            }
-
-
+	    
             ///////////////////
             // Control Tuple //
             ///////////////////
@@ -2167,7 +2327,7 @@ int main (int argc, char *argv[])
 	    if(nTightEl >= 1)
             {
                 float epRat = selectedTightElectrons[0]->E()/selectedTightElectrons[0]->P();
-                cout << "Electron E/P Ratio : " << epRat << endl;
+//                cout << "Electron E/P Ratio : " << epRat << endl;
             }
 
             //////////////////////
@@ -2231,8 +2391,10 @@ int main (int argc, char *argv[])
                 muoneta = selectedTightElectrons[0]->Eta();
             }
 
-
-            bjetpt= selectedLBJets[0]->Pt();
+	    if(nMtags >= 1)
+	    {
+                bjetpt= selectedMBJets[0]->Pt();
+	    }
 
 
 
@@ -2339,30 +2501,30 @@ int main (int argc, char *argv[])
             //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
 
 
-            float vals[41] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,(nJets > 2 ? selectedJets[2]->Pt() : -9999),(nJets > 3 ? selectedJets[3]->Pt() : -9999),mets[0]->Et(),HT,0,0,0,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,scaleFactor,nvertices,normfactor,Luminosity,centralWeight,weight1,weight2,weight3,weight4,weight5,weight6,weight7,weight8,diLepMass};
+            float vals[49] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,(nJets > 0 ? selectedJets[0]->Pt() : -9999),(nJets > 1 ? selectedJets[1]->Pt() : -9999),(nJets > 2 ? selectedJets[2]->Pt() : -9999),(nJets > 3 ? selectedJets[3]->Pt() : -9999),mets[0]->Et(),HT,0,0,0,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,fleptonSF1, fleptonSF2, btagWeight, lumiWeight,fTopPtReWeightsf,ISRsf,scaleFactor,nvertices,normfactor,Luminosity,centralWeight,weight1,weight2,weight3,weight4,weight5,weight6,weight7,weight8,diLepMass};
             //                "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
             if(Muon && Electron)
             {
-                vals[12] = muonpt;
-                vals[13] = muoneta;
-                vals[14] = selectedElectrons[0]->Pt();
+                vals[14] = muonpt;
+                vals[15] = muoneta;
+                vals[16] = selectedTightElectrons[0]->Pt();
             }
             if(Muon && !Electron)
             {
-                vals[12] = muonpt;
-                vals[13] = muoneta;
-                vals[14] = selectedMuons[1]->Pt();
+                vals[14] = muonpt;
+                vals[15] = muoneta;
+                vals[16] = selectedMuons[1]->Pt();
             }
             if(!Muon && Electron)
             {
-                vals[12] = muonpt;
-                vals[13] = muoneta;
-                vals[14] = selectedElectrons[1]->Pt();
+                vals[14] = muonpt;
+                vals[15] = muoneta;
+                vals[16] = selectedElectrons[1]->Pt();
             }
 
             tup->Fill(vals);
-	    if(nTightEl >= 1) eltup->Fill(scaleFactor,normfactor,Luminosity,selectedTightElectrons[0]->superClusterEta(),selectedTightElectrons[0]->sigmaIEtaIEta_full5x5(),fabs(selectedTightElectrons[0]->deltaEtaIn()),fabs(selectedTightElectrons[0]->deltaPhiIn()),selectedTightElectrons[0]->hadronicOverEm(),ElectronRelIso(selectedTightElectrons[0], rho),selectedTightElectrons[0]->ioEmIoP(),fabs(selectedTightElectrons[0]->d0()),fabs(selectedTightElectrons[0]->dz()),selectedTightElectrons[0]->missingHits(),selectedTightElectrons[0]->E(),selectedTightElectrons[0]->P());
-	    if(nMu >= 1)mutup->Fill(scaleFactor,normfactor,Luminosity,muonpt,muoneta,selectedMuons[0]->relPfIso(4, 0.5));
+	    if(nTightEl >= 1) eltup->Fill(scaleFactor,normfactor,Luminosity,selectedTightElectrons[0]->superClusterEta(),selectedTightElectrons[0]->sigmaIEtaIEta_full5x5(),fabs(selectedTightElectrons[0]->deltaEtaIn()),fabs(selectedTightElectrons[0]->deltaPhiIn()),selectedTightElectrons[0]->hadronicOverEm(),ElectronRelIso(selectedTightElectrons[0], rho),selectedTightElectrons[0]->ioEmIoP(),fabs(selectedTightElectrons[0]->d0()),fabs(selectedTightElectrons[0]->dz()),selectedTightElectrons[0]->missingHits(),selectedTightElectrons[0]->Pt());
+	    if(nMu >= 1)mutup->Fill(scaleFactor,normfactor,Luminosity,muonpt,muoneta,selectedMuons[0]->relPfIso(4, 0.5),nMu);
 
 
 
@@ -2444,6 +2606,11 @@ int main (int argc, char *argv[])
         //TCanvas* tempCanvas = TCanvasCreator(temp, it->first);
         //tempCanvas->SaveAs( (pathPNG+it->first+".png").c_str() );
     }
+
+    TDirectory* th1dir = fout->mkdir("Histos1D");
+    th1dir->cd();
+//    puHisto->Write();
+
     delete fout;
     cout << "It took us " << ((double)clock() - start) / CLOCKS_PER_SEC << " to run the program" << endl;
     cout << "********************************************" << endl;
