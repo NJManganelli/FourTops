@@ -1357,13 +1357,13 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     vector < Dataset* > datasets;                   //cout<<"vector filled"<<endl;
     const char *xmlfile = xmlNom.c_str();
     treeLoader.LoadDatasets (datasets, xmlfile);    //cout<<"datasets loaded"<<endl;
-    int nDatasets = datasets.size();
+    int nDatasets =datasets.size();
     TH1F *tempHisto;
     float tempEntries;
     int nChannels = 1;
-    cout<<""<<endl;
-
-    cout<<"PRODUCING DATACARD"<<endl;
+    int howmanyMC = 0;
+    vector <string > MCdatasets; //contains only MC samples required in datacard
+    cout<<"\nPRODUCING DATACARD\n"<<endl;
 
     string binname, histoName, dataSetName, datacardname;
     ofstream card;
@@ -1377,8 +1377,23 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     }    
     card.open (datacardname.c_str());
 
+    for (int j = 0; j<nDatasets; j++){
+        dataSetName=datasets[j]->Name();
+        cout<<dataSetName<<endl;
+        if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos
+            ||dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos || dataSetName.find("MLM")!=string::npos
+            ||dataSetName.find("scale")!=string::npos||dataSetName.find("Scale")!=string::npos)
+        {
+            continue;
+        }
+        else{
+            MCdatasets.push_back(dataSetName);
+            howmanyMC+=1;
+        }
+    }
+
     card << "imax " + static_cast<ostringstream*>( &(ostringstream() << nChannels) )->str() + "\n";
-    card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << nDatasets-2) )->str() + "\n";
+    card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << howmanyMC) )->str() + "\n";
     card << "kmax *\n";
     card << "---------------\n";
     card << "shapes * * "+shapefileName+"  $CHANNEL__$PROCESS__nominal  $CHANNEL__$PROCESS__$SYSTEMATIC\n";
@@ -1411,7 +1426,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     card << "---------------------------\n";
     card << "bin                               ";
 
-    for(int i = 0; i<nDatasets-8; i++)    card << binname + " ";
+    for(int i = 0; i<howmanyMC; i++)    card << binname + "                ";
 
     card << "\n";
     card << "process                             ";
@@ -1434,14 +1449,14 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     card << "\n";
     card << "process                                ";
 
-    for(int i=0; i<datasets.size()-7; i++){
-        card << static_cast<ostringstream*>( &(ostringstream() << i) )->str() + "                    ";
+    for(int i=0; i<howmanyMC; i++){
+        card << static_cast<ostringstream*>( &(ostringstream() << i) )->str() + "                     ";
     }
   
     card << "\n";
     card << "rate                                ";
 
-            tempEntries = 0;
+    tempEntries = 0;
     for (int j = 0; j<nDatasets; j++){
         dataSetName=datasets[j]->Name();
         if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
@@ -1462,12 +1477,12 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     card << "\n";
     card << "---------------------------\n";
     card << "lumi                  lnN           ";
-    for (int i=0; i<nChannels*(nDatasets-7); i++){ //minus 1 -2*JER -2*JES -2*Scale -MLM
+    for (int i=0; i<nChannels*howmanyMC; i++){ 
         card << "1.027                ";
     }
     card << "\n";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
         if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
         {
             continue;
@@ -1475,44 +1490,46 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         else if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
             continue;
         }
-        else {
-            if(dataSetName.find("tttt")!=string::npos){
-                card << "tttt_norm              lnN          ";
-                for (int j = 0; j<nChannels; j++){
-                    card << "1.1                 -                    -                    -                  -                    ";
+        else if(dataSetName.find("tttt")!=string::npos){
+            card << "tttt_norm              lnN          ";
+            for(int k = 0; k<nChannels; k++){
+                for (int dash1 = 0; dash1<d; dash1++){
+                    card << "-                  ";
                 }
-                card << "\n";
+                card << "1.1                    ";                   
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
+                    card << "-                  ";
+                }
             }
-            else{
-                card << dataSetName + "_norm      lnN           ";
-                for(int k = 0; k<nChannels; k++){
-                    for (int dash1 = 0; dash1<d-1; dash1++){
-                        card << "-                  ";
-                    }
-                    card << "1.04                  ";                   
-                    for (int dash2 = 5; dash2>d; dash2-- ){
-                        card << "-                  ";
-                    }
+            card << "\n";
+        }
+        else{
+            card << dataSetName + "_norm      lnN           ";
+            if (dataSetName.find("DYJets")!=string::npos || dataSetName.find("WJets")!=string::npos) card<<"      ";
+            for(int k = 0; k<nChannels; k++){
+                for (int dash1 = 0; dash1<d; dash1++){
+                    card << "-                  ";
                 }
-                card<<"\n";
-            }   
-        }        
+                card << "1.04                  ";                   
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
+                    card << "-                  ";
+                }
+            }
+            card<<"\n";
+        }   
     }
 
     card << "scale                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
-        if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
-            continue;
-        }
-        else if(dataSetName.find("TTJets")!=string::npos)
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1524,19 +1541,16 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     }   
 
     card << "btag                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
-        if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
-            continue;
-        }
-        else if(dataSetName.find("TTJets")!=string::npos)
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1548,19 +1562,16 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     }    
 
     card << "PU                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
-        if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
-            continue;
-        }
-        else if(dataSetName.find("TTJets")!=string::npos)
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1569,22 +1580,19 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         else {
             continue;
         }        
-    }    
+    }   
 
     card << "JES                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
-        if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
-            continue;
-        }
-        else if(dataSetName.find("TTJets")!=string::npos)
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1596,19 +1604,16 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     }    
 
     card << "JER                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
-        if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
-            continue;
-        }
-        else if(dataSetName.find("TTJets")!=string::npos)
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1617,22 +1622,19 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         else {
             continue;
         }        
-    }               
+    }                
 
     card << "matching                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
-        if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
-            continue;
-        }
-        else if(dataSetName.find("TTJets")!=string::npos)
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1641,22 +1643,19 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         else {
             continue;
         }        
-    }  
+    }   
 
     // card << "heavyFlav               shape           ";
-    // for (int d = 0; d<nDatasets; d++){
-    //     dataSetName = datasets[d]->Name();
-        // if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
-        //     continue;
-        // }
-        // else if(dataSetName.find("TTJets")!=string::npos)
+    // for (int d = 0; d<howmanyMC; d++){
+    //     dataSetName = MCdatasets[d];
+    //     if(dataSetName.find("TTJets")!=string::npos)
     //     {
     //         for(int k = 0; k<nChannels; k++){
-    //             for (int dash1 = 0; dash1<d-1; dash1++){
+    //             for (int dash1 = 0; dash1<d; dash1++){
     //                 card << "-                  ";
     //             }
     //             card << "1                      ";                   
-    //             for (int dash2 = 5; dash2>d; dash2-- ){
+    //             for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
     //                 card << "-                  ";
     //             }
     //         }
@@ -1665,7 +1664,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     //     else {
     //         continue;
     //     }        
-    // }  
+    // } 
 
     card.close();
 };
@@ -1813,7 +1812,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
 //     //                     card << "-                  ";
 //     //                 }
 //     //                 card << "1.04                  ";                   
-//     //                 for (int dash2 = 5; dash2>d; dash2-- ){
+//     //                 for (int dash2 = 5; dash2>d+1; dash2-- ){
 //     //                     card << "-                  ";
 //     //                 }
 //     //             }
