@@ -199,7 +199,6 @@ int main(int argc, char** argv)
                 child2->QueryIntAttribute("nBins", &NumberOfBins);   cout<<"Variable : "<<ppText<<"  lBound : "<<lBound<<"   uBound : "<<uBound<<"  nBins: "<<NumberOfBins<<endl;
                 if(jetSplit)
                 {
-                    // SplitSystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileNameSys, CraneenPath);
                     // SplitDatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath);
                     // if(ppText == DatacardVar){
                     //     Split_DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, splitVar, bSplit, tSplit, wSplit, xmlFileName, lumiScale);
@@ -207,7 +206,6 @@ int main(int argc, char** argv)
                 }
                 else if(jetTagsplit){
 
-                    // Split2SystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileNameSys, CraneenPath);
                     // Split2DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1, splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, CraneenPath);
                     // if(ppText == DatacardVar){     
                     //     Split2_DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, jetSplit, jetTagsplit, splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName, lumiScale);
@@ -215,7 +213,6 @@ int main(int argc, char** argv)
                 }
                 else
                 {
-                    //SystematicsAnalyser(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, false, shapefile, errorfile, channel, VoI, xmlFileNameSys, CraneenPath);
                     DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath, shapefileName);
                     if(ppText == DatacardVar){
                         DataCardProducer(shapefile, shapefileName ,channel, leptoAbbr, xmlFileName, lumiScale);
@@ -224,7 +221,6 @@ int main(int argc, char** argv)
                 }
 
                 shapefile->Close();
-                // GetScaleEnvelope(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel, VoI, xmlFileName, CraneenPath, shapefileName);
 
                 // errorfile->Close();
 
@@ -438,7 +434,7 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
     int nEntries;
     float ScaleFactor=1, NormFactor=1, Luminosity, varofInterest, GenWeight=1, weight1=1, weight2=1, weight3=1, weight4=1, weight5=1, weight6=1, weight7=1, weight8=1, ttbar_flav=1, SFlepton=1, SFbtag=1, SFbtagUp=1, SFbtagDown=1, SFPU=1, SFPU_up=1, SFPU_down=1;
     Dataset* ttbar_ll;    Dataset* ttbar_ll_up;    Dataset* ttbar_ll_down;    Dataset* ttbar_cc;    Dataset* ttbar_cc_up;    Dataset* ttbar_cc_down;    Dataset* ttbar_bb;    Dataset* ttbar_bb_up;    Dataset* ttbar_bb_down;
-
+    float PtLepton;
     bool split_ttbar = false;
     bool reweight_ttbar = false;
     string mainTTbarSample  = "TTJets_powheg";
@@ -528,17 +524,10 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up",&SFPU_up);       
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down",&SFPU_down);       
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav",&ttbar_flav);
-
-        // //temporary due to ntuple mishap
-        // nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU",&SFPU);    
-        // nTuple[dataSetName.c_str()]->SetBranchAddress("PU",&SFPU_up);       
-        // nTuple[dataSetName.c_str()]->SetBranchAddress("PU_up",&SFPU_down);  
-
+        nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt",&PtLepton);
 
         float eqlumi = 1./datasets[d]->EquivalentLumi();
         cout<<"eqlumi: "<<eqlumi<<endl;
-        // cout<<"got variables"<<endl;
-        //for fixed bin width
 
         histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(),dataSetName.c_str(), nBins, plotLow, plotHigh);
         if(dataSetName.find(mainTTbarSample)!=string::npos && dataSetName.find("JES")==string::npos && dataSetName.find("JER")==string::npos){
@@ -558,48 +547,55 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
             histo1D["heavyFlav_Up"] = new TH1F("heavyFlav_Up","heavyFlav_Up", nBins, plotLow, plotHigh);
             histo1D["heavyFlav_Down"] = new TH1F("heavyFlav_Down","heavyFlav_Down", nBins, plotLow, plotHigh);   
         }     
-        else if(dataSetName.find("tttt")!=string::npos){
-            histo1D["Genweight_tttt"] = new TH1F("Genweight_tttt","Genweight_tttt", nBins, plotLow, plotHigh);
-        }
-        else if(dataSetName.find("JESUp")!=string::npos){
-            histo1D["JES_Up"] = new TH1F("JES_Up","JES_Up", nBins, plotLow, plotHigh);
-        }
-        else if(dataSetName.find("JESDown")!=string::npos){
-            histo1D["JES_Down"] = new TH1F("JES_Down","JES_Down", nBins, plotLow, plotHigh);
-        }
-        else if(dataSetName.find("JERUp")!=string::npos){
-            histo1D["JER_Up"] = new TH1F("JER_Up","JER_Up", nBins, plotLow, plotHigh);
-        }
-        else if(dataSetName.find("JERDown")!=string::npos){
-            histo1D["JER_Down"] = new TH1F("JER_Down","JER_Down", nBins, plotLow, plotHigh);
-        }
+        // else if(dataSetName.find("tttt")!=string::npos){
+        //     histo1D["Genweight_tttt"] = new TH1F("Genweight_tttt","Genweight_tttt", nBins, plotLow, plotHigh);
+        // }
+        // else if(dataSetName.find("JESUp")!=string::npos){
+        //     histo1D["JES_Up"] = new TH1F("JES_Up","JES_Up", nBins, plotLow, plotHigh);
+        // }
+        // else if(dataSetName.find("JESDown")!=string::npos){
+        //     histo1D["JES_Down"] = new TH1F("JES_Down","JES_Down", nBins, plotLow, plotHigh);
+        // }
+        // else if(dataSetName.find("JERUp")!=string::npos){
+        //     histo1D["JER_Up"] = new TH1F("JER_Up","JER_Up", nBins, plotLow, plotHigh);
+        // }
+        // else if(dataSetName.find("JERDown")!=string::npos){
+        //     histo1D["JER_Down"] = new TH1F("JER_Down","JER_Down", nBins, plotLow, plotHigh);
+        // }
         ////////////////////////////////////////////////////////
         /////       loop through entries and fill plots    /////
         ////////////////////////////////////////////////////////
+
+        Luminosity =2628.0; 
+
+        float ProjectedLumi = 10000; //pb-1
+        float LumiFactor = 1;
+        // float LumiFactor = ProjectedLumi/Luminosity;
+
         for (int j = 0; j<nEntries; j++)
         {
             nTuple[dataSetName.c_str()]->GetEntry(j);
             float OverallSF = SFlepton*SFbtag*SFPU;
             //cout<<"OverallSF: "<<OverallSF<<"   SF: "<<ScaleFactor<<" btag: "<<SFbtag<<" lepton: "<<SFlepton<<" PU: "<<SFPU<<endl; cout<<"genweight: "<<GenWeight<<endl; cout<<"weight1: "<<weight1<<endl;
 
+            // if (PtLepton<31.){
+            //     continue;
+            // }
+
             if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos || dataSetName.find("NP_overlay_Data")!=string::npos)
             {
-                MSPlot[plotname]->Fill(varofInterest, datasets[d], true,  1.);
-                histo1D[dataSetName.c_str()]->Fill(varofInterest,eqlumi);
+                MSPlot[plotname]->Fill(varofInterest, datasets[d], true,  LumiFactor);
+                histo1D[dataSetName.c_str()]->Fill(varofInterest,eqlumi*LumiFactor);
             }
             else
             {
                 if(lScale > 0 ) //artificial Lumi
                     {Luminosity = 1000*lScale;} 
-                Luminosity =2628.0; 
                 NormFactor =1;
                 if (dataSetName.find("tttt")!=string::npos) {    NormFactor = 0.5635;    }
                 else if (dataSetName.find("WJets")!=string::npos){     NormFactor = 0.522796;    }
                 else if (dataSetName.find("DYJets")!=string::npos){    NormFactor = 0.566;    }
 
-                // ScaleFactor =1;
-                // if (dataSetName.find("WJets")!=string::npos || dataSetName.find("DYJets")!=string::npos) cout<<"btagsf: "<<SFbtag<<"  lepton: "<<SFlepton<<"  SF PU: "<<SFPU<<" totalSF:"<<ScaleFactor<<" weight sign: "<<GenWeight<<"  total weight: "<<NormFactor*ScaleFactor*Luminosity*GenWeight*eqlumi<<endl;
-                
                 ////////////////////////////////////////////////////////
                 /////                    Fill plots                /////
                 ////////////////////////////////////////////////////////
@@ -633,59 +629,59 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
                 // ScaleFactor=SFPU*SFbtag;
                 // ttbbReweight=1;
                 // cout<<SFbtag<< "   "<<  ScaleFactor<<  "   "<< SFPU<<  "   "<< SFlepton<< "   "<<  ttbbReweight<<    endl;
-                if (dataSetName.find(mainTTbarSample)!=string::npos && dataSetName.find("JES")==string::npos &&dataSetName.find("JER")==string::npos){
+                if (dataSetName.find(mainTTbarSample)!=string::npos && dataSetName.find("JES")==string::npos &&dataSetName.find("JER")==string::npos && dataSetName.find("Scale")==string::npos){
 
-                    histo1D["Genweight_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*GenWeight*eqlumi*ttbbReweight);
-                    histo1D["weight1_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight1*eqlumi*ttbbReweight);
-                    histo1D["weight2_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight2*eqlumi*ttbbReweight);
-                    histo1D["weight3_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight3*eqlumi*ttbbReweight);
-                    histo1D["weight4_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight4*eqlumi*ttbbReweight);
-                    histo1D["weight5_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight5*eqlumi*ttbbReweight);
-                    histo1D["weight6_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight6*eqlumi*ttbbReweight);
-                    histo1D["weight7_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight7*eqlumi*ttbbReweight);
-                    histo1D["weight8_tt"]->Fill(varofInterest,NormFactor*ScaleFactor*Luminosity*weight8*eqlumi*ttbbReweight);   
+                    histo1D["Genweight_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight1_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*weight1*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight2_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*weight2*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight3_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*weight3*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight4_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*weight4*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight5_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*weight5*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight6_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*weight6*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight7_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*weight7*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight8_tt"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*weight8*eqlumi*ttbbReweight*LumiFactor);   
 
-                    histo1D["PU_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU_up*Luminosity*GenWeight*eqlumi*ttbbReweight);   
-                    histo1D["PU_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU_down*Luminosity*GenWeight*eqlumi*ttbbReweight);   
-                    histo1D["btag_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtagUp*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight);   
-                    histo1D["btag_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtagDown*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight);   
-                    histo1D["heavyFlav_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight_up);   
-                    histo1D["heavyFlav_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight_down);            
+                    histo1D["PU_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU_up*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["PU_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU_down*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["btag_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtagUp*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["btag_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtagDown*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["heavyFlav_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight_up*LumiFactor);   
+                    histo1D["heavyFlav_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight_down*LumiFactor);            
                      // cout<<"njets: "<<nJets<<endl;
                     if(split_ttbar){
                         // if (ttbar_flav>1.5) cout<<"ttbar_flav:  "<<ttbar_flav<<endl;
                         if(ttbar_flav<0.5){//light
                             
-                            MSPlot[plotname]->Fill(varofInterest, ttbar_ll, true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight);                
+                            MSPlot[plotname]->Fill(varofInterest, ttbar_ll, true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight*LumiFactor);                
                         }     
                         else if(ttbar_flav>0.5 && ttbar_flav<1.5){//cc
-                            MSPlot[plotname]->Fill(varofInterest, ttbar_cc, true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight);                
+                            MSPlot[plotname]->Fill(varofInterest, ttbar_cc, true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight*LumiFactor);                
                         }   
                         else{
-                            MSPlot[plotname]->Fill(varofInterest, ttbar_bb, true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight);                
+                            MSPlot[plotname]->Fill(varofInterest, ttbar_bb, true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight*LumiFactor);                
                         }          
                     }
                     else{
-                        MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight);   
+                        MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight*LumiFactor);   
                     }             
                 }
                 else if (dataSetName.find("tttt")!=string::npos){
-                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight);
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*ttbbReweight*LumiFactor);
                 }
-                else if(dataSetName.find("JESUp")!=string::npos){
-                    histo1D["JES_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight);
-                }
-                else if(dataSetName.find("JESDown")!=string::npos){
-                    histo1D["JES_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight);
-                }
-                else if(dataSetName.find("JERUp")!=string::npos){
-                    histo1D["JER_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight);
-                }
-                else if(dataSetName.find("JERDown")!=string::npos){
-                    histo1D["JER_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight);
-                }            
-                else if(dataSetName.find("MLM")==string::npos){ //ie. don't add the MLM dataset which is just used for matching
-                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*ttbbReweight);
+                // else if(dataSetName.find("JESUp")!=string::npos){
+                //     histo1D["JES_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);
+                // }
+                // else if(dataSetName.find("JESDown")!=string::npos){
+                //     histo1D["JES_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);
+                // }
+                // else if(dataSetName.find("JERUp")!=string::npos){
+                //     histo1D["JER_Up"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);
+                // }
+                // else if(dataSetName.find("JERDown")!=string::npos){
+                //     histo1D["JER_Down"]->Fill(varofInterest,NormFactor*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);
+                // }            
+                else if(dataSetName.find("MLM")==string::npos && dataSetName.find("Scale")==string::npos && dataSetName.find("JES")==string::npos && dataSetName.find("JER")==string::npos){ //ie. don't add the MLM dataset which is just used for matching
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFlepton*SFbtag*SFPU*Luminosity*GenWeight*ttbbReweight*LumiFactor);
                 }
             }
         }//end of event loop
@@ -719,21 +715,15 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         else{
             writename = channel + "__" + dataSetName +"__nominal";
         }
-        // cout<<"writename  :"<<writename<<endl;
         histo1D[dataSetName.c_str()]->Write((writename).c_str());
         canv->SaveAs((pathPNG+dataSetName+".png").c_str());
-        // cout<<"datasetname:   "<<dataSetName<<endl;
-        /////
+
         string scalesysname = channel+"__"+mainTTbarSample+"__";
 
         if ( dataSetName.find(mainTTbarSample)!= string::npos && dataSetName.find("JES")==string::npos &&dataSetName.find("JER")==string::npos){
             //cout<<"  making weights histos"<<endl;
        
-            // TCanvas *canv0 = new TCanvas();
-            // histo1D["Genweight_tt"]->Draw();
             histo1D["Genweight_tt"]->Write("Genweight_tt");                  
-            // canv0->SaveAs("Genweight_tt.png");
-
             for(int ii=1; ii<9; ii++){
                 // TCanvas *canv1 = new TCanvas();
                 string weightstring = static_cast<ostringstream*>( &(ostringstream() << ii) )->str();
@@ -754,7 +744,6 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
 
         // cout<<"saved histos"<<endl;
     } //end of dataset loop
-    //cout<<"unloading datasets"<<endl;
 
     GetScaleEnvelope(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom, CraneenPath, shapefileName, mainTTbarSample);
     GetMatching(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom, CraneenPath, mainTTbarSample, otherTTbarsample);
@@ -762,17 +751,12 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
     errorfile->Close();
 
     // treeLoader.UnLoadDataset();
-    // cout<<"make scale dirs"<<endl;
     string scaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
-    // mkdir(scaleFileDir.c_str(),0777);
     string scaleFileName = scaleFileDir + "/Error"+sVarofinterest+".root";
-    // MSPlot[plotname.c_str()]->Draw();
-    // MSPlot[plotname.c_str()]->setErrorBandFile("ScaleFilesMu_light/ErrorBDTSave2.root"); //set error file for uncertainty bands on multisample plot
     MSPlot[plotname.c_str()]->setErrorBandFile((scaleFileName).c_str()); //set error file for uncertainty bands on multisample plot
     MSPlot[plotname.c_str()]->setDataLumi(2500);
     // MSPlot[plotname.c_str()]->setMaxY(1000000);
-    cout<<scaleFileName<<endl;
-    // cout<<"running delete loop"<<endl;
+
     for(map<string,MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++)
     {
         string name = it->first;  
@@ -781,7 +765,6 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         temp->Write(shapefile, name, true, pathPNG, "png");
     }
     MSPlot.erase(plotname);
-
     for(map<string,TH1F*>::const_iterator it = histo1D.begin(); it!=histo1D.end();it++){
         histo1D.erase(it->first);
     }
@@ -1357,13 +1340,13 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     vector < Dataset* > datasets;                   //cout<<"vector filled"<<endl;
     const char *xmlfile = xmlNom.c_str();
     treeLoader.LoadDatasets (datasets, xmlfile);    //cout<<"datasets loaded"<<endl;
-    int nDatasets = datasets.size();
+    int nDatasets =datasets.size();
     TH1F *tempHisto;
     float tempEntries;
     int nChannels = 1;
-    cout<<""<<endl;
-
-    cout<<"PRODUCING DATACARD"<<endl;
+    int howmanyMC = 0;
+    vector <string > MCdatasets; //contains only MC samples required in datacard
+    cout<<"\nPRODUCING DATACARD\n"<<endl;
 
     string binname, histoName, dataSetName, datacardname;
     ofstream card;
@@ -1377,8 +1360,23 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     }    
     card.open (datacardname.c_str());
 
+    for (int j = 0; j<nDatasets; j++){
+        dataSetName=datasets[j]->Name();
+        cout<<dataSetName<<endl;
+        if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos
+            ||dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos || dataSetName.find("MLM")!=string::npos
+            ||dataSetName.find("scale")!=string::npos||dataSetName.find("Scale")!=string::npos)
+        {
+            continue;
+        }
+        else{
+            MCdatasets.push_back(dataSetName);
+            howmanyMC+=1;
+        }
+    }
+
     card << "imax " + static_cast<ostringstream*>( &(ostringstream() << nChannels) )->str() + "\n";
-    card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << nDatasets-2) )->str() + "\n";
+    card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << howmanyMC-1) )->str() + "\n";
     card << "kmax *\n";
     card << "---------------\n";
     card << "shapes * * "+shapefileName+"  $CHANNEL__$PROCESS__nominal  $CHANNEL__$PROCESS__$SYSTEMATIC\n";
@@ -1411,7 +1409,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     card << "---------------------------\n";
     card << "bin                               ";
 
-    for(int i = 0; i<nDatasets-1; i++)    card << binname + " ";
+    for(int i = 0; i<howmanyMC; i++)    card << binname + "                ";
 
     card << "\n";
     card << "process                             ";
@@ -1422,27 +1420,33 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         {
             continue;
         }
+        else if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
+            continue;
+        }
         else{
             card<<dataSetName+"           ";
         }
     }
- 
+
 
     card << "\n";
     card << "process                                ";
 
-    for(int i=0; i<datasets.size()-1; i++){
-        card << static_cast<ostringstream*>( &(ostringstream() << i) )->str() + "                    ";
+    for(int i=0; i<howmanyMC; i++){
+        card << static_cast<ostringstream*>( &(ostringstream() << i) )->str() + "                     ";
     }
   
     card << "\n";
     card << "rate                                ";
 
-            tempEntries = 0;
+    tempEntries = 0;
     for (int j = 0; j<nDatasets; j++){
         dataSetName=datasets[j]->Name();
         if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
         {
+            continue;
+        }
+        else if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
             continue;
         }
         else{
@@ -1452,55 +1456,63 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
             card << static_cast<ostringstream*>( &(ostringstream() << tempEntries) )->str() + "               ";
         }
     }
-   
+
     card << "\n";
     card << "---------------------------\n";
     card << "lumi                  lnN           ";
-    for (int i=0; i<nChannels*(nDatasets-1); i++){
+    for (int i=0; i<nChannels*howmanyMC; i++){ 
         card << "1.027                ";
     }
     card << "\n";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
         if(dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos)
         {
             continue;
         }
-        else {
-            if(dataSetName.find("tttt")!=string::npos){
-                card << "tttt_norm              lnN          ";
-                for (int j = 0; j<nChannels; j++){
-                    card << "1.1                 -                    -                    -                  -                    ";
+        else if(dataSetName.find("JER")!=string::npos || dataSetName.find("JES")!=string::npos|| dataSetName.find("Scale")!=string::npos ||dataSetName.find("MLM")!=string::npos){
+            continue;
+        }
+        else if(dataSetName.find("tttt")!=string::npos){
+            card << "tttt_norm              lnN          ";
+            for(int k = 0; k<nChannels; k++){
+                for (int dash1 = 0; dash1<d; dash1++){
+                    card << "-                  ";
                 }
-                card << "\n";
+                card << "1.1                    ";                   
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
+                    card << "-                  ";
+                }
             }
-            else{
-                card << dataSetName + "_norm      lnN           ";
-                for(int k = 0; k<nChannels; k++){
-                    for (int dash1 = 0; dash1<d-1; dash1++){
-                        card << "-                  ";
-                    }
-                    card << "1.04                  ";                   
-                    for (int dash2 = 5; dash2>d; dash2-- ){
-                        card << "-                  ";
-                    }
+            card << "\n";
+        }
+        else{
+            card << dataSetName + "_norm      lnN           ";
+            if (dataSetName.find("DYJets")!=string::npos || dataSetName.find("WJets")!=string::npos) card<<"      ";
+            for(int k = 0; k<nChannels; k++){
+                for (int dash1 = 0; dash1<d; dash1++){
+                    card << "-                  ";
                 }
-                card<<"\n";
-            }   
-        }        
+                card << "1.04                  ";                   
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
+                    card << "-                  ";
+                }
+            }
+            card<<"\n";
+        }   
     }
 
     card << "scale                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
         if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1512,16 +1524,16 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     }   
 
     card << "btag                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
         if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1533,16 +1545,16 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     }    
 
     card << "PU                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
         if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1551,19 +1563,19 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         else {
             continue;
         }        
-    }    
+    }   
 
     card << "JES                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
         if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1575,16 +1587,16 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     }    
 
     card << "JER                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
         if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1593,19 +1605,19 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         else {
             continue;
         }        
-    }               
+    }                
 
     card << "matching                shape           ";
-    for (int d = 0; d<nDatasets; d++){
-        dataSetName = datasets[d]->Name();
+    for (int d = 0; d<howmanyMC; d++){
+        dataSetName = MCdatasets[d];
         if(dataSetName.find("TTJets")!=string::npos)
         {
             for(int k = 0; k<nChannels; k++){
-                for (int dash1 = 0; dash1<d-1; dash1++){
+                for (int dash1 = 0; dash1<d; dash1++){
                     card << "-                  ";
                 }
                 card << "1                      ";                   
-                for (int dash2 = 5; dash2>d; dash2-- ){
+                for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
                     card << "-                  ";
                 }
             }
@@ -1614,19 +1626,19 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
         else {
             continue;
         }        
-    }  
+    }   
 
     // card << "heavyFlav               shape           ";
-    // for (int d = 0; d<nDatasets; d++){
-    //     dataSetName = datasets[d]->Name();
+    // for (int d = 0; d<howmanyMC; d++){
+    //     dataSetName = MCdatasets[d];
     //     if(dataSetName.find("TTJets")!=string::npos)
     //     {
     //         for(int k = 0; k<nChannels; k++){
-    //             for (int dash1 = 0; dash1<d-1; dash1++){
+    //             for (int dash1 = 0; dash1<d; dash1++){
     //                 card << "-                  ";
     //             }
     //             card << "1                      ";                   
-    //             for (int dash2 = 5; dash2>d; dash2-- ){
+    //             for (int dash2 = howmanyMC; dash2>d+1; dash2-- ){
     //                 card << "-                  ";
     //             }
     //         }
@@ -1635,7 +1647,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
     //     else {
     //         continue;
     //     }        
-    // }  
+    // } 
 
     card.close();
 };
@@ -1783,7 +1795,7 @@ void DataCardProducer(TFile *shapefile, string shapefileName, string channel, st
 //     //                     card << "-                  ";
 //     //                 }
 //     //                 card << "1.04                  ";                   
-//     //                 for (int dash2 = 5; dash2>d; dash2-- ){
+//     //                 for (int dash2 = 5; dash2>d+1; dash2-- ){
 //     //                     card << "-                  ";
 //     //                 }
 //     //             }
