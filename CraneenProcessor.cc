@@ -316,8 +316,8 @@ void GetMatching(int nBins, float lScale, float plotLow, float plotHigh, string 
     histo1D["matchingPlus"] = new TH1F("Plus","Plus", nBins, plotLow, plotHigh);
     histo1D["matchingMinus"] = new TH1F("Minus","Minus", nBins, plotLow, plotHigh);
 
-    histo1D["main_ttbar"] = (TH1F*)shapefile->Get(("ttttmu__"+mainTTbarSample+"__nominal").c_str());
-    histo1D["other_ttbar"] = (TH1F*)shapefile->Get(("ttttmu__"+otherTTbarsample+"__nominal").c_str());    cout<<"Got matching histos"<<endl;
+    histo1D["main_ttbar"] = (TH1F*)shapefile->Get((channel+"__"+mainTTbarSample+"__nominal").c_str());
+    histo1D["other_ttbar"] = (TH1F*)shapefile->Get((channel+"__"+otherTTbarsample+"__nominal").c_str());    cout<<"Got matching histos"<<endl;
 
     for(int binN = 1; binN <nBins+1; ++binN){
     float binContentMax = -1, binContentMin =  1000000000000000;  
@@ -432,13 +432,13 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
     //***********************************************OPEN FILES & GET NTUPLES**********************************************
     string dataSetName, filepath;
     int nEntries;
-    float ScaleFactor=1, NormFactor=1, Luminosity, varofInterest, GenWeight=1, weight1=1, weight2=1, weight3=1, weight4=1, weight5=1, weight6=1, weight7=1, weight8=1, ttbar_flav=1, SFtrigger=1, SFlepton=1, SFbtag=1, SFbtagUp=1, SFbtagDown=1, SFPU=1, SFPU_up=1, SFPU_down=1, SFTopPt=1;
+    float ScaleFactor=1, NormFactor=1, Luminosity, varofInterest, GenWeight=1, weight1=1, weight2=1, weight3=1, weight4=1, weight5=1, weight6=1, weight7=1, weight8=1, ttbar_flav=1, SFtrigger=1, SFlepton=1, SFbtag=1, SFbtagUp=1, SFbtagDown=1, SFPU=1, SFPU_up=1, SFPU_down=1, SFTopPt=1, SFbehrends=1;
     Dataset* ttbar_ll;    Dataset* ttbar_ll_up;    Dataset* ttbar_ll_down;    Dataset* ttbar_cc;    Dataset* ttbar_cc_up;    Dataset* ttbar_cc_down;    Dataset* ttbar_bb;    Dataset* ttbar_bb_up;    Dataset* ttbar_bb_down;
     float PtLepton;
     bool split_ttbar = false;
     bool reweight_ttbar = false;
-    string mainTTbarSample  = "TTJets_powheg";
-    string otherTTbarsample = "TTJets_MLM";
+    string mainTTbarSample  = "TTDileptMG";
+    string otherTTbarsample = "TTDileptPowheg";
     double ll_rw = 0.976;        double bb_rw = 3.;        double ll_rw_up = 0.976;        double bb_rw_up = 3.;        double ll_rw_down = 0.976;        double bb_rw_down = 3.;        
 
     if (split_ttbar){
@@ -524,7 +524,8 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU",&SFPU);    
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up",&SFPU_up);       
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down",&SFPU_down); 
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFTopPt",&SFTopPt);       
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt",&SFTopPt);  
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends",&SFbehrends);       
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav",&ttbar_flav);
         nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt",&PtLepton);
 
@@ -619,45 +620,45 @@ void DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, stri
                 // cout<<SFbtag<< "   "<<  ScaleFactor<<  "   "<< SFPU<<  "   "<< SFlepton<< "   "<<  ttbbReweight<<    endl;
                 if (dataSetName.find(mainTTbarSample)!=string::npos && dataSetName.find("JES")==string::npos &&dataSetName.find("JER")==string::npos && dataSetName.find("Scale")==string::npos){
 
-                    histo1D["Genweight_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);
-                    histo1D["weight1_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*weight1*eqlumi*ttbbReweight*LumiFactor);
-                    histo1D["weight2_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*weight2*eqlumi*ttbbReweight*LumiFactor);
-                    histo1D["weight3_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*weight3*eqlumi*ttbbReweight*LumiFactor);
-                    histo1D["weight4_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*weight4*eqlumi*ttbbReweight*LumiFactor);
-                    histo1D["weight5_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*weight5*eqlumi*ttbbReweight*LumiFactor);
-                    histo1D["weight6_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*weight6*eqlumi*ttbbReweight*LumiFactor);
-                    histo1D["weight7_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*weight7*eqlumi*ttbbReweight*LumiFactor);
-                    histo1D["weight8_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*weight8*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["Genweight_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight1_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*weight1*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight2_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*weight2*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight3_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*weight3*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight4_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*weight4*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight5_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*weight5*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight6_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*weight6*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight7_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*weight7*eqlumi*ttbbReweight*LumiFactor);
+                    histo1D["weight8_tt"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*weight8*eqlumi*ttbbReweight*LumiFactor);   
 
-                    histo1D["PU_Up"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_up*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
-                    histo1D["PU_Down"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_down*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
-                    histo1D["btag_Up"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
-                    histo1D["btag_Down"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagDown*SFPU*SFTopPt*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
-                    histo1D["heavyFlav_Up"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*GenWeight*eqlumi*ttbbReweight_up*LumiFactor);   
-                    histo1D["heavyFlav_Down"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*GenWeight*eqlumi*ttbbReweight_down*LumiFactor);            
+                    histo1D["PU_Up"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_up*SFTopPt*SFbehrends*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["PU_Down"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_down*SFTopPt*SFbehrends*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["btag_Up"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*SFbehrends*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["btag_Down"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagDown*SFPU*SFTopPt*SFbehrends*Luminosity*GenWeight*eqlumi*ttbbReweight*LumiFactor);   
+                    histo1D["heavyFlav_Up"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*GenWeight*eqlumi*ttbbReweight_up*LumiFactor);   
+                    histo1D["heavyFlav_Down"]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*GenWeight*eqlumi*ttbbReweight_down*LumiFactor);            
                      // cout<<"njets: "<<nJets<<endl;
                     if(split_ttbar){
                         // if (ttbar_flav>1.5) cout<<"ttbar_flav:  "<<ttbar_flav<<endl;
                         if(ttbar_flav<0.5){//light
                             
-                            MSPlot[plotname]->Fill(varofInterest, ttbar_ll, true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor);                
+                            MSPlot[plotname]->Fill(varofInterest, ttbar_ll, true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor);                
                         }     
                         else if(ttbar_flav>0.5 && ttbar_flav<1.5){//cc
-                            MSPlot[plotname]->Fill(varofInterest, ttbar_cc, true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor);                
+                            MSPlot[plotname]->Fill(varofInterest, ttbar_cc, true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor);                
                         }   
                         else{
-                            MSPlot[plotname]->Fill(varofInterest, ttbar_bb, true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor);                
+                            MSPlot[plotname]->Fill(varofInterest, ttbar_bb, true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor);                
                         }          
                     }
                     else{
-                        MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor);   
+                        MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor);   
                     }             
                 }
                 else if (dataSetName.find("tttt")!=string::npos){
-                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor);
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor);
                 }
-                else if(dataSetName.find("MLM")==string::npos && dataSetName.find("Scale")==string::npos && dataSetName.find("JES")==string::npos && dataSetName.find("JER")==string::npos){ //ie. don't add the MLM dataset which is just used for matching
-                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*GenWeight*ttbbReweight*LumiFactor);
+                else if(dataSetName.find(otherTTbarsample)==string::npos && dataSetName.find("Scale")==string::npos && dataSetName.find("JES")==string::npos && dataSetName.find("JER")==string::npos){ //ie. don't add the MLM dataset which is just used for matching
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*GenWeight*ttbbReweight*LumiFactor);
                 }
             }
         }//end of event loop
@@ -870,7 +871,7 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
     //***********************************************OPEN FILES & GET NTUPLES**********************************************
     string dataSetName, filepath, histoName;
     int nEntries;
-    float ScaleFactor=1, NormFactor=1, Luminosity, varofInterest, splitVar, GenWeight=1, weight1=1, weight2=1, weight3=1, weight4=1, weight5=1, weight6=1, weight7=1, weight8=1, ttbar_flav=1, SFtrigger=1, SFlepton=1, SFbtag=1, SFbtagUp=1, SFbtagDown=1, SFPU=1, SFPU_up=1, SFPU_down=1, SFTopPt=1;
+    float ScaleFactor=1, NormFactor=1, Luminosity, varofInterest, splitVar, GenWeight=1, weight1=1, weight2=1, weight3=1, weight4=1, weight5=1, weight6=1, weight7=1, weight8=1, ttbar_flav=1, SFtrigger=1, SFlepton=1, SFbtag=1, SFbtagUp=1, SFbtagDown=1, SFPU=1, SFPU_up=1, SFPU_down=1, SFTopPt=1, SFbehrends=1;
     float PtLepton;
     bool reweight_ttbar = false;
     for (int d = 0; d < datasets.size(); d++)  //Loop through datasets
@@ -913,7 +914,8 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU",&SFPU);    
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up",&SFPU_up);       
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down",&SFPU_down); 
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFTopPt",&SFTopPt);       
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt",&SFTopPt);  
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends",&SFbehrends);    
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav",&ttbar_flav);
         nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt",&PtLepton);
 
@@ -986,25 +988,25 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
                 }
                 //outsiderange = false;
                 else if (dataSetName.find(mainTTbarSample)!=string::npos&& dataSetName.find("JES")==string::npos && dataSetName.find("JER")==string::npos ){
-                    histo1D[("Genweight_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                    histo1D[("weight1_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight1);
-                    histo1D[("weight2_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight2);
-                    histo1D[("weight3_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight3);
-                    histo1D[("weight4_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight4);
-                    histo1D[("weight5_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight5);
-                    histo1D[("weight6_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight6);
-                    histo1D[("weight7_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight7);
-                    histo1D[("weight8_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight8);     
-                    histo1D[("PU_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_up*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                    histo1D[("PU_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_down*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                    histo1D[("btag_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                    histo1D[("btag_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagDown*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                    histo1D[("heavyFlav_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight_up*LumiFactor*GenWeight);
-                    histo1D[("heavyFlav_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight_down*LumiFactor*GenWeight);
-                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor*GenWeight);
+                    histo1D[("Genweight_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                    histo1D[("weight1_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight1);
+                    histo1D[("weight2_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight2);
+                    histo1D[("weight3_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight3);
+                    histo1D[("weight4_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight4);
+                    histo1D[("weight5_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight5);
+                    histo1D[("weight6_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight6);
+                    histo1D[("weight7_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight7);
+                    histo1D[("weight8_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight8);     
+                    histo1D[("PU_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_up*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                    histo1D[("PU_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_down*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                    histo1D[("btag_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                    histo1D[("btag_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagDown*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                    histo1D[("heavyFlav_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight_up*LumiFactor*GenWeight);
+                    histo1D[("heavyFlav_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight_down*LumiFactor*GenWeight);
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor*GenWeight);
                 }
                 else if(dataSetName.find("MLM")==string::npos && dataSetName.find("Scale")==string::npos && dataSetName.find("JES")==string::npos && dataSetName.find("JER")==string::npos){ //ie. don't add the MLM dataset which is just used for matching
-                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true,NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor*GenWeight);
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true,NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor*GenWeight);
                             // cout<<dataSetName<<" "<<varofInterest<<"  "<<NormFactor<<"  "<<SFlepton<<"  "<<SFbtag<<"  "<<SFPU<<"  "<<Luminosity<<"  "<<ttbbReweight<<"  "<<LumiFactor<<"  "<<GenWeight<<endl;
                 }
             }
@@ -1026,25 +1028,25 @@ void SplitDatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh,
                             histo1D[histoName.c_str()]->Fill(varofInterest,eqlumi*LumiFactor);
                         }
                         else if (dataSetName == "TTJets_powheg"){
-                            histo1D[("Genweight_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                            histo1D[("weight1_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight1);
-                            histo1D[("weight2_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight2);
-                            histo1D[("weight3_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight3);
-                            histo1D[("weight4_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight4);
-                            histo1D[("weight5_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight5);
-                            histo1D[("weight6_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight6);
-                            histo1D[("weight7_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight7);
-                            histo1D[("weight8_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight8);         
-                            histo1D[("PU_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_up*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                            histo1D[("PU_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_down*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                            histo1D[("btag_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                            histo1D[("btag_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagDown*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
-                            histo1D[("heavyFlav_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight_up*LumiFactor*GenWeight);
-                            histo1D[("heavyFlav_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*eqlumi*ttbbReweight_down*LumiFactor*GenWeight);     
-                            MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor*GenWeight);
+                            histo1D[("Genweight_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                            histo1D[("weight1_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight1);
+                            histo1D[("weight2_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight2);
+                            histo1D[("weight3_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight3);
+                            histo1D[("weight4_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight4);
+                            histo1D[("weight5_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight5);
+                            histo1D[("weight6_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight6);
+                            histo1D[("weight7_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight7);
+                            histo1D[("weight8_tt"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*weight8);         
+                            histo1D[("PU_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_up*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                            histo1D[("PU_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU_down*SFTopPt*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                            histo1D[("btag_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                            histo1D[("btag_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtagDown*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight*LumiFactor*GenWeight);
+                            histo1D[("heavyFlav_Up"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight_up*LumiFactor*GenWeight);
+                            histo1D[("heavyFlav_Down"+numStr).c_str()]->Fill(varofInterest,NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*eqlumi*ttbbReweight_down*LumiFactor*GenWeight);     
+                            MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor*GenWeight);
                         }
                         else if(dataSetName.find("MLM")==string::npos && dataSetName.find("Scale")==string::npos && dataSetName.find("JES")==string::npos && dataSetName.find("JER")==string::npos){ //ie. don't add the MLM dataset which is just used for matching
-                            MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*Luminosity*ttbbReweight*LumiFactor*GenWeight);
+                            MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor*SFtrigger*SFlepton*SFbtagUp*SFPU*SFTopPt*SFbehrends*Luminosity*ttbbReweight*LumiFactor*GenWeight);
                             // cout<<dataSetName<<" "<<varofInterest<<"  "<<NormFactor<<"  "<<SFlepton<<"  "<<SFbtag<<"  "<<SFPU<<"  "<<Luminosity<<"  "<<ttbbReweight<<"  "<<LumiFactor<<"  "<<GenWeight<<endl;
 
                         }
