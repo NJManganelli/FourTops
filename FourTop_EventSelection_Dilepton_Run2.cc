@@ -827,7 +827,7 @@ int main (int argc, char *argv[])
 
         // TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
-        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:1stJetPt:2ndJetPt:3rdJetPt:4thJetPt:MET:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:SFtrigger:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:SFPU_up:SFPU_down:sfTopPt:sfISR:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:diLepMass");
+        TNtuple * tup = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:1stJetPt:2ndJetPt:3rdJetPt:4thJetPt:MET:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:EventSph:EventCen:DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:SFtrigger:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:SFPU_up:SFPU_down:SFbehrends:SFtopPt:SFISR:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:diLepMass");
         TNtuple * eltup = new TNtuple(elTuptitle.c_str(),elTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:ElSuperclusterEta:Elfull5x5:EldEdatIn:EldPhiIn:ElhOverE:ElRelIso:ElEmP:Eld0:Eldz:ElMissingHits:ElPt");
 	TNtuple * mutup = new TNtuple(muTuptitle.c_str(),muTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:MuPt:MuEta:MuRelIso:nMuons");
 	TNtuple * jettup = new TNtuple(jetTuptitle.c_str(),jetTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:NHF:NEMF:nConstituents:CHF:CMultiplicity:CEMF");
@@ -936,6 +936,15 @@ int main (int argc, char *argv[])
         TRootRun *runInfos = new TRootRun();
         datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
         datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
+
+        ////////////////////////////////////////
+        /// Set up Behrends Scaling Functions //
+        ////////////////////////////////////////
+
+	float dataPar1 = 0.11535, dataPar2 = 0.2397, mcPar1 = 0.11535, mcPar2 = 0.2888;
+
+	TF1 *DataFit 	= new TF1("DataFit","0.11535*0.2397**(x-5)",5,15);
+	TF1 *MCFit 	= new TF1("DataFit","0.11535*0.2888**(x-5)",5,15);
 
 
 
@@ -1766,6 +1775,9 @@ int main (int argc, char *argv[])
 
 //	    if((dataSetName.find("TTJets")!=string::npos || dataSetName.find("TTDilept")!=string::npos) && nTops != 2) continue;            //If there are not 2 top partons, skip this event.
 
+
+
+
             sfTup->Fill(fleptonSF1, fleptonSF2, btagWeight, lumiWeight, fTopPtReWeightsf, ISRsf, scaleFactor, normfactor, Luminosity);
 
 
@@ -1949,6 +1961,15 @@ int main (int argc, char *argv[])
             float nLtags = selectedLBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
             float nTtags = selectedTBJets.size(); //Number of CSVL tags in Event (includes jets that pass CSVM)
             float nFatJets = selectedFatJets.size();
+
+            //////////////////////////////
+            //  Behrends Scaling Factor //
+            //////////////////////////////
+
+	    float fbehrendsSF = 1.0;
+
+	    if(nJets >= 5 && dataSetName.find("TTDileptMG")!=std::string::npos) fbehrendsSF = DataFit->Eval(nJets)/MCFit->Eval(nJets);
+
 
             //            cout <<" med tags ...   "<< nMtags   <<endl;
 
@@ -2597,7 +2618,7 @@ int main (int argc, char *argv[])
             //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
 
 
-            float vals[53] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,(nJets > 0 ? selectedJets[0]->Pt() : -9999),(nJets > 1 ? selectedJets[1]->Pt() : -9999),(nJets > 2 ? selectedJets[2]->Pt() : -9999),(nJets > 3 ? selectedJets[3]->Pt() : -9999),mets[0]->Et(),HT,0,0,0,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,fTriggerSF,fleptonSF, btagWeight,btagWeightUp,btagWeightDown,lumiWeight,lumiWeight_up,lumiWeight_down,fTopPtReWeightsf,ISRsf,scaleFactor,nvertices,normfactor,Luminosity,centralWeight,weight1,weight2,weight3,weight4,weight5,weight6,weight7,weight8,diLepMass};
+            float vals[54] = {BDTScore,nJets,nFatJets,nWTags,nTopTags,nLtags,nMtags,nTtags,(nJets > 0 ? selectedJets[0]->Pt() : -9999),(nJets > 1 ? selectedJets[1]->Pt() : -9999),(nJets > 2 ? selectedJets[2]->Pt() : -9999),(nJets > 3 ? selectedJets[3]->Pt() : -9999),mets[0]->Et(),HT,0,0,0,bjetpt,HT2M,HTb,HTH,HTRat,topness,tSph,tCen,dSph,dCen,tdSph,tdCen,fTriggerSF,fleptonSF, btagWeight,btagWeightUp,btagWeightDown,lumiWeight,lumiWeight_up,lumiWeight_down,fbehrendsSF,fTopPtReWeightsf,ISRsf,scaleFactor,nvertices,normfactor,Luminosity,centralWeight,weight1,weight2,weight3,weight4,weight5,weight6,weight7,weight8,diLepMass};
             //                "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
             if(Muon && Electron)
             {
@@ -2628,12 +2649,12 @@ int main (int argc, char *argv[])
 
         tupfile->cd();
         tup->Write();
-        negTup->Write();
-        posTup->Write();
-        sfTup->Write();
-	eltup->Write();
-	mutup->Write();
-	jettup->Write();
+//        negTup->Write();
+//        posTup->Write();
+//        sfTup->Write();
+//	eltup->Write();
+//	mutup->Write();
+//	jettup->Write();
 	cuttup->Write();
         tupfile->Close();
 
