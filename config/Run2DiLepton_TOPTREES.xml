@@ -78,7 +78,7 @@
 <d name="TTDileptMG_scaleup_MuEl"  title="TTDiLeptMG"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="294336.597377312" xsection="87.31483776"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
 
-<d name="TTDileptPowheg_MuEl"  title="TTDileptPowheg"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="57263.929450839" xsection="87.31483776"   PreselEff="0.0"
+<d name="TTDileptPowheg_MuEl"  title="TTDileptPowheg"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="57263.929450839" xsection="87.31483776"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTTo2L2Nu_13TeV-powheg/crab_TTTo2L2Nu13TeVpowhegFall15PU25nsData2015v176XmcRun2asymptoticv12v176XmcRun2asymptoticv12/160201_153604/0000/TOPTREE*.root"/>
 
 <!--d name="TTJetsMG_MuElSkim_scaleup"  title="t\bar{t}+jets_MadGraph_Run-2_Start_25ns_scaleup"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="2839.504184" xsection="831.76"   PreselEff="0.0"
@@ -2137,7 +2137,7 @@
 <d name="TTDileptMG_scaleup_MuMu"  title="TTDiLeptMG"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="294336.597377312" xsection="87.31483776"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
 
-<d name="TTDileptPowheg_MuMu"  title="TTDileptPowheg"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="57263.929450839" xsection="87.31483776"   PreselEff="0.0"
+<d name="TTDileptPowheg_MuMu"  title="TTDileptPowheg"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="57263.929450839" xsection="87.31483776"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTTo2L2Nu_13TeV-powheg/crab_TTTo2L2Nu13TeVpowhegFall15PU25nsData2015v176XmcRun2asymptoticv12v176XmcRun2asymptoticv12/160201_153604/0000/TOPTREE*.root"/>
 
 <!-- Skimmed ElEl -->
@@ -4181,6 +4181,9 @@
 
 <d name="TTDileptMG_JESDown_ElEl"  title="TTDiLeptMG"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="294336.597377312" xsection="87.31483776"   PreselEff="0.0"
    filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
+
+<d name="TTDileptPowheg_ElEl"  title="TTDileptPowheg"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="57263.929450839" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTTo2L2Nu_13TeV-powheg/crab_TTTo2L2Nu13TeVpowhegFall15PU25nsData2015v176XmcRun2asymptoticv12v176XmcRun2asymptoticv12/160201_153604/0000/TOPTREE*.root"/>
 
 
 </datasets>
