@@ -116,10 +116,10 @@ int main (int argc, char *argv[])
 
     vector<string> vecfileNames;
     cout<<"argc: "<<argc<<endl;
-        for(int args = 0; args < argc; args++)
-        {
-            cout<<args<<"  : "<<argv[args]<<endl;
-        }
+    for(int args = 0; args < argc; args++)
+    {
+        cout<<args<<"  : "<<argv[args]<<endl;
+    }
 
     if (batch){
         //Checking Passed Arguments to ensure proper execution of MACRO
@@ -199,8 +199,8 @@ int main (int argc, char *argv[])
     bool SingleLepton      = true;
     bool Muon              = true;
     bool Electron          = false;
-    bool HadTopOn          = true;
-    bool EventBDTOn        = true;
+    bool HadTopOn          = false;
+    bool EventBDTOn        = false;
     bool TrainMVA          = false; // If false, the previously trained MVA will be used to calculate stuff
     bool bx25              = true;
     bool bTagReweight      = true;
@@ -215,6 +215,7 @@ int main (int argc, char *argv[])
     bool JESUp             = false;
     bool JESDown           = false;
     bool fillingbTagHistos = false;
+    bool bTopPt            = true;
     string MVAmethod       = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
     float Luminosity       = 2628.0 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
     //bool split_ttbar     = false;
@@ -305,19 +306,19 @@ int main (int argc, char *argv[])
         if(fillingbTagHistos) {
             if (Muon) {
                 btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu.root",false,30,500,2.4);
-                btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Up.root",false,30,500,2.4);
-                btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Down.root",false,30,500,2.4);
+                // btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Up.root",false,30,500,2.4);
+                // btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Down.root",false,30,500,2.4);
             }
             else if (Electron) {
                 btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El.root",false,30,500,2.4);
-                btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Up.root",false,30,500,2.4);
-                btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Down.root",false,30,500,2.4);
+                // btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Up.root",false,30,500,2.4);
+                // btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Down.root",false,30,500,2.4);
             }
         }    
         else {
-            btwt = new BTagWeightTools(bTagReader,"histos/Histo_powheg_76X.root",false,30,500,2.4); 
-            btwtUp = new BTagWeightTools(bTagReaderUp,"histos/Histo_powheg_76X.root",false,30,500,2.4); 
-            btwtDown = new BTagWeightTools(bTagReaderDown,"histos/Histo_powheg_76X.root",false,30,500,2.4); 
+            btwt = new BTagWeightTools(bTagReader,"histos/HistobtagPowhegJEC76X.root",false,30,500,2.4); 
+            btwtUp = new BTagWeightTools(bTagReaderUp,"histos/HistobtagPowhegJEC76X.root",false,30,500,2.4); 
+            btwtDown = new BTagWeightTools(bTagReaderDown,"histos/HistobtagPowhegJEC76X.root",false,30,500,2.4); 
         }
     }
 
@@ -577,7 +578,7 @@ int main (int argc, char *argv[])
         
         string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
         TFile * tupfile    = new TFile(Ntupname.c_str(),"RECREATE");
-        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:SFPU_up:SFPU_down:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJetcsv1:csvJetcsv2:csvJetcsv3:csvJetcsv4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4");
+        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:sfTopPt:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:SFPU_up:SFPU_down:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJetcsv1:csvJetcsv2:csvJetcsv3:csvJetcsv4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4");
        
         // string Ntup4j0bname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_4j0b_" + dataSetName + postfix + ".root";     
         // TFile * tup4j0bfile    = new TFile(Ntupname.c_str(),"RECREATE");
@@ -751,7 +752,7 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////
             //           Object definitions for selection            //
             ///////////////////////////////////////////////////////////
-            Run2Selection r2selection(init_jets, init_muons, init_electrons, mets);
+            Run2Selection r2selection(init_jets, init_muons, init_electrons, mets, rho);
 
             int nMu = 0, nEl = 0, nLooseMu = 0, nLooseEl = 0; //number of (loose) muons/electrons
 
@@ -982,8 +983,8 @@ int main (int argc, char *argv[])
                         if(debug)cout<<"btag efficiency = "<<bTagEff<<endl;       
                     }      
                     btwt->FillMCEfficiencyHistos(selectedJets); 
-                    btwtUp->FillMCEfficiencyHistos(selectedJets); 
-                    btwtDown->FillMCEfficiencyHistos(selectedJets); 
+                    // btwtUp->FillMCEfficiencyHistos(selectedJets); 
+                    // btwtDown->FillMCEfficiencyHistos(selectedJets); 
 
                 }
             }
@@ -1117,6 +1118,8 @@ int main (int argc, char *argv[])
                 negWeights++;
             }
 
+
+
             /////////////////////////////////////
             //    Fill cuts table + z peak     //
             /////////////////////////////////////
@@ -1143,12 +1146,13 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //                                                                                 Baseline Event selection                                                                      //
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             if (Muon)
             {   
-                if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6 && nMtags >=0)) )continue; // Muon Channel Selection
+                if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 /*&& nJets>=6 */ && nMtags >=2)) )continue; // Muon Channel Selection
             }
             else if(Electron){
-                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 && nJets>=6 && nMtags >=0)) continue; // Electron Channel Selection
+                if  (  !( nMu == 0 && nEl == 1 && nLooseEl == 1 /* && nJets>=6 */ &&  nMtags >=2)) continue; // Electron Channel Selection
             }
             else{
                 cerr<<"Correct Channel not selected."<<endl;
@@ -1164,7 +1168,7 @@ int main (int argc, char *argv[])
             }
             passed++;
             /////////////////////////////////////////////////
-            //            ttbb reweighting                 //
+            //           heavy flav  reweighting           //
             /////////////////////////////////////////////////
             float numOfbb = 0;
             float numOfcc = 0;
@@ -1172,7 +1176,7 @@ int main (int argc, char *argv[])
             float ttbar_flav = -1;
             vector<TRootMCParticle*> mcParticles_flav;
             // TRootGenEvent* genEvt_flav = 0;
-            if(dataSetName.find("TTJets")!=string::npos){
+            if(dataSetName.find("TTJets")!=string::npos|| dataSetName.find("TT_")!=string::npos){
                 // genEvt_flav = treeLoader.LoadGenEvent(ievt,false);
                 treeLoader.LoadMCEvent(ievt, 0, mcParticles_flav,false);
                 for(unsigned int p=0; p<mcParticles_flav.size(); p++) {
@@ -1217,6 +1221,49 @@ int main (int argc, char *argv[])
             // tup->Fill(vals);
 
             // continue;
+
+
+            ///////////////////////
+            //  Top PT Reweight  //
+            ///////////////////////
+
+            float fTopPtsf = 1, fAntitopPtsf = 1, fTopPtReWeightsf = 1;
+            int nTops = 0;
+
+            if((bTopPt==true) && (dataSetName.find("TTJets")!=string::npos || dataSetName.find("TT_")!=string::npos))
+            {
+                for(int part = 0; part < mcParticles_flav.size(); part++)
+                {
+                    // if(abs(mcParticles_flav[part]->type()) == 6 && mcParticles_flav[part]->status() < 30) cout << "Type: " << mcParticles_flav[part]->type() << " Status: " << mcParticles_flav[part]->status() << endl;
+                    // if(abs(mcParticles_flav[part]->type()) == 5) cout << "Type: " << mcParticles_flav[part]->type() << " Status: " << mcParticles_flav[part]->status() << endl;
+                    // if(abs(mcParticles_flav[part]->type()) <= 6 || abs(mcParticles_flav[part]->type()) == 21) cout << "Type: " << mcParticles_flav[part]->type() << " Status: " << mcParticles_flav[part]->status() << endl;
+                    // if(abs(mcParticles_flav[part]->status()) <= 59 && abs(mcParticles_flav[part]->status()) >=30) cout << "Type: " << mcParticles_flav[part]->type() << " Status: " << mcParticles_flav[part]->status() << endl;
+                    if(mcParticles_flav[part]->type() == 6 && mcParticles_flav[part]->status() == 22)
+                    {
+                        if(mcParticles_flav[part]->Pt() < 400) fTopPtsf = exp(0.148-(0.00129*mcParticles_flav[part]->Pt()));
+                        else fTopPtsf = exp(0.148-(0.00129*400));
+                        nTops++;
+                    }
+                    else if(mcParticles_flav[part]->type() == -6 && mcParticles_flav[part]->status() == 22)
+                    {
+                        if(mcParticles_flav[part]->Pt() < 400) fAntitopPtsf = exp(0.148-(0.00129*mcParticles_flav[part]->Pt()));
+                        else fAntitopPtsf = exp(0.148-(0.00129*400));
+                        nTops++;
+                    }
+                }
+                fTopPtReWeightsf = sqrt(fTopPtsf*fAntitopPtsf);
+                scaleFactor *= fTopPtReWeightsf;
+                // if(nTops > 2)
+                // {
+                //  cout << fTopPtsf << " " << fAntitopPtsf << " " << fTopPtReWeightsf <<" nTops: " << nTops << endl;
+                //  for(int part = 0; part < mcParticles_flav.size(); part++)
+                //  {
+                //  cout << "Type: " << mcParticles_flav[part]->type() << " Status: " << mcParticles_flav[part]->status() << endl;
+                //  }
+                //  cin.get();
+                // }
+            }
+
 
             //////////////////////////////////////////
             //     TMVA for mass Reconstruction     //
@@ -1455,7 +1502,7 @@ int main (int argc, char *argv[])
             }
             float nOrigJets = (float)selectedOrigJets.size();
             float jet5and6Pt = jet5Pt+jet6Pt;
-            float vals[63] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fleptonSF,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,lumiWeight_up,lumiWeight_down,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt, csvJetcsv1, csvJetcsv2, csvJetcsv3, csvJetcsv4, csvJetpt1, csvJetpt2, csvJetpt3, csvJetpt4};
+            float vals[64] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,lumiWeight_up,lumiWeight_down,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt, csvJetcsv1, csvJetcsv2, csvJetcsv3, csvJetcsv4, csvJetpt1, csvJetpt2, csvJetpt3, csvJetpt4};
             tupfile->cd();
             tup->Fill(vals);
             // tupCutfile->cd();
@@ -1510,8 +1557,8 @@ int main (int argc, char *argv[])
 
     if(fillingbTagHistos && bTagReweight && dataSetName.find("Data")==string::npos){
         delete btwt;
-        delete btwtDown;
-        delete btwtUp;
+        // delete btwtDown;
+        // delete btwtUp;
     }    
 
     cout<<"TRIGGGG"<<endl;
