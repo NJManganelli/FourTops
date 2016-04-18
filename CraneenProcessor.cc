@@ -291,9 +291,11 @@ int main(int argc, char** argv)
         xmlFileNameSys = child->FirstChild("fileNameSys")->ToElement()->GetText();
         CraneenPath = child->FirstChild("craneenPath")->ToElement()->GetText();
         string temp_var = child->FirstChild("datacardVar")->ToElement()->GetText();
-        
-        if(!temp_var.empty()) DatacardVar = temp_var;
-        else cout << "No datacard Variable set.  Defaulting to BDT." << endl;
+
+        if(!temp_var.empty())
+            DatacardVar = temp_var;
+        else
+            cout << "No datacard Variable set.  Defaulting to BDT." << endl;
 
         // split ttbar
         // TiXmlElement* childttbarsplit = child->FirstChild( "split_ttbar" )->ToElement();
@@ -358,8 +360,8 @@ int main(int argc, char** argv)
                     SplitDatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile,
                         channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath, shapefileName);
                     if(ppText == DatacardVar) {
-                        Split_DataCardProducer(VoI, shapefile, shapefileName, channel, leptoAbbr, jetSplit, splitVar, bSplit,
-                            tSplit, wSplit, xmlFileName, lumiScale);
+                        Split_DataCardProducer(VoI, shapefile, shapefileName, channel, leptoAbbr, jetSplit, splitVar,
+                            bSplit, tSplit, wSplit, xmlFileName, lumiScale);
                     }
                 } else if(jetTagsplit) {
 
@@ -521,100 +523,137 @@ void GetMatching(int nBins,
     histo1D["matchingPlus"]->Write((matchingsysname + "Up").c_str());
     cout << "wrote sys matching shapes in shapefile" << endl;
 }
-void GetMatchingSplit(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string xmlNom, string CraneenPath, string mainTTbarSample, string otherTTbarsample,string sSplitVar, float fbSplit, float ftSplit, float fwSplit){
-    string plotname;   ///// Jet Split plot
+void GetMatchingSplit(int nBins,
+    float lScale,
+    float plotLow,
+    float plotHigh,
+    string leptoAbbr,
+    TFile* shapefile,
+    TFile* errorfile,
+    string channel,
+    string sVarofinterest,
+    string xmlNom,
+    string CraneenPath,
+    string mainTTbarSample,
+    string otherTTbarsample,
+    string sSplitVar,
+    float fbSplit,
+    float ftSplit,
+    float fwSplit)
+{
+    string plotname; ///// Jet Split plot
     string numStr;
-    string sbSplit = static_cast<ostringstream*>( &(ostringstream() << fbSplit) )->str();
-    string stSplit = static_cast<ostringstream*>( &(ostringstream() << ftSplit) )->str();
-    string swSplit = static_cast<ostringstream*>( &(ostringstream() << fwSplit) )->str();
-    cout<<"Producing envelope for scale uncertainty"<<endl;
-    for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
-    {    
-        numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
+    string sbSplit = static_cast<ostringstream*>(&(ostringstream() << fbSplit))->str();
+    string stSplit = static_cast<ostringstream*>(&(ostringstream() << ftSplit))->str();
+    string swSplit = static_cast<ostringstream*>(&(ostringstream() << fwSplit))->str();
+    cout << "Producing envelope for scale uncertainty" << endl;
+    for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
+        numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
 
-        histo1D["matchingPlus"] = new TH1F("Plus","Plus", nBins, plotLow, plotHigh);
-        histo1D["matchingMinus"] = new TH1F("Minus","Minus", nBins, plotLow, plotHigh);
+        histo1D["matchingPlus"] = new TH1F("Plus", "Plus", nBins, plotLow, plotHigh);
+        histo1D["matchingMinus"] = new TH1F("Minus", "Minus", nBins, plotLow, plotHigh);
 
-        histo1D["main_ttbar"] = (TH1F*)shapefile->Get((channel+numStr+sSplitVar+"__"+mainTTbarSample+"__nominal").c_str());
-        histo1D["other_ttbar"] = (TH1F*)shapefile->Get((channel+numStr+sSplitVar+"__"+otherTTbarsample+"__nominal").c_str());    cout<<"Got matching histos"<<endl;
-        cout<<channel+numStr+sSplitVar+"__"+mainTTbarSample+"__nominal"<<"    "<<channel+numStr+sSplitVar+"__"+otherTTbarsample+"__nominal"<<endl;
-        for(int binN = 1; binN <nBins+1; ++binN){
-        float binContentMax = -1, binContentMin =  1000000000000000;  
-        float errorMatching = abs(histo1D["main_ttbar"]->GetBinContent(binN) - histo1D["other_ttbar"]->GetBinContent(binN));
+        histo1D["main_ttbar"] =
+            (TH1F*)shapefile->Get((channel + numStr + sSplitVar + "__" + mainTTbarSample + "__nominal").c_str());
+        histo1D["other_ttbar"] =
+            (TH1F*)shapefile->Get((channel + numStr + sSplitVar + "__" + otherTTbarsample + "__nominal").c_str());
+        cout << "Got matching histos" << endl;
+        cout << channel + numStr + sSplitVar + "__" + mainTTbarSample + "__nominal"
+             << "    " << channel + numStr + sSplitVar + "__" + otherTTbarsample + "__nominal" << endl;
+        for(int binN = 1; binN < nBins + 1; ++binN) {
+            float binContentMax = -1, binContentMin = 1000000000000000;
+            float errorMatching =
+                abs(histo1D["main_ttbar"]->GetBinContent(binN) - histo1D["other_ttbar"]->GetBinContent(binN));
 
             histo1D["matchingPlus"]->SetBinContent(binN, histo1D["main_ttbar"]->GetBinContent(binN) + errorMatching);
             histo1D["matchingMinus"]->SetBinContent(binN, histo1D["main_ttbar"]->GetBinContent(binN) - errorMatching);
-        }  
+        }
 
         shapefile->cd();
-        string matchingsysname = channel+numStr+sSplitVar+"__"+mainTTbarSample+"__matching";
-        histo1D["matchingMinus"]->Write( (matchingsysname+"Down").c_str());
-        histo1D["matchingPlus"]->Write(( matchingsysname+"Up").c_str());     
-        cout<<"wrote sys matching shapes in shapefile"<<endl;       
+        string matchingsysname = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__matching";
+        histo1D["matchingMinus"]->Write((matchingsysname + "Down").c_str());
+        histo1D["matchingPlus"]->Write((matchingsysname + "Up").c_str());
+        cout << "wrote sys matching shapes in shapefile" << endl;
     }
 }
-void GetScaleEnvelopeSplit(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile, TFile *errorfile, string channel, string sVarofinterest, string sSplitVar, float fbSplit, float ftSplit, float fwSplit, string xmlNom, string CraneenPath, string shapefileName, string mainTTbarSample){
-    string plotname;   ///// Jet Split plot
+void GetScaleEnvelopeSplit(int nBins,
+    float lScale,
+    float plotLow,
+    float plotHigh,
+    string leptoAbbr,
+    TFile* shapefile,
+    TFile* errorfile,
+    string channel,
+    string sVarofinterest,
+    string sSplitVar,
+    float fbSplit,
+    float ftSplit,
+    float fwSplit,
+    string xmlNom,
+    string CraneenPath,
+    string shapefileName,
+    string mainTTbarSample)
+{
+    string plotname; ///// Jet Split plot
     string numStr;
-    string sbSplit = static_cast<ostringstream*>( &(ostringstream() << fbSplit) )->str();
-    string stSplit = static_cast<ostringstream*>( &(ostringstream() << ftSplit) )->str();
-    string swSplit = static_cast<ostringstream*>( &(ostringstream() << fwSplit) )->str();
+    string sbSplit = static_cast<ostringstream*>(&(ostringstream() << fbSplit))->str();
+    string stSplit = static_cast<ostringstream*>(&(ostringstream() << ftSplit))->str();
+    string swSplit = static_cast<ostringstream*>(&(ostringstream() << fwSplit))->str();
 
-    cout<<"Producing envelope for scale uncertainty"<<endl;
-    for(int s = fbSplit; s <= ftSplit; s+=fwSplit)
-    {
-        numStr = static_cast<ostringstream*>( &(ostringstream() << s) )->str();
-        histo1D[("weightPlus"+numStr).c_str()] = new TH1F("Plus","Plus", nBins, plotLow, plotHigh);
-        histo1D[("weightMinus"+numStr).c_str()] = new TH1F("Minus","Minus", nBins, plotLow, plotHigh);
+    cout << "Producing envelope for scale uncertainty" << endl;
+    for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
+        numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
+        histo1D[("weightPlus" + numStr).c_str()] = new TH1F("Plus", "Plus", nBins, plotLow, plotHigh);
+        histo1D[("weightMinus" + numStr).c_str()] = new TH1F("Minus", "Minus", nBins, plotLow, plotHigh);
 
         // TFile * reopenSF = new TFile(shapefileName.c_str());
-        histo1D[("weight0_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("Genweight_tt"+numStr).c_str());
-        histo1D[("weight1_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("weight1_tt"+numStr).c_str());
-        histo1D[("weight2_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("weight2_tt"+numStr).c_str());
-        histo1D[("weight3_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("weight3_tt"+numStr).c_str());
-        histo1D[("weight4_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("weight4_tt"+numStr).c_str());
-        histo1D[("weight5_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("weight5_tt"+numStr).c_str());
-        histo1D[("weight6_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("weight6_tt"+numStr).c_str());
-        histo1D[("weight7_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("weight7_tt"+numStr).c_str());
-        histo1D[("weight8_tt"+numStr).c_str()] = (TH1F*)shapefile->Get(("weight8_tt"+numStr).c_str());
+        histo1D[("weight0_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("Genweight_tt" + numStr).c_str());
+        histo1D[("weight1_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("weight1_tt" + numStr).c_str());
+        histo1D[("weight2_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("weight2_tt" + numStr).c_str());
+        histo1D[("weight3_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("weight3_tt" + numStr).c_str());
+        histo1D[("weight4_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("weight4_tt" + numStr).c_str());
+        histo1D[("weight5_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("weight5_tt" + numStr).c_str());
+        histo1D[("weight6_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("weight6_tt" + numStr).c_str());
+        histo1D[("weight7_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("weight7_tt" + numStr).c_str());
+        histo1D[("weight8_tt" + numStr).c_str()] = (TH1F*)shapefile->Get(("weight8_tt" + numStr).c_str());
 
-        cout<<"Got weights"<<endl;
+        cout << "Got weights" << endl;
 
+        for(int binN = 1; binN < nBins + 1; ++binN) {
+            float binContentMax = -1, binContentMin = 1000000000000000;
 
-        for(int binN = 1; binN <nBins+1; ++binN){
-        float binContentMax = -1, binContentMin =  1000000000000000;  
-
-            for(int weightIt = 1; weightIt<9; ++weightIt){
-                if(weightIt == 6 || weightIt == 8){
-                    continue; //extreme weights with 1/2u and 2u
+            for(int weightIt = 1; weightIt < 9; ++weightIt) {
+                if(weightIt == 6 || weightIt == 8) {
+                    continue; // extreme weights with 1/2u and 2u
                 }
 
-                string weightStr = static_cast<ostringstream*>( &(ostringstream() << weightIt) )->str();
-                string weightHistoName = ("weight"+weightStr+"_tt"+numStr).c_str();
-                cout<<weightHistoName<<endl;
-                if(binContentMin > histo1D[weightHistoName]->GetBinContent(binN) ) binContentMin = histo1D[weightHistoName]->GetBinContent(binN);
-                if(binContentMax < histo1D[weightHistoName]->GetBinContent(binN) ) binContentMax = histo1D[weightHistoName]->GetBinContent(binN);
-                cout<<"binContentMax: "<<binContentMax<<"binContentMin: "<<binContentMin<<endl;
+                string weightStr = static_cast<ostringstream*>(&(ostringstream() << weightIt))->str();
+                string weightHistoName = ("weight" + weightStr + "_tt" + numStr).c_str();
+                cout << weightHistoName << endl;
+                if(binContentMin > histo1D[weightHistoName]->GetBinContent(binN))
+                    binContentMin = histo1D[weightHistoName]->GetBinContent(binN);
+                if(binContentMax < histo1D[weightHistoName]->GetBinContent(binN))
+                    binContentMax = histo1D[weightHistoName]->GetBinContent(binN);
+                cout << "binContentMax: " << binContentMax << "binContentMin: " << binContentMin << endl;
                 // cout<<"bin number : "<<binN<<"   bincontent: "<<histo1D["weight0"]->GetBinContent(binN)<<endl;
             }
-            histo1D[("weightPlus"+numStr).c_str()]->SetBinContent(binN, binContentMax);
-            histo1D[("weightMinus"+numStr).c_str()]->SetBinContent(binN, binContentMin);
-        }  
-
+            histo1D[("weightPlus" + numStr).c_str()]->SetBinContent(binN, binContentMax);
+            histo1D[("weightMinus" + numStr).c_str()]->SetBinContent(binN, binContentMin);
+        }
 
         errorfile->cd();
-        errorfile->mkdir(("MultiSamplePlot_"+sVarofinterest + numStr + sSplitVar).c_str());
-        errorfile->cd(("MultiSamplePlot_"+sVarofinterest + numStr + sSplitVar).c_str());
-        histo1D[("weightMinus"+numStr).c_str()]->Write("Minus");
-        histo1D[("weightPlus"+numStr).c_str()]->Write("Plus");
-        histo1D[("weight0_tt"+numStr).c_str()]->Write("Nominal");
-        cout<<"wrote weights in errorfile"<<endl;
+        errorfile->mkdir(("MultiSamplePlot_" + sVarofinterest + numStr + sSplitVar).c_str());
+        errorfile->cd(("MultiSamplePlot_" + sVarofinterest + numStr + sSplitVar).c_str());
+        histo1D[("weightMinus" + numStr).c_str()]->Write("Minus");
+        histo1D[("weightPlus" + numStr).c_str()]->Write("Plus");
+        histo1D[("weight0_tt" + numStr).c_str()]->Write("Nominal");
+        cout << "wrote weights in errorfile" << endl;
         shapefile->cd();
-        string scalesysname = channel+numStr+sSplitVar+"__"+mainTTbarSample+"__scale";
-        cout<<scalesysname<<endl;
-        histo1D[("weightMinus"+numStr).c_str()]->Write((scalesysname+"Down").c_str());
-        histo1D[("weightPlus"+numStr).c_str()]->Write((scalesysname+"Up").c_str());     
-        cout<<"wrote sys scale shapes in shapefile"<<endl;  
+        string scalesysname = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__scale";
+        cout << scalesysname << endl;
+        histo1D[("weightMinus" + numStr).c_str()]->Write((scalesysname + "Down").c_str());
+        histo1D[("weightPlus" + numStr).c_str()]->Write((scalesysname + "Up").c_str());
+        cout << "wrote sys scale shapes in shapefile" << endl;
     }
 }
 
@@ -760,39 +799,46 @@ void DatasetPlotter(int nBins,
             cout << "skip ttbar split datasets!" << endl;
             continue;
         }
-//        if(leptoAbbr.find("Combined") != string::npos) {
-//            if(dataSetName.find("Data") != string::npos) {
-//                filepath = CraneenPath + "Data_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
-//            } else if(dataSetName.find("TTDileptMG_TopPt") != string::npos) {
-//                filepath =
-//                    CraneenPath + "TTDileptMG_TopPt_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
-//            } else if(dataSetName.find("TTDileptMG") != string::npos) {
-//                filepath = CraneenPath + "TTDileptMG_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
-//            } else if(dataSetName.find("DYJets") != string::npos) {
-//                filepath = CraneenPath + "DYJets_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
-//            } else if(dataSetName.find("T_tW") != string::npos) {
-//                filepath = CraneenPath + "T_tW_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
-//            } else if(dataSetName.find("Tbar_tW") != string::npos) {
-//                filepath = CraneenPath + "Tbar_tW_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
-//            } else if(dataSetName.find("NP_overlay_ttttNLO") != string::npos) {
-//                filepath =
-//                    CraneenPath + "NP_overlay_ttttNLO_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
-//            }
-//        } else
-            filepath = CraneenPath + dataSetName + "_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
+        //        if(leptoAbbr.find("Combined") != string::npos) {
+        //            if(dataSetName.find("Data") != string::npos) {
+        //                filepath = CraneenPath + "Data_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //                "<<filepath<<endl;
+        //            } else if(dataSetName.find("TTDileptMG_TopPt") != string::npos) {
+        //                filepath =
+        //                    CraneenPath + "TTDileptMG_TopPt_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //                    "<<filepath<<endl;
+        //            } else if(dataSetName.find("TTDileptMG") != string::npos) {
+        //                filepath = CraneenPath + "TTDileptMG_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //                "<<filepath<<endl;
+        //            } else if(dataSetName.find("DYJets") != string::npos) {
+        //                filepath = CraneenPath + "DYJets_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //                "<<filepath<<endl;
+        //            } else if(dataSetName.find("T_tW") != string::npos) {
+        //                filepath = CraneenPath + "T_tW_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //                "<<filepath<<endl;
+        //            } else if(dataSetName.find("Tbar_tW") != string::npos) {
+        //                filepath = CraneenPath + "Tbar_tW_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //                "<<filepath<<endl;
+        //            } else if(dataSetName.find("NP_overlay_ttttNLO") != string::npos) {
+        //                filepath =
+        //                    CraneenPath + "NP_overlay_ttttNLO_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //                    "<<filepath<<endl;
+        //            }
+        //        } else
+        filepath = CraneenPath + dataSetName + "_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
 
         FileObj[dataSetName.c_str()] = new TFile((filepath).c_str()); // create TFile for each dataset
         string nTuplename;
-//        if(leptoAbbr.find("Combined") != string::npos) {
-//            if(dataSetName.find("MuEl") != string::npos) {
-//                nTuplename = "Craneen__MuEl";
-//            } else if(dataSetName.find("MuMu") != string::npos) {
-//                nTuplename = "Craneen__MuMu";
-//            } else if(dataSetName.find("ElEl") != string::npos) {
-//                nTuplename = "Craneen__ElEl";
-//            }
-//        } else
-            nTuplename = "Craneen__" + leptoAbbr;
+        //        if(leptoAbbr.find("Combined") != string::npos) {
+        //            if(dataSetName.find("MuEl") != string::npos) {
+        //                nTuplename = "Craneen__MuEl";
+        //            } else if(dataSetName.find("MuMu") != string::npos) {
+        //                nTuplename = "Craneen__MuMu";
+        //            } else if(dataSetName.find("ElEl") != string::npos) {
+        //                nTuplename = "Craneen__ElEl";
+        //            }
+        //        } else
+        nTuplename = "Craneen__" + leptoAbbr;
         nTuple[dataSetName.c_str()] =
             (TNtuple*)FileObj[dataSetName.c_str()]->Get(nTuplename.c_str()); // get ntuple for each dataset
         nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();
@@ -820,7 +866,7 @@ void DatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
 
@@ -850,14 +896,15 @@ void DatasetPlotter(int nBins,
             // }
 
             if((dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
-                dataSetName.find("DATA") != string::npos || dataSetName.find("NP_overlay_Data") != string::npos) && (dataSetName.find("Pseudo") == string::npos || dataSetName.find("pseudo") == string::npos)) {
-//                if(leptoAbbr.find("Combined") != string::npos) {
-//                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, Luminosity);
-//                    histo1D[dataSetName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
-//                } else {
-                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
-                    histo1D[dataSetName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
-//                }
+                   dataSetName.find("DATA") != string::npos || dataSetName.find("NP_overlay_Data") != string::npos) &&
+                (dataSetName.find("Pseudo") == string::npos || dataSetName.find("pseudo") == string::npos)) {
+                //                if(leptoAbbr.find("Combined") != string::npos) {
+                //                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, Luminosity);
+                //                    histo1D[dataSetName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
+                //                } else {
+                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
+                histo1D[dataSetName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
+                //                }
             } else {
                 if(lScale > 0) // artificial Lumi
                 {
@@ -894,7 +941,8 @@ void DatasetPlotter(int nBins,
                 }
 
                 histo1D[dataSetName]->Fill(
-                    varofInterest, NormFactor * ScaleFactor * GenWeight * Luminosity * eqlumi * ttbbReweight);
+                    varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
+                            SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi * ttbbReweight);
 
                 // SFbtag = 1;
                 // ScaleFactor=1;
@@ -1032,9 +1080,9 @@ void DatasetPlotter(int nBins,
 
     GetScaleEnvelope(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
         CraneenPath, shapefileName, mainTTbarSample);
-//    if(channel.find("comb") == string::npos)
-        GetMatching(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
-            CraneenPath, mainTTbarSample, otherTTbarsample);
+    //    if(channel.find("comb") == string::npos)
+    GetMatching(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
+        CraneenPath, mainTTbarSample, otherTTbarsample);
     cout << "produced envelope" << endl;
     errorfile->Close();
 
@@ -1263,11 +1311,12 @@ void SplitDatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
 
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
+
 
         // for fixed bin width
         for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
@@ -1331,6 +1380,7 @@ void SplitDatasetPlotter(int nBins,
             float ttbbReweight = 1, ttbbReweight_up = 1, ttbbReweight_down = 1;
             NormFactor = 1;
             if(dataSetName.find("tttt") != string::npos) {
+                //cout << "SF: " << ScaleFactor << " Aggrigate: " << (GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends) << endl;
                 NormFactor = 0.409;
             } else if(dataSetName.find("WJets") != string::npos) {
                 NormFactor = 0.522796;
@@ -1342,9 +1392,7 @@ void SplitDatasetPlotter(int nBins,
             {
                 plotname = sVarofinterest + stSplit + sSplitVar;
                 histoName = dataSetName + stSplit + sSplitVar;
-		cout << "Last Bin Event! SplitVar = " << splitVar << endl;
-                histo1D[histoName]->Fill(
-                    varofInterest, NormFactor * ScaleFactor * GenWeight * Luminosity * eqlumi * ttbbReweight);
+                //cout << "Last Bin Event! SplitVar = " << splitVar << endl;
 
                 if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                     dataSetName.find("DATA") != string::npos || dataSetName.find("NP_overlay_Data") != string::npos) {
@@ -1354,8 +1402,8 @@ void SplitDatasetPlotter(int nBins,
                 // outsiderange = false;
                 else if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
                     dataSetName.find("JER") == string::npos) {
-		    cout << "Main TTbar Sample Event!  stSplit = " << stSplit << endl;
-//                    cin.get();
+                    //cout << "Main TTbar Sample Event!  stSplit = " << stSplit << endl;
+                    //                    cin.get();
                     histo1D[("Genweight_tt" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
                             SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor *
                             GenWeight);
@@ -1401,14 +1449,24 @@ void SplitDatasetPlotter(int nBins,
                     histo1D[("heavyFlav_Down" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
                             SFlepton * SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi * ttbbReweight_down *
                             LumiFactor * GenWeight);
+                    histo1D[histoName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
+                            SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi * ttbbReweight);
                     MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
                             SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * ttbbReweight * LumiFactor * GenWeight);
-                } else if(dataSetName.find(otherTTbarsample) == string::npos && dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos && dataSetName.find("JER") == string::npos) { // ie. don't add the MLM dataset which is just used for matching
+                } else if(dataSetName.find(otherTTbarsample) == string::npos &&
+                    dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos &&
+                    dataSetName.find("JER") ==
+                        string::npos) { // ie. don't add the MLM dataset which is just used for matching
                     MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
                             SFbtagUp * SFPU * SFTopPt * SFbehrends * Luminosity * ttbbReweight * LumiFactor *
                             GenWeight);
+                    histo1D[histoName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
+                            SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi * ttbbReweight);
                     // cout<<dataSetName<<" "<<varofInterest<<"  "<<NormFactor<<"  "<<SFlepton<<"  "<<SFbtag<<"
                     // "<<SFPU<<"  "<<Luminosity<<"  "<<ttbbReweight<<"  "<<LumiFactor<<"  "<<GenWeight<<endl;
+                } else {
+                    histo1D[histoName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
+                            SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi * ttbbReweight);
                 }
             } else // If it doesn't belong in the last bin, find out which it belongs in
             {
@@ -1419,15 +1477,14 @@ void SplitDatasetPlotter(int nBins,
                         numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
                         plotname = sVarofinterest + numStr + sSplitVar;
                         histoName = dataSetName + numStr + sSplitVar;
-                        histo1D[histoName]->Fill(
-                            varofInterest, NormFactor * ScaleFactor * GenWeight * Luminosity * eqlumi * ttbbReweight);
 
                         if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                             dataSetName.find("DATA") != string::npos ||
                             dataSetName.find("NP_overlay_Data") != string::npos) {
                             MSPlot[plotname]->Fill(varofInterest, datasets[d], true, LumiFactor);
                             histo1D[histoName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
-                        } else if(dataSetName == mainTTbarSample) {
+                        } else if(dataSetName == mainTTbarSample && dataSetName.find("JES") == string::npos &&
+                            dataSetName.find("JER") == string::npos) {
                             histo1D[("Genweight_tt" + numStr).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
                                     SFlepton * SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
                                     ttbbReweight * LumiFactor * GenWeight);
@@ -1473,6 +1530,8 @@ void SplitDatasetPlotter(int nBins,
                             histo1D[("heavyFlav_Down" + numStr).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
                                     SFlepton * SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
                                     ttbbReweight_down * LumiFactor * GenWeight);
+                            histo1D[histoName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
+                                    SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi * ttbbReweight);
                             MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
                                     SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * ttbbReweight * LumiFactor *
                                     GenWeight);
@@ -1483,8 +1542,13 @@ void SplitDatasetPlotter(int nBins,
                             MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
                                     SFbtagUp * SFPU * SFTopPt * SFbehrends * Luminosity * ttbbReweight * LumiFactor *
                                     GenWeight);
+                            histo1D[histoName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
+                                    SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi * ttbbReweight);
                             // cout<<dataSetName<<" "<<varofInterest<<"  "<<NormFactor<<"  "<<SFlepton<<"  "<<SFbtag<<"
                             // "<<SFPU<<"  "<<Luminosity<<"  "<<ttbbReweight<<"  "<<LumiFactor<<"  "<<GenWeight<<endl;
+                        } else {
+                            histo1D[histoName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
+                                    SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi * ttbbReweight);
                         }
 
                         outsiderange = false;
@@ -1528,38 +1592,39 @@ void SplitDatasetPlotter(int nBins,
             histo1D[histoName.c_str()]->Write((writename).c_str());
 
             canv->SaveAs((pathPNG + histoName + ".png").c_str());
-            if ( dataSetName.find(mainTTbarSample)!= string::npos && dataSetName.find("JES")==string::npos &&dataSetName.find("JER")==string::npos){
-                cout<<"  making weights histos"<<endl;
-           
+            if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
+                dataSetName.find("JER") == string::npos) {
+                cout << "  making weights histos" << endl;
+
                 // TCanvas *canv0 = new TCanvas();
                 // histo1D[("Genweight_tt"+numStr).c_str()]->Draw();
-                histo1D[("Genweight_tt"+numStr).c_str()]->Write(("Genweight_tt"+numStr).c_str());                  
+                histo1D[("Genweight_tt" + numStr).c_str()]->Write(("Genweight_tt" + numStr).c_str());
                 // canv0->SaveAs(("Genweight_tt"+numStr+".png").c_str());
 
-                for(int ii=1; ii<9; ii++){
+                for(int ii = 1; ii < 9; ii++) {
                     // TCanvas *canv1 = new TCanvas();
-                    string weightstring = static_cast<ostringstream*>( &(ostringstream() << ii) )->str();
-                    string weighthisto = "weight"+weightstring+"_tt"+numStr;
+                    string weightstring = static_cast<ostringstream*>(&(ostringstream() << ii))->str();
+                    string weighthisto = "weight" + weightstring + "_tt" + numStr;
                     // histo1D[weighthisto]->Draw();
-                    histo1D[weighthisto]->Write(("weight"+weightstring+"_tt"+numStr).c_str());
+                    histo1D[weighthisto]->Write(("weight" + weightstring + "_tt" + numStr).c_str());
                     // canv1->SaveAs(("weight"+weightstring+"_tt"+numStr+".png").c_str());
+                }
+                string scalesysname = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__";
 
-                }    
-                string scalesysname = channel+numStr+sSplitVar+"__"+mainTTbarSample+"__";
-
-                histo1D[("PU_Up"+numStr).c_str()]->Write((scalesysname+"PUUp").c_str());   
-                histo1D[("PU_Down"+numStr).c_str()]->Write((scalesysname+"PUDown").c_str());   
-                histo1D[("btag_Up"+numStr).c_str()]->Write((scalesysname+"btagUp").c_str());   
-                histo1D[("btag_Down"+numStr).c_str()]->Write((scalesysname+"btagDown").c_str());  
-                histo1D[("heavyFlav_Up"+numStr).c_str()]->Write((scalesysname+"heavyFlavUp").c_str());   
-                histo1D[("heavyFlav_Down"+numStr).c_str()]->Write((scalesysname+"heavyFlavDown").c_str()); 
-       
+                histo1D[("PU_Up" + numStr).c_str()]->Write((scalesysname + "PUUp").c_str());
+                histo1D[("PU_Down" + numStr).c_str()]->Write((scalesysname + "PUDown").c_str());
+                histo1D[("btag_Up" + numStr).c_str()]->Write((scalesysname + "btagUp").c_str());
+                histo1D[("btag_Down" + numStr).c_str()]->Write((scalesysname + "btagDown").c_str());
+                histo1D[("heavyFlav_Up" + numStr).c_str()]->Write((scalesysname + "heavyFlavUp").c_str());
+                histo1D[("heavyFlav_Down" + numStr).c_str()]->Write((scalesysname + "heavyFlavDown").c_str());
             }
         }
     } // end of dataset for loop
 
-    GetScaleEnvelopeSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,sSplitVar,fbSplit,  ftSplit ,fwSplit,xmlNom, CraneenPath, shapefileName, mainTTbarSample);
-    GetMatchingSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom, CraneenPath, mainTTbarSample, otherTTbarsample,sSplitVar,fbSplit,  ftSplit ,fwSplit);
+    GetScaleEnvelopeSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
+        sSplitVar, fbSplit, ftSplit, fwSplit, xmlNom, CraneenPath, shapefileName, mainTTbarSample);
+    GetMatchingSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
+        CraneenPath, mainTTbarSample, otherTTbarsample, sSplitVar, fbSplit, ftSplit, fwSplit);
     errorfile->Close();
 
     // treeLoader.UnLoadDataset();
@@ -1567,13 +1632,14 @@ void SplitDatasetPlotter(int nBins,
     string scaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
     mkdir(scaleFileDir.c_str(), 0777);
     string scaleFileName = scaleFileDir + "/Error" + sVarofinterest + ".root";
-    MSPlot[plotname.c_str()]->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
+    MSPlot[plotname.c_str()]->setErrorBandFile(
+        scaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
     MSPlot[plotname.c_str()]->setDataLumi(2600);
     for(map<string, MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++) {
         string name = it->first;
         cout << name << " ** " << sVarofinterest << endl;
         MultiSamplePlot* temp = it->second;
-        temp->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
+        temp->setErrorBandFile(scaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 0, false, false, false, 100);
         temp->Write(shapefile, name, true, pathPNG, "eps");
     }
@@ -1857,8 +1923,8 @@ void DataCardProducer(string VoI,
         if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
             dataSetName.find("DATA") != string::npos || dataSetName.find("JER") != string::npos ||
             dataSetName.find("JES") != string::npos || dataSetName.find("MLM") != string::npos ||
-            dataSetName.find("scale") != string::npos || dataSetName.find("Scale") != string::npos || 
-	    dataSetName.find(otherTTbarsample) != string::npos) {
+            dataSetName.find("scale") != string::npos || dataSetName.find("Scale") != string::npos ||
+            dataSetName.find(otherTTbarsample) != string::npos) {
             continue;
         } else {
             MCdatasets.push_back(dataSetName);
@@ -2087,7 +2153,7 @@ void DataCardProducer(string VoI,
             continue;
         }
     }
-
+/*
     card << "matching                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
@@ -2106,6 +2172,7 @@ void DataCardProducer(string VoI,
             continue;
         }
     }
+*/
 
     // card << "heavyFlav               shape           ";
     // for (int d = 0; d<howmanyMC; d++){
@@ -2176,7 +2243,7 @@ void Split_DataCardProducer(string VoI,
             dataSetName.find("DATA") != string::npos || dataSetName.find("JER") != string::npos ||
             dataSetName.find("JES") != string::npos || dataSetName.find("MLM") != string::npos ||
             dataSetName.find("scale") != string::npos || dataSetName.find("Scale") != string::npos ||
-	    dataSetName.find(otherTTbarsample) != string::npos) {
+            dataSetName.find(otherTTbarsample) != string::npos) {
             continue;
         } else {
             MCdatasets.push_back(dataSetName);
@@ -2300,8 +2367,8 @@ void Split_DataCardProducer(string VoI,
         } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
             dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
             continue;
-            } else if(dataSetName.find(otherTTbarsample) != string::npos) {
-                continue;
+        } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+            continue;
         } else if(dataSetName.find("tttt") != string::npos) {
             card << "tttt_norm              lnN          ";
             for(int k = 0; k < nChannels; k++) {
@@ -2423,6 +2490,7 @@ void Split_DataCardProducer(string VoI,
         }
     }
 
+/*
     card << "matching                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
@@ -2441,6 +2509,7 @@ void Split_DataCardProducer(string VoI,
             continue;
         }
     }
+*/
     card.close();
 };
 
