@@ -912,11 +912,11 @@ void DatasetPlotter(int nBins,
                 }
                 NormFactor = 1;
                 if(dataSetName.find("tttt") != string::npos) {
-                    NormFactor = 0.4095;
+                    NormFactor = 1.0/0.4095;
                 } else if(dataSetName.find("WJets") != string::npos) {
-                    NormFactor = 0.522796;
+                    NormFactor = 1.0/0.522796;
                 } else if(dataSetName.find("DYJets") != string::npos) {
-                    NormFactor = 0.566;
+                    NormFactor = 1.0/0.566;
                 }
 
                 ////////////////////////////////////////////////////////
@@ -1381,11 +1381,11 @@ void SplitDatasetPlotter(int nBins,
             NormFactor = 1;
             if(dataSetName.find("tttt") != string::npos) {
                 //cout << "SF: " << ScaleFactor << " Aggrigate: " << (GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends) << endl;
-                NormFactor = 0.409;
+                NormFactor = 1.0/0.409;
             } else if(dataSetName.find("WJets") != string::npos) {
-                NormFactor = 0.522796;
+                NormFactor = 1.0/0.522796;
             } else if(dataSetName.find("DYJets") != string::npos) {
-                NormFactor = 0.566;
+                NormFactor = 1.0/0.566;
             }
             if(splitVar >=
                 ftSplit) // Check if this entry belongs in the last bin.  Done here to optimize number of checks

@@ -110,6 +110,12 @@ struct HighestCVSBtag {
             j2->btag_combinedInclusiveSecondaryVertexV2BJetTags();
     }
 };
+struct pair_pt {
+    bool operator()(const std::pair<float,std::pair<TRootParticle*, TRootParticle*>> &left, const std::pair<float,std::pair<TRootParticle*, TRootParticle*>> &right) const
+    {
+        return left.first > right.first;
+    }
+};
 
 bool match;
 
@@ -202,6 +208,9 @@ int main(int argc, char* argv[])
     int domisTagEffShift = 0; // 0: off (except nominal scalefactor for mistag eff) 1: minus 2: plus
     cout << "domisTagEffShift: " << domisTagEffShift << endl;
 
+    int mvaNegWeight = 0; // 0: Using MVA trained without neg weights 1: Using MVA trained with Neg Weights 
+    cout << "mvaNegWeight: " << mvaNegWeight << endl;
+
     cout << "*************************************************************" << endl;
     cout << " Beginning of the program for the FourTop search ! " << endl;
     cout << "*************************************************************" << endl;
@@ -224,6 +233,9 @@ int main(int argc, char* argv[])
         postfix = postfix + "_misTagMinus";
     if(domisTagEffShift == 1)
         postfix = postfix + "_misTagPlus";
+    if(mvaNegWeight == 1)
+        postfix = postfix + "_MVANegWeight";
+
 
     ///////////////////////////////////////
     //      Configuration                //
@@ -463,9 +475,11 @@ int main(int argc, char* argv[])
     MVAComputer* Eventcomputer_;
 
     if(dilepton && Muon && Electron) {
-                Eventcomputer_ = new
-                MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_26thOctober.root","MasterMVA_DiLep_Combined_26thOctober",MVAvars,
-                "_DilepCombinedOctober26th2015");
+                if(mvaNegWeight == 1) Eventcomputer_ = new
+                MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_6thApril2016_NegWeight.root","MasterMVA_DiLep_Combined_6thApril2016_NegWeight",MVAvars,
+                "_DilepCombined6thApril2016_NegWeight");
+		else Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_6thApril2016_NoWeight.root","MasterMVA_DiLep_Combined_6thApril2016_NoWeight",MVAvars,
+                "_DilepCombined6thApril2016_NoWeight");
 //        Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_MuEl_26thOctober.root", "MasterMVA_MuEl_26thOctober",
 //            MVAvars, "_MuElOctober26th2015");
     } else if(dilepton && Muon && !Electron) {
@@ -474,9 +488,11 @@ int main(int argc, char* argv[])
         //        "_MuMuJuly9th2015");
 //        Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_MuMu_26thOctober.root", "MasterMVA_MuMu_26thOctober",
 //            MVAvars, "_MuMuOctober26th2015");
-                Eventcomputer_ = new
-                MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_26thOctober.root","MasterMVA_DiLep_Combined_26thOctober",MVAvars,
-                "_DilepCombinedOctober26th2015");
+                if(mvaNegWeight == 1) Eventcomputer_ = new
+                MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_6thApril2016_NegWeight.root","MasterMVA_DiLep_Combined_6thApril2016_NegWeight",MVAvars,
+                "_DilepCombined6thApril2016_NegWeight");
+		else Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_6thApril2016_NoWeight.root","MasterMVA_DiLep_Combined_6thApril2016_NoWeight",MVAvars,
+                "_DilepCombined6thApril2016_NoWeight");
 
     } else if(dilepton && !Muon && Electron) {
         //        Eventcomputer_ = new
@@ -484,9 +500,11 @@ int main(int argc, char* argv[])
         //        "_ElElJuly9th2015");
 //        Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_ElEl_26thOctober.root", "MasterMVA_ElEl_26thOctober",
 //            MVAvars, "_ElElOctober26th2015");
-                Eventcomputer_ = new
-                MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_26thOctober.root","MasterMVA_DiLep_Combined_26thOctober",MVAvars,
-                "_DilepCombinedOctober26th2015");
+                if(mvaNegWeight == 1) Eventcomputer_ = new
+                MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_6thApril2016_NegWeight.root","MasterMVA_DiLep_Combined_6thApril2016_NegWeight",MVAvars,
+                "_DilepCombined6thApril2016_NegWeight");
+		else Eventcomputer_ = new MVAComputer("BDT","MVA/MasterMVA_DiLep_Combined_6thApril2016_NoWeight.root","MasterMVA_DiLep_Combined_6thApril2016_NoWeight",MVAvars,
+                "_DilepCombined6thApril2016_NoWeight");
     }
 
     cout << " Initialized Eventcomputer_" << endl;
@@ -828,8 +846,8 @@ int main(int argc, char* argv[])
         // TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(),"nJets:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
 
         TNtuple* tup = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(),
-            "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:1stJetPt:2ndJetPt:3rdJetPt:4thJetPt:MET:HT:"
-            "LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2M:HTb:HTH:HTRat:topness:EventSph:EventCen:"
+            "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:1stJetPt:2ndJetPt:3rdJetPt:4thJetPt:5thJetPt:6thJetPt:7thJetPt:8thJetPt:MET:HT:"
+            "LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:dRLep:AbsSumCharge:LepFlavor:nLep:LeadingBJetPt:dRbb:HT2M:HTb:HTH:HTRat:topness:EventSph:EventCen:"
             "DiLepSph:DiLepCen:TopDiLepSph:TopDiLepCen:SFtrigger:SFlepton:SFbtag:SFbtagUp:SFbtagDown:SFPU:SFPU_up:SFPU_"
             "down:SFbehrends:SFtopPt:SFISR:ScaleFactor:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:"
             "weight4:weight5:weight6:weight7:weight8:diLepMass");
@@ -952,7 +970,7 @@ int main(int argc, char* argv[])
 
         float BDTScore, MHT, MHTSig, STJet, muoneta, muonpt, electronpt, bjetpt, EventMass, EventMassX, SumJetMass,
             SumJetMassX, H, HX, HTHi, HTRat, HT, HTX, HTH, HTXHX, sumpx_X, sumpy_X, sumpz_X, sume_X, sumpx, sumpy,
-            sumpz, sume, jetpt, PTBalTopEventX, PTBalTopSumJetX, PTBalTopMuMet;
+            sumpz, sume, jetpt, PTBalTopEventX, PTBalTopSumJetX, PTBalTopMuMet, dRLep, dRbb, lepFlavor;
 
         double currentfrac = 0.;
         double end_d = ending;
@@ -993,7 +1011,7 @@ int main(int argc, char* argv[])
             vector<TRootElectron *> selectedElectrons, selectedLooseElectrons, selectedMediumElectrons,
                 selectedTightElectrons;
             vector<TRootElectron *> selectedLooseXElectrons, selectedMediumXElectrons, selectedPosTightElectrons,
-                selectedNegTightElectrons, selectedPosNTightElectrons, selectedNegNTightElectrons;
+                selectedNegTightElectrons, selectedNTightElectrons;
             vector<TRootPFJet *> selectedJets, selectedUncleanedJets;
             vector<TRootPFJet*> selectedLooseJets;
             vector<TRootSubstructureJet*> selectedFatJets;
@@ -1008,7 +1026,7 @@ int main(int argc, char* argv[])
             STJet = 0., EventMass = 0., EventMassX = 0., SumJetMass = 0., SumJetMassX = 0., HTHi = 0., HTRat = 0;
             H = 0., HX = 0., HT = 0., HTX = 0., HTH = 0., HTXHX = 0., sumpx_X = 0., sumpy_X = 0., sumpz_X = 0.,
             sume_X = 0., sumpx = 0., sumpy = 0., sumpz = 0., sume = 0., jetpt = 0., PTBalTopEventX = 0.,
-            PTBalTopSumJetX = 0.;
+            PTBalTopSumJetX = 0., dRLep = 0, dRbb = 0, lepFlavor = 0;
 
             double ievt_d = ievt;
             float centralWeight = 1, scaleUp = 1, scaleDown = 1, weight1 = 1, weight2 = 1, weight3 = 1, weight4 = 1,
@@ -1483,10 +1501,7 @@ int main(int argc, char* argv[])
                 }
                 if(!isMed) {
                     selectedLooseXElectrons.push_back(selectedElectrons[l]);
-                    if(selectedElectrons[l]->charge() == 1)
-                        selectedPosNTightElectrons.push_back(selectedElectrons[l]);
-                    else if(selectedElectrons[l]->charge() == -1)
-                        selectedNegNTightElectrons.push_back(selectedElectrons[l]);
+                    selectedNTightElectrons.push_back(selectedElectrons[l]);
                 }
             }
             for(int m = 0; m < selectedMediumElectrons.size(); m++) {
@@ -1498,10 +1513,7 @@ int main(int argc, char* argv[])
                 }
                 if(!isTight) {
                     selectedMediumXElectrons.push_back(selectedMediumElectrons[m]);
-                    if(selectedMediumElectrons[m]->charge() == 1)
-                        selectedPosNTightElectrons.push_back(selectedMediumElectrons[m]);
-                    else if(selectedMediumElectrons[m]->charge() == -1)
-                        selectedNegNTightElectrons.push_back(selectedMediumElectrons[m]);
+                    selectedNTightElectrons.push_back(selectedMediumElectrons[m]);
                 }
             }
             for(int t = 0; t < selectedTightElectrons.size(); t++) {
@@ -1544,7 +1556,6 @@ int main(int argc, char* argv[])
             nLooseEl = selectedLooseXElectrons.size(); // Number of Loose Electrons in Event
             nMedEl = selectedMediumXElectrons.size(); // Number of Loose Electrons in Event
             nTightEl = selectedTightElectrons.size(); // Number of Loose Electrons in Event
-            nLep = nMu + nEl;
 
             bool isTagged = false;
             vector<TLorentzVector> selectedMuonsTLV_JC, selectedElectronsTLV_JC, selectedLooseIsoMuonsTLV;
@@ -1558,10 +1569,11 @@ int main(int argc, char* argv[])
             //////////////////////////////////
 
             float diLepMass = 0, diMuMass = 0;
-            bool ZVeto = false, sameCharge = false;
+            bool ZVeto = true, sameCharge = true;
             float ZMass = 91, ZMassWindow = 15;
             int cj1 = 0, cj2 = 0, lidx1 = 0, lidx2 = 0;
             TLorentzVector lep1, lep2, diLep;
+            vector<pair<float, pair<TRootLepton*, TRootLepton*> > > LeptonPairs;
 
             for(int selmu = 0; selmu < selectedMuons.size(); selmu++) {
                 if(selectedMuons[selmu]->charge() == 1)
@@ -1580,48 +1592,98 @@ int main(int argc, char* argv[])
             }
             if(nMu >= 2 && nEl == 0 && Muon && !Electron) // Di-Muon Selection
             {
-                if(selectedPosMuons.size() > 0 && selectedNegMuons.size() > 0) {
-                    lep1 = (TLorentzVector)*selectedPosMuons[0];
-                    lep2 = (TLorentzVector)*selectedNegMuons[0];
-                    sameCharge = true;
-                } else {
-                    lep1 = selectedMuonsTLV_JC[0];
+                
+                    for(int posMu = 0; posMu < selectedPosMuons.size(); posMu++){  //Making a vector of OS Lepton Pairs
+                        for(int negMu = 0; negMu < selectedNegMuons.size(); negMu++){
+			    float pairPt = selectedPosMuons[posMu]->Pt() + selectedNegMuons[negMu]->Pt();
+                            LeptonPairs.push_back(std::make_pair(pairPt, std::make_pair((TRootLepton*)selectedPosMuons[posMu], (TRootLepton*)selectedNegMuons[negMu])));
+                        }
+                    }
+                    std::sort(LeptonPairs.begin(), LeptonPairs.end(), pair_pt());
+		if(LeptonPairs.size() > 0) { //OS pair exists
+                    for(int ipair = 0; ipair < LeptonPairs.size(); ipair++)
+	            {
+			sameCharge = false;
+                        TLorentzVector dl = ((TLorentzVector)*LeptonPairs[ipair].second.first) + ((TLorentzVector)*LeptonPairs[ipair].second.second);
+                        float dlm = dl.M();
+                        if(!(dlm < 20 || (dlm > (ZMass - ZMassWindow) && dlm < (ZMass + ZMassWindow))))
+			{ //found a OS pair outside of Z-peak
+			    lep1 = (TLorentzVector)*LeptonPairs[ipair].second.first;
+                    	    lep2 = (TLorentzVector)*LeptonPairs[ipair].second.second;
+                            ZVeto = false;
+			    break;
+			}
+                    }
+                    if(ZVeto) { //no pair outside mass restrictions was found so just use the highest Pt one.  This will not pass preselection
+		        lep1 = (TLorentzVector)*selectedPosMuons[0];
+                        lep2 = (TLorentzVector)*selectedNegMuons[0];
+		    }
+                    
+                } else {//there are no OS pairs so the two leptons must be SS this will not pass preselection
+                    lep1 = selectedMuonsTLV_JC[0];//lep1 and lep2 are assigned to prevent possible segfaults
                     lep2 = selectedMuonsTLV_JC[1];
+                    sameCharge = true;
                 }
+		nLep = nMu;
             } else if(nTightEl >= 1 && nEl >= 2 && nMu == 0 && Electron && !Muon) // Di-Electron Selection criteria
             {
-                if(selectedPosTightElectrons.size() > 0 && selectedNegTightElectrons.size() > 0) {
-                    lep1 = (TLorentzVector)*selectedPosTightElectrons[0];
-                    lep2 = (TLorentzVector)*selectedNegTightElectrons[0];
-                    sameCharge = true;
-                } else if(selectedPosTightElectrons.size() > 0 && selectedNegNTightElectrons.size() > 0) {
-                    lep1 = (TLorentzVector)*selectedPosTightElectrons[0];
-                    lep2 = (TLorentzVector)*selectedNegNTightElectrons[0];
-                    sameCharge = true;
-                } else if(selectedNegTightElectrons.size() > 0 && selectedPosNTightElectrons.size() > 0) {
-                    lep1 = (TLorentzVector)*selectedNegTightElectrons[0];
-                    lep2 = (TLorentzVector)*selectedPosNTightElectrons[0];
-                    sameCharge = true;
-                } else {
-                    lep1 = (TLorentzVector)*selectedTightElectrons[0]; // Always set the first lepton to the highest Pt
-                                                                       // Tight Electron
-                    if(nTightEl >= 2) // If there is a second Tight Electron use that one
-                    {
-                        lep2 = (TLorentzVector)*selectedTightElectrons[1];
-                    } else if(nMedEl >= 1) // If no second Tight electron use the highest Pt Medium if present
-                    {
-                        lep2 = (TLorentzVector)*selectedMediumXElectrons[0];
-                    } else // In the absence of other second electrons use the highest Pt Loose one
-                    {
-                        lep2 = (TLorentzVector)*selectedLooseXElectrons[0];
+                for(int selTEl = 0; selTEl < selectedTightElectrons.size(); selTEl++){  //Making a vector of OS Lepton Pairs
+                    for(int selEl = 0; selEl < selectedElectrons.size(); selEl++){
+			if(selectedTightElectrons[selTEl]->charge() != selectedElectrons[selEl]->charge()){
+		            float pairPt = selectedElectrons[selEl]->Pt() + selectedTightElectrons[selTEl]->Pt();
+                            LeptonPairs.push_back(std::make_pair(pairPt, std::make_pair((TRootLepton*)selectedElectrons[selEl], (TRootLepton*)selectedTightElectrons[selTEl])));
+			}
                     }
                 }
+                std::sort(LeptonPairs.begin(), LeptonPairs.end(), pair_pt()); //sort pairs by their sum Pt
+                    
+		if(LeptonPairs.size() > 0) { //OS pair exists
+		    for(int ipair = 0; ipair < LeptonPairs.size(); ipair++)
+	            {
+                        TLorentzVector dl = ((TLorentzVector)*LeptonPairs[ipair].second.first) + ((TLorentzVector)*LeptonPairs[ipair].second.second);
+                        float dlm = dl.M();
+                        if(!(dlm < 20 || (dlm > (ZMass - ZMassWindow) && dlm < (ZMass + ZMassWindow))))
+			{ //found a OS pair outside of Z-peak
+			    lep1 = (TLorentzVector)*LeptonPairs[ipair].second.first;
+                    	    lep2 = (TLorentzVector)*LeptonPairs[ipair].second.second;
+                            ZVeto = false;
+			    break;
+			}
+                    }
+		    if(ZVeto) { //no pair outside mass restrictions was found so just use the highest Pt one.  This will not pass preselection
+		        lep1 = (TLorentzVector)*LeptonPairs[0].second.first;
+                        lep2 = (TLorentzVector)*LeptonPairs[0].second.second;
+		    }
+		    sameCharge = false;
+		}
+                else { //there are no OS pairs so the two leptons must be SS this will not pass preselection
+		    sameCharge = true; 
+		    lep1 = (TLorentzVector)*selectedElectrons[0]; //lep1 and lep2 are assigned to prevent possible segfaults
+                    lep2 = (TLorentzVector)*selectedElectrons[1];
+		}
+		nLep = nEl;
             } else if(nTightEl >= 1 && nEl >= 1 && nMu >= 1 && Electron && Muon) // Muon-Electron Selection
             {
-                lep1 = (TLorentzVector)*selectedMuons[0];
-                lep2 = (TLorentzVector)*selectedTightElectrons[0];
-                if(selectedElectrons[0]->charge() == selectedMuons[0]->charge())
-                    sameCharge = true;
+                for(int selMu = 0; selMu < selectedMuons.size(); selMu++){  //Making a vector of OS Lepton Pairs
+                    for(int selEl = 0; selEl < selectedTightElectrons.size(); selEl++){
+			if(selectedMuons[selMu]->charge() != selectedTightElectrons[selEl]->charge()){
+		            float pairPt = selectedMuons[selMu]->Pt() + selectedTightElectrons[selEl]->Pt();
+                            LeptonPairs.push_back(std::make_pair(pairPt, std::make_pair((TRootLepton*)selectedMuons[selMu], (TRootLepton*)selectedTightElectrons[selEl])));
+			}
+                    }
+                }
+		if(LeptonPairs.size() > 0) { //there is a OS pair
+		    std::sort(LeptonPairs.begin(), LeptonPairs.end(), pair_pt());
+                    lep1 = (TLorentzVector)*LeptonPairs[0].second.first;
+                    lep2 = (TLorentzVector)*LeptonPairs[0].second.second;
+                    sameCharge = false;
+		}
+                else { //there are no OS pairs so the two leptons must be SS this will not pass preselection
+		    sameCharge = true; 
+		    lep1 = (TLorentzVector)*selectedTightElectrons[0];//lep1 and lep2 are assigned to prevent possible segfaults
+                    lep2 = (TLorentzVector)*selectedMuons[0];
+		}
+		nLep = nMu + nEl;
             }
 
             /////////////////////////////////////////////////
@@ -1835,7 +1897,7 @@ int main(int argc, char* argv[])
             sfTup->Fill(fleptonSF1, fleptonSF2, btagWeight, lumiWeight, fTopPtReWeightsf, ISRsf, scaleFactor,
                 normfactor, Luminosity);
 
-            if(sameCharge) {
+            if(!sameCharge) {
                 diLep = lep1 + lep2;
                 diLepMass = diLep.M();
                 MSPlot["PreselDiLepMass"]->Fill(diLepMass, datasets[d], true, Luminosity * scaleFactor);
@@ -2128,9 +2190,9 @@ int main(int argc, char* argv[])
             }
             if(Muon && !Electron && dilepton) // Muon-Muon Selection Table
             {
-                if(sameCharge &&
-                    (diLepMass < 20 || (diLepMass > (ZMass - ZMassWindow) && diLepMass < (ZMass + ZMassWindow))))
-                    ZVeto = true;
+//                if(!sameCharge &&
+//                    (diLepMass < 20 || (diLepMass > (ZMass - ZMassWindow) && diLepMass < (ZMass + ZMassWindow))))
+//                    ZVeto = true;
                 if(trigged) {
                     cfTrigger = 1;
                     if(isGoodPV) {
@@ -2161,9 +2223,9 @@ int main(int argc, char* argv[])
             }
             if(!Muon && Electron && dilepton) // Electron-Electron Selection Table
             {
-                if(sameCharge &&
-                    (diLepMass < 20 || (diLepMass > (ZMass - ZMassWindow) && diLepMass < (ZMass + ZMassWindow))))
-                    ZVeto = true;
+//                if(!sameCharge &&
+//                    (diLepMass < 20 || (diLepMass > (ZMass - ZMassWindow) && diLepMass < (ZMass + ZMassWindow))))
+//                    ZVeto = true;
                 if(trigged) {
                     cfTrigger = 1;
                     if(isGoodPV) {
@@ -2276,14 +2338,17 @@ int main(int argc, char* argv[])
                 cout << " applying baseline event selection..." << endl;
             // Apply the lepton, btag and HT selections
             if(Muon && Electron && dilepton) {
-                if(!(nMu >= 1 && nTightEl >= 1))
+                if(!(nMu >= 1 && nTightEl >= 1 && !sameCharge))
                     continue; // Muon-Electron Channel Selection
+		lepFlavor = 2;
             } else if(Muon && !Electron && dilepton) {
-                if(!(nMu >= 2 && nEl == 0 && !ZVeto))
+                if(!(nMu >= 2 && nEl == 0 && !ZVeto && !sameCharge))
                     continue; // Muon-Electron Channel Selection
+		lepFlavor = 1;
             } else if(!Muon && Electron && dilepton) {
-                if(!(nMu == 0 && nTightEl >= 1 && nEl >= 2 && !ZVeto))
+                if(!(nMu == 0 && nTightEl >= 1 && nEl >= 2 && !ZVeto && !sameCharge))
                     continue; // Muon-Electron Channel Selection
+		lepFlavor = 3;
             } else {
                 cerr << "Correct Channel not selected." << endl;
                 exit(1);
@@ -2496,12 +2561,20 @@ int main(int argc, char* argv[])
                 //                cout << "Electron E/P Ratio : " << epRat << endl;
             }
 
+            ////////////////////////
+            // Lepton Information //
+            ////////////////////////
+
+	    
+
+	    dRLep = lep1.DeltaR(lep2);
+
             //////////////////////
             // Jets Based Plots //
             //////////////////////
 
             HT = 0;
-            float HT1M2L = 0, H1M2L = 0, HTbjets = 0, HT2M = 0, H2M = 0;
+            float HT1M2L = 0, H1M2L = 0, HTbjets = 0, HT2M = 0, H2M = 0, dRbb = 0;
 
             for(Int_t seljet1 = 0; seljet1 < selectedJets.size(); seljet1++) {
                 if(nMtags >= 2 && seljet1 >= 2) {
@@ -2520,15 +2593,13 @@ int main(int argc, char* argv[])
                 jetpt = selectedJets[seljet1]->Pt();
                 HT = HT + jetpt;
                 H = H + selectedJets[seljet1]->P();
-                if(seljet1 > 2)
-                    HTHi += selectedJets[seljet1]->Pt();
                 jettup->Fill(scaleFactor, normfactor, Luminosity, selectedJets[seljet1]->neutralHadronEnergyFraction(),
                     selectedJets[seljet1]->neutralEmEnergyFraction(), selectedJets[seljet1]->nConstituents(),
                     selectedJets[seljet1]->chargedHadronEnergyFraction(), selectedJets[seljet1]->chargedMultiplicity(),
                     selectedJets[seljet1]->chargedEmEnergyFraction());
             }
-
-            HTRat = HTHi / HT;
+            dRbb = fabs(selectedJets[0]->DeltaR(*selectedJets[1]));
+            HTRat = (selectedJets[0]->Pt() + selectedJets[1]->Pt()) / HT;
             HTH = HT / H;
 
             MSPlot["HTExcess2M"]->Fill(HT2M, datasets[d], true, Luminosity * scaleFactor);
@@ -2536,6 +2607,7 @@ int main(int argc, char* argv[])
             MSPlot["HT_SelectedJets"]->Fill(HT, datasets[d], true, Luminosity * scaleFactor);
             histo2D["HTLepSep"]->Fill(HT, lep1.DeltaR(lep2));
             sort(selectedJets.begin(), selectedJets.end(), HighestPt()); // order Jets wrt Pt for tuple output
+            
 
             if(selectedJets.size() >= 3)
                 MSPlot["3rdJetPt"]->Fill(selectedJets[2]->Pt(), datasets[d], true, Luminosity * scaleFactor);
@@ -2674,28 +2746,29 @@ int main(int argc, char* argv[])
 
             //	  tup->Fill(nJets,nLtags,nMtags,nTtags,HT,muonpt,muoneta,electronpt,bjetpt,HT2M,HTb,HTH,HTRat,topness,scaleFactor,nvertices,normfactor,Luminosity,weight_0);
 
-            float vals[54] = { BDTScore, nJets, nFatJets, nWTags, nTopTags, nLtags, nMtags, nTtags,
+            float vals[63] = { BDTScore, nJets, nFatJets, nWTags, nTopTags, nLtags, nMtags, nTtags,
                 (nJets > 0 ? selectedJets[0]->Pt() : -9999), (nJets > 1 ? selectedJets[1]->Pt() : -9999),
-                (nJets > 2 ? selectedJets[2]->Pt() : -9999), (nJets > 3 ? selectedJets[3]->Pt() : -9999), mets[0]->Et(),
-                HT, 0, 0, 0, bjetpt, HT2M, HTb, HTH, HTRat, topness, tSph, tCen, dSph, dCen, tdSph, tdCen, fTriggerSF,
+                (nJets > 2 ? selectedJets[2]->Pt() : -9999), (nJets > 3 ? selectedJets[3]->Pt() : -9999), (nJets > 4 ? selectedJets[4]->Pt() : -9999), (nJets > 5 ? selectedJets[5]->Pt() : -9999),
+                (nJets > 6 ? selectedJets[6]->Pt() : -9999), (nJets > 7 ? selectedJets[7]->Pt() : -9999), mets[0]->Et(),
+                HT, 0, 0, 0, dRLep, (sameCharge ? 2 : 0), lepFlavor, nLep, bjetpt, dRbb, HT2M, HTb, HTH, HTRat, topness, tSph, tCen, dSph, dCen, tdSph, tdCen, fTriggerSF,
                 fleptonSF, btagWeight, btagWeightUp, btagWeightDown, lumiWeight, lumiWeight_up, lumiWeight_down,
                 fbehrendsSF, fTopPtReWeightsf, ISRsf, scaleFactor, nvertices, normfactor, Luminosity, centralWeight,
                 weight1, weight2, weight3, weight4, weight5, weight6, weight7, weight8, diLepMass };
             //                "BDT:nJets:nFatJets:nWTags:nTopTags:nLtags:nMtags:nTtags:HT:LeadingMuonPt:LeadingMuonEta:LeadingElectronPt:LeadingBJetPt:HT2L:HTb:HTH:HTRat:topness:ScaleFactor:PU:NormFactor:Luminosity:GenWeight");
             if(Muon && Electron) {
-                vals[14] = muonpt;
-                vals[15] = muoneta;
-                vals[16] = selectedTightElectrons[0]->Pt();
+                vals[18] = muonpt;
+                vals[19] = muoneta;
+                vals[20] = selectedTightElectrons[0]->Pt();
             }
             if(Muon && !Electron) {
-                vals[14] = muonpt;
-                vals[15] = muoneta;
-                vals[16] = selectedMuons[1]->Pt();
+                vals[18] = muonpt;
+                vals[19] = muoneta;
+                vals[20] = selectedMuons[1]->Pt();
             }
             if(!Muon && Electron) {
-                vals[14] = muonpt;
-                vals[15] = muoneta;
-                vals[16] = selectedElectrons[1]->Pt();
+                vals[18] = muonpt;
+                vals[19] = muoneta;
+                vals[20] = selectedElectrons[1]->Pt();
             }
 
             tup->Fill(vals);

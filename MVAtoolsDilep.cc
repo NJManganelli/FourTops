@@ -199,22 +199,27 @@ int main(int argc, char** argv)
 
         if(Muon && Electron) {
             Eventtrainer_ = new MVATrainer(
-                "BDT", "MasterMVA_MuEl_14thApril2016_AdaBoost", "MVA/MasterMVA_MuEl_14thApril2016_AdaBoost.root");
+                "BDT", "MasterMVA_MuEl_18thApril2016_18OSLep", "MVA/MasterMVA_MuEl_18thApril2016_18OSLep.root");
         } else if(Muon && !Electron) {
             Eventtrainer_ = new MVATrainer(
-                "BDT", "MasterMVA_MuMu_14thApril2016_AdaBoost", "MVA/MasterMVA_MuMu_14thApril2016_AdaBoost.root");
+                "BDT", "MasterMVA_MuMu_18thApril2016_18OSLep", "MVA/MasterMVA_MuMu_18thApril2016_18OSLep.root");
         } else if(!Muon && Electron) {
             Eventtrainer_ = new MVATrainer(
-                "BDT", "MasterMVA_ElEl_14thApril2016_AdaBoost", "MVA/MasterMVA_ElEl_14thApril2016_AdaBoost.root");
+                "BDT", "MasterMVA_ElEl_18thApril2016_18OSLep", "MVA/MasterMVA_ElEl_18thApril2016_18OSLep.root");
         } else if(!Muon && !Electron && Combined) {
-            Eventtrainer_ = new MVATrainer("BDT", "MasterMVA_DiLep_Combined_14thApril2016_AdaBoost",
-                "MVA/MasterMVA_DiLep_Combined_14thApril2016_AdaBoost.root");
+            Eventtrainer_ = new MVATrainer("BDT", "MasterMVA_DiLep_Combined_18thApril2016_18OSLep",
+                "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root");
         }
 
-        Eventtrainer_->bookWeight("Weight");
+//        Eventtrainer_->bookWeight("Weight");
         Eventtrainer_->bookInputVar("topness");
         Eventtrainer_->bookInputVar("leadLepPt");
         Eventtrainer_->bookInputVar("leadLepEta");
+        Eventtrainer_->bookInputVar("dRLep");
+//        Eventtrainer_->bookInputVar("AbsSumCharge");
+        Eventtrainer_->bookInputVar("LepFlavor");
+        Eventtrainer_->bookInputVar("nLep");
+        Eventtrainer_->bookInputVar("dRbb");
         Eventtrainer_->bookInputVar("HTH");
         Eventtrainer_->bookInputVar("HTRat");
         Eventtrainer_->bookInputVar("HTb");
@@ -222,15 +227,15 @@ int main(int argc, char** argv)
         Eventtrainer_->bookInputVar("nMtags");
         Eventtrainer_->bookInputVar("nTtags");
         Eventtrainer_->bookInputVar("nJets");
-//                Eventtrainer_->bookInputVar("Jet3Pt");
-//                Eventtrainer_->bookInputVar("Jet4Pt");
+        Eventtrainer_->bookInputVar("Jet3Pt");
+        Eventtrainer_->bookInputVar("Jet4Pt");
         Eventtrainer_->bookInputVar("HT2M");
         Eventtrainer_->bookInputVar("EventSph");
-//                Eventtrainer_->bookInputVar("EventCen");
-//                Eventtrainer_->bookInputVar("DiLepSph");
-//                Eventtrainer_->bookInputVar("DiLepCen");
-//                Eventtrainer_->bookInputVar("TopDiLepSph");
-//                Eventtrainer_->bookInputVar("TopDiLepCen");
+//        Eventtrainer_->bookInputVar("EventCen");
+//        Eventtrainer_->bookInputVar("DiLepSph");
+//        Eventtrainer_->bookInputVar("DiLepCen");
+//        Eventtrainer_->bookInputVar("TopDiLepSph");
+//        Eventtrainer_->bookInputVar("TopDiLepCen");
 
         bool isSignal;
 
@@ -254,12 +259,18 @@ int main(int argc, char** argv)
             HT2M_tttt, EventSph_tt, EventSph_tttt;
         float Jet3Pt_tt, Jet3Pt_tttt, Jet4Pt_tt, Jet4Pt_tttt, EventCen_tt, EventCen_tttt, DiLepSph_tt, DiLepSph_tttt, DiLepCen_tt,
             DiLepCen_tttt, TopDiLepSph_tt, TopDiLepSph_tttt, TopDiLepCen_tt, TopDiLepCen_tttt;
+        float dRLep_tt, dRLep_tttt, AbsSumCharge_tt, AbsSumCharge_tttt, LepFlavor_tt, LepFlavor_tttt, dRbb_tt, dRbb_tttt, nLep_tt, nLep_tttt;
         float weight_tt, weight_tttt;
 
         ttbar_tup->SetBranchAddress("GenWeight", &weight_tt);
         ttbar_tup->SetBranchAddress("topness", &topness_tt);
         ttbar_tup->SetBranchAddress("LeadingMuonPt", &leadLepPt_tt);
         ttbar_tup->SetBranchAddress("LeadingMuonEta", &leadLepEta_tt);
+        ttbar_tup->SetBranchAddress("dRLep", &dRLep_tt);
+        ttbar_tup->SetBranchAddress("AbsSumCharge", &AbsSumCharge_tt);
+        ttbar_tup->SetBranchAddress("LepFlavor", &LepFlavor_tt);
+        ttbar_tup->SetBranchAddress("nLep", &nLep_tt);
+        ttbar_tup->SetBranchAddress("dRbb", &dRbb_tt);
         ttbar_tup->SetBranchAddress("HTb", &HTb_tt);
         ttbar_tup->SetBranchAddress("HTH", &HTH_tt);
         ttbar_tup->SetBranchAddress("HTRat", &HTRat_tt);
@@ -269,19 +280,24 @@ int main(int argc, char** argv)
         ttbar_tup->SetBranchAddress("nJets", &nJets_tt);
         ttbar_tup->SetBranchAddress("HT2M", &HT2M_tt);
         ttbar_tup->SetBranchAddress("EventSph", &EventSph_tt);
-//        ttbar_tup->SetBranchAddress("3rdJetPt", &Jet3Pt_tt);
-//        ttbar_tup->SetBranchAddress("4thJetPt", &Jet4Pt_tt);
-//        ttbar_tup->SetBranchAddress("EventCen", &EventCen_tt);
-//        ttbar_tup->SetBranchAddress("DiLepSph", &DiLepSph_tt);
-//        ttbar_tup->SetBranchAddress("DiLepCen", &DiLepCen_tt);
-//        ttbar_tup->SetBranchAddress("TopDiLepSph", &TopDiLepSph_tt);
-//        ttbar_tup->SetBranchAddress("TopDiLepCen", &TopDiLepCen_tt);
+        ttbar_tup->SetBranchAddress("3rdJetPt", &Jet3Pt_tt);
+        ttbar_tup->SetBranchAddress("4thJetPt", &Jet4Pt_tt);
+        ttbar_tup->SetBranchAddress("EventCen", &EventCen_tt);
+        ttbar_tup->SetBranchAddress("DiLepSph", &DiLepSph_tt);
+        ttbar_tup->SetBranchAddress("DiLepCen", &DiLepCen_tt);
+        ttbar_tup->SetBranchAddress("TopDiLepSph", &TopDiLepSph_tt);
+        ttbar_tup->SetBranchAddress("TopDiLepCen", &TopDiLepCen_tt);
 
 
         tttt_tup->SetBranchAddress("GenWeight", &weight_tttt);
         tttt_tup->SetBranchAddress("topness", &topness_tttt);
         tttt_tup->SetBranchAddress("LeadingMuonPt", &leadLepPt_tttt);
         tttt_tup->SetBranchAddress("LeadingMuonEta", &leadLepEta_tttt);
+        tttt_tup->SetBranchAddress("dRLep", &dRLep_tttt);
+        tttt_tup->SetBranchAddress("AbsSumCharge", &AbsSumCharge_tttt);
+        tttt_tup->SetBranchAddress("LepFlavor", &LepFlavor_tttt);
+        tttt_tup->SetBranchAddress("nLep", &nLep_tttt);
+        tttt_tup->SetBranchAddress("dRbb", &dRbb_tttt);
         tttt_tup->SetBranchAddress("HTb", &HTb_tttt);
         tttt_tup->SetBranchAddress("HTH", &HTH_tttt);
         tttt_tup->SetBranchAddress("HTRat", &HTRat_tttt);
@@ -291,13 +307,13 @@ int main(int argc, char** argv)
         tttt_tup->SetBranchAddress("nJets", &nJets_tttt);
         tttt_tup->SetBranchAddress("HT2M", &HT2M_tttt);
         tttt_tup->SetBranchAddress("EventSph", &EventSph_tttt);
-//        tttt_tup->SetBranchAddress("3rdJetPt", &Jet3Pt_tttt);
-//        tttt_tup->SetBranchAddress("4thJetPt", &Jet4Pt_tttt);
-//        tttt_tup->SetBranchAddress("EventCen", &EventCen_tttt);
-//        tttt_tup->SetBranchAddress("DiLepSph", &DiLepSph_tttt);
-//        tttt_tup->SetBranchAddress("DiLepCen", &DiLepCen_tttt);
-//        tttt_tup->SetBranchAddress("TopDiLepSph", &TopDiLepSph_tttt);
-//        tttt_tup->SetBranchAddress("TopDiLepCen", &TopDiLepCen_tttt);
+        tttt_tup->SetBranchAddress("3rdJetPt", &Jet3Pt_tttt);
+        tttt_tup->SetBranchAddress("4thJetPt", &Jet4Pt_tttt);
+        tttt_tup->SetBranchAddress("EventCen", &EventCen_tttt);
+        tttt_tup->SetBranchAddress("DiLepSph", &DiLepSph_tttt);
+        tttt_tup->SetBranchAddress("DiLepCen", &DiLepCen_tttt);
+        tttt_tup->SetBranchAddress("TopDiLepSph", &TopDiLepSph_tttt);
+        tttt_tup->SetBranchAddress("TopDiLepCen", &TopDiLepCen_tttt);
 
         // for(int idatasets=0;idatasets<2;idatasets++){
         //     if(idatasets == 0){
@@ -341,10 +357,15 @@ int main(int argc, char** argv)
                 // cout<<nJets_tt<<"     "<<jet5and6pt_tttt<<endl;
 
                 if(nJets_tt >= 4) {
-                    Eventtrainer_->FillWeight("B", "Weight", scaleFactor);
+//                    Eventtrainer_->FillWeight("B", "Weight", scaleFactor);
                     Eventtrainer_->Fill("B", "topness", topness_tt);
                     Eventtrainer_->Fill("B", "leadLepPt", leadLepPt_tt);
                     Eventtrainer_->Fill("B", "leadLepEta", leadLepEta_tt);
+                    Eventtrainer_->Fill("B", "dRLep", dRLep_tt);
+//                    Eventtrainer_->Fill("B", "AbsSumCharge", AbsSumCharge_tt);
+                    Eventtrainer_->Fill("B", "LepFlavor", LepFlavor_tt);
+                    Eventtrainer_->Fill("B", "nLep", nLep_tt);
+                    Eventtrainer_->Fill("B", "dRbb", dRbb_tt);
                     Eventtrainer_->Fill("B", "HTb", HTb_tt);
                     Eventtrainer_->Fill("B", "HTRat", HTRat_tt);
                     Eventtrainer_->Fill("B", "HTH", HTH_tt);
@@ -352,15 +373,15 @@ int main(int argc, char** argv)
                     Eventtrainer_->Fill("B", "nMtags", nMtags_tt);
                     Eventtrainer_->Fill("B", "nTtags", nTtags_tt);
                     Eventtrainer_->Fill("B", "nJets", nJets_tt);
-//                                        Eventtrainer_->Fill("B", "Jet3Pt", Jet3Pt_tt);
-//                                        Eventtrainer_->Fill("B", "Jet4Pt", Jet4Pt_tt);
+                    Eventtrainer_->Fill("B", "Jet3Pt", Jet3Pt_tt);
+                    Eventtrainer_->Fill("B", "Jet4Pt", Jet4Pt_tt);
                     Eventtrainer_->Fill("B", "HT2M", HT2M_tt);
                     Eventtrainer_->Fill("B", "EventSph", EventSph_tt);
-//                                        Eventtrainer_->Fill("B", "EventCen", EventCen_tt);
-//                                        Eventtrainer_->Fill("B", "DiLepSph", DiLepSph_tt);
-//                                        Eventtrainer_->Fill("B", "DiLepCen", DiLepCen_tt);
-//                                        Eventtrainer_->Fill("B", "TopDiLepSph", TopDiLepSph_tt);
-//                                        Eventtrainer_->Fill("B", "TopDiLepCen", TopDiLepCen_tt);
+//                    Eventtrainer_->Fill("B", "EventCen", EventCen_tt);
+//                    Eventtrainer_->Fill("B", "DiLepSph", DiLepSph_tt);
+//                    Eventtrainer_->Fill("B", "DiLepCen", DiLepCen_tt);
+//                    Eventtrainer_->Fill("B", "TopDiLepSph", TopDiLepSph_tt);
+//                    Eventtrainer_->Fill("B", "TopDiLepCen", TopDiLepCen_tt);
                 }
             }
 
@@ -372,10 +393,15 @@ int main(int argc, char** argv)
                 scaleFactor = 1.0;
 
             if(nJets_tttt >= 4) {
-                Eventtrainer_->FillWeight("S", "Weight", scaleFactor);
+//                Eventtrainer_->FillWeight("S", "Weight", scaleFactor);
                 Eventtrainer_->Fill("S", "topness", topness_tttt);
                 Eventtrainer_->Fill("S", "leadLepPt", leadLepPt_tttt);
                 Eventtrainer_->Fill("S", "leadLepEta", leadLepEta_tttt);
+                Eventtrainer_->Fill("S", "dRLep", dRLep_tttt);
+//                Eventtrainer_->Fill("S", "AbsSumCharge", AbsSumCharge_tttt);
+                Eventtrainer_->Fill("S", "LepFlavor", LepFlavor_tttt);
+                Eventtrainer_->Fill("S", "nLep", nLep_tttt);
+                Eventtrainer_->Fill("S", "dRbb", dRbb_tttt);
                 Eventtrainer_->Fill("S", "HTb", HTb_tttt);
                 Eventtrainer_->Fill("S", "HTH", HTH_tttt);
                 Eventtrainer_->Fill("S", "HTRat", HTRat_tttt);
@@ -383,27 +409,27 @@ int main(int argc, char** argv)
                 Eventtrainer_->Fill("S", "nMtags", nMtags_tttt);
                 Eventtrainer_->Fill("S", "nTtags", nTtags_tttt);
                 Eventtrainer_->Fill("S", "nJets", nJets_tttt);
-//                                    Eventtrainer_->Fill("S", "Jet3Pt", Jet3Pt_tttt);
-//                                    Eventtrainer_->Fill("S", "Jet4Pt", Jet4Pt_tttt);
+                Eventtrainer_->Fill("S", "Jet3Pt", Jet3Pt_tttt);
+                Eventtrainer_->Fill("S", "Jet4Pt", Jet4Pt_tttt);
                 Eventtrainer_->Fill("S", "HT2M", HT2M_tttt);
                 Eventtrainer_->Fill("S", "EventSph", EventSph_tttt);
-//                                    Eventtrainer_->Fill("S", "EventCen", EventCen_tttt);
-//                                    Eventtrainer_->Fill("S", "DiLepSph", DiLepSph_tttt);
-//                                    Eventtrainer_->Fill("S", "DiLepCen", DiLepCen_tttt);
-//                                    Eventtrainer_->Fill("S", "TopDiLepSph", TopDiLepSph_tttt);
-//                                    Eventtrainer_->Fill("S", "TopDiLepCen", TopDiLepCen_tttt);
+//                Eventtrainer_->Fill("S", "EventCen", EventCen_tttt);
+//                Eventtrainer_->Fill("S", "DiLepSph", DiLepSph_tttt);
+//                Eventtrainer_->Fill("S", "DiLepCen", DiLepCen_tttt);
+//                Eventtrainer_->Fill("S", "TopDiLepSph", TopDiLepSph_tttt);
+//                Eventtrainer_->Fill("S", "TopDiLepCen", TopDiLepCen_tttt);
             }
             fbit = j + 1;
         }
         // }
         if(Muon && Electron && !Combined) {
-            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_MuEl14thApril2016_AdaBoost", true);
+            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_MuEl18thApril2016_18OSLep", false);
         } else if(Muon && !Electron && !Combined) {
-            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_MuMu14thApril2016_AdaBoost", true);
+            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_MuMu18thApril2016_18OSLep", false);
         } else if(!Muon && Electron && !Combined) {
-            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_ElEl14thApril2016_AdaBoost", true);
+            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_ElEl18thApril2016_18OSLep", false);
         } else if(!Muon && !Electron && Combined) {
-            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_DilepCombined14thApril2016_AdaBoost", true);
+            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_DilepCombined18thApril2016_18OSLep", false);
         }
         cout << "MVA Trained!" << endl;
         delete Eventtrainer_;
@@ -420,40 +446,45 @@ int main(int argc, char** argv)
         MVAvars.push_back("topness");
         MVAvars.push_back("leadLepPt");
         MVAvars.push_back("leadLepEta");
+        MVAvars.push_back("dRLep");
+//        MVAvars.push_back("AbsSumCharge");
+        MVAvars.push_back("LepFlavor");
+        MVAvars.push_back("nLep");
+        MVAvars.push_back("dRbb");
         MVAvars.push_back("HTH");
         MVAvars.push_back("HTRat");
         MVAvars.push_back("HTb");
         MVAvars.push_back("nLtags");
         MVAvars.push_back("nMtags");
         MVAvars.push_back("nTtags");
-        //MVAvars.push_back("nJets");
-//            MVAvars.push_back("Jet3Pt");
-//            MVAvars.push_back("Jet4Pt");
+        MVAvars.push_back("nJets");
+        MVAvars.push_back("Jet3Pt");
+        MVAvars.push_back("Jet4Pt");
         MVAvars.push_back("HT2M");
         MVAvars.push_back("EventSph");
-//            MVAvars.push_back("EventCen");
-//            MVAvars.push_back("DiLepSph");
-//            MVAvars.push_back("DiLepCen");
-//            MVAvars.push_back("TopDiLepSph");
-//            MVAvars.push_back("TopDiLepCen");
+//        MVAvars.push_back("EventCen");
+//        MVAvars.push_back("DiLepSph");
+//        MVAvars.push_back("DiLepCen");
+//        MVAvars.push_back("TopDiLepSph");
+//        MVAvars.push_back("TopDiLepCen");
 
         MVAComputer* Eventcomputer_;
         if(Muon && Electron) {
-            MVApostfix = "_DilepCombined14thApril2016_AdaBoost";
-            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_14thApril2016_AdaBoost.root",
-                "MasterMVA_DiLep_Combined_14thApril2016_AdaBoost", MVAvars, MVApostfix.c_str());
+            MVApostfix = "_DilepCombined18thApril2016_18OSLep";
+            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root",
+                "MasterMVA_DiLep_Combined_18thApril2016_18OSLep", MVAvars, MVApostfix.c_str());
         } else if(Muon && !Electron) {
-            MVApostfix = "_DilepCombined14thApril2016_AdaBoost";
-            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_14thApril2016_AdaBoost.root",
-                "MasterMVA_DiLep_Combined_14thApril2016_AdaBoost", MVAvars, MVApostfix.c_str());
+            MVApostfix = "_DilepCombined18thApril2016_18OSLep";
+            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root",
+                "MasterMVA_DiLep_Combined_18thApril2016_18OSLep", MVAvars, MVApostfix.c_str());
         } else if(!Muon && Electron) {
-            MVApostfix = "_DilepCombined14thApril2016_AdaBoost";
-            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_14thApril2016_AdaBoost.root",
-                "MasterMVA_DiLep_Combined_14thApril2016_AdaBoost", MVAvars, MVApostfix.c_str());
+            MVApostfix = "_DilepCombined18thApril2016_18OSLep";
+            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root",
+                "MasterMVA_DiLep_Combined_18thApril2016_18OSLep", MVAvars, MVApostfix.c_str());
         } else if(!Muon && !Electron && Combined) {
-            MVApostfix = "_DilepCombined14thApril2016_AdaBoost";
-            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_14thApril2016_AdaBoost.root",
-                "MasterMVA_DiLep_Combined_14thApril2016_AdaBoost", MVAvars, MVApostfix.c_str());
+            MVApostfix = "_DilepCombined18thApril2016_18OSLep";
+            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root",
+                "MasterMVA_DiLep_Combined_18thApril2016_18OSLep", MVAvars, MVApostfix.c_str());
         }
 
         cout << " Initialized Eventcomputer_" << endl;
@@ -499,13 +530,18 @@ int main(int argc, char** argv)
             cout << "Sample: " << files[i]->GetPath() << endl;
             files[i]->cd();
 
-            float topness, muonpt, muoneta, HTH, HTRat, HTb, nLtags, nMtags, nTtags, nJets, HT2M, EventSph, weight;
+            float topness, muonpt, muoneta, HTH, HTRat, HTb, nLtags, nMtags, nTtags, nJets, HT2M, EventSph, weight, dRLep, AbsSumCharge, nLep, LepFlavor, dRbb, Jet3Pt, Jet4Pt;
             float BDTScore;
 
             tup->SetBranchAddress("GenWeight", &weight);
             tup->SetBranchAddress("topness", &topness);
             tup->SetBranchAddress("LeadingMuonPt", &muonpt);
             tup->SetBranchAddress("LeadingMuonEta", &muoneta);
+            tup->SetBranchAddress("dRLep", &dRLep);
+            tup->SetBranchAddress("AbsSumCharge", &AbsSumCharge);
+            tup->SetBranchAddress("LepFlavor", &LepFlavor);
+            tup->SetBranchAddress("nLep", &nLep);
+            tup->SetBranchAddress("dRbb", &dRbb);
             tup->SetBranchAddress("HTb", &HTb);
             tup->SetBranchAddress("HTH", &HTH);
             tup->SetBranchAddress("HTRat", &HTRat);
@@ -514,6 +550,8 @@ int main(int argc, char** argv)
             tup->SetBranchAddress("nTtags", &nTtags);
             tup->SetBranchAddress("nJets", &nJets);
             tup->SetBranchAddress("HT2M", &HT2M);
+            tup->SetBranchAddress("3rdJetPt", &Jet3Pt);
+            tup->SetBranchAddress("4thJetPt", &Jet4Pt);
             tup->SetBranchAddress("EventSph", &EventSph);
 
             string branchName = "BDT" + MVApostfix; // name for the branch of the new BDT discriminant
@@ -527,19 +565,24 @@ int main(int argc, char** argv)
                     Eventcomputer_->FillVar("topness", topness);
                     Eventcomputer_->FillVar("leadLepPt", muonpt);
                     Eventcomputer_->FillVar("leadLepEta", muoneta);
+                    Eventcomputer_->FillVar("dRLep", dRLep);
+//                    Eventcomputer_->FillVar("AbsSumCharge", AbsSumCharge);
+                    Eventcomputer_->FillVar("LepFlavor", LepFlavor);
+                    Eventcomputer_->FillVar("nLep", nLep);
+                    Eventcomputer_->FillVar("dRbb", dRbb);
                     Eventcomputer_->FillVar("HTH", HTH);
                     Eventcomputer_->FillVar("HTRat", HTRat);
                     Eventcomputer_->FillVar("HTb", HTb);
                     Eventcomputer_->FillVar("nLtags", nLtags);
                     Eventcomputer_->FillVar("nMtags", nMtags);
                     Eventcomputer_->FillVar("nTtags", nTtags);
-//                    Eventcomputer_->FillVar("nJets", nJets);
-                    //                Eventcomputer_->FillVar("Jet3Pt", selectedJets[2]->Pt());
-                    //                Eventcomputer_->FillVar("Jet4Pt", selectedJets[3]->Pt());
+                    Eventcomputer_->FillVar("nJets", nJets);
+                    Eventcomputer_->FillVar("Jet3Pt", Jet3Pt);
+                    Eventcomputer_->FillVar("Jet4Pt", Jet4Pt);
                     Eventcomputer_->FillVar("HT2M", HT2M);
                     Eventcomputer_->FillVar("EventSph", EventSph);
                     //                Eventcomputer_->FillVar("EventCen", tCen);
-                    //               Eventcomputer_->FillVar("DiLepSph", dSph);
+                    //                Eventcomputer_->FillVar("DiLepSph", dSph);
                     //                Eventcomputer_->FillVar("DiLepCen", dCen);
                     //                Eventcomputer_->FillVar("TopDiLepSph", tdSph);
                     //                Eventcomputer_->FillVar("TopDiLepCen", tdCen);
