@@ -714,8 +714,17 @@ void DatasetPlotter(int nBins,
     float PtLepton;
     bool split_ttbar = false;
     bool reweight_ttbar = false;
-    string mainTTbarSample = "TTDileptMG";
-    string otherTTbarsample = "TTDileptPowheg";
+    string mainTTbarSample;
+    string otherTTbarsample;
+    cout<<"channel  "<<channel<<endl;
+    if(channel == "ttttmu"||channel == "ttttel"){
+        mainTTbarSample = "TTJets_powheg";
+        otherTTbarsample = "TTJets_MLM";
+    }
+    else{
+        mainTTbarSample = "TTDileptMG";
+        otherTTbarsample = "TTDileptPowheg";
+    }
     double ll_rw = 0.976;
     double bb_rw = 3.;
     double ll_rw_up = 0.976;
@@ -1234,8 +1243,17 @@ void SplitDatasetPlotter(int nBins,
     pathPNG += "_MSPlots/";
     mkdir(pathPNG.c_str(), 0777);
     cout << "Making directory :" << pathPNG << endl; // make directory
-    string mainTTbarSample = "TTDileptMG";
-    string otherTTbarsample = "TTDileptPowheg";
+    string mainTTbarSample;
+    string otherTTbarsample;
+    cout<<"channel  "<<channel<<endl;
+    if(channel == "ttttmu"||channel == "ttttel"){
+        mainTTbarSample = "TTJets_powheg";
+        otherTTbarsample = "TTJets_MLM";
+    }
+    else{
+        mainTTbarSample = "TTDileptMG";
+        otherTTbarsample = "TTDileptPowheg";
+    }
     ///////////////////////////////////////////////////////////// Load Datasets
     /////////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
     TTreeLoader treeLoader;
@@ -1903,8 +1921,17 @@ void DataCardProducer(string VoI,
     vector<string> MCdatasets; // contains only MC samples required in datacard
     cout << "\nPRODUCING DATACARD\n" << endl;
 
-    string mainTTbarSample = "TTDileptMG";
-    string otherTTbarsample = "TTDileptPowheg";
+    string mainTTbarSample;
+    string otherTTbarsample;
+    cout<<"channel  "<<channel<<endl;
+    if(channel == "ttttmu"||channel == "ttttel"){
+        mainTTbarSample = "TTJets_powheg";
+        otherTTbarsample = "TTJets_MLM";
+    }
+    else{
+        mainTTbarSample = "TTDileptMG";
+        otherTTbarsample = "TTDileptPowheg";
+    }
 
     string binname, histoName, dataSetName, datacardname;
     ofstream card;
@@ -2220,8 +2247,17 @@ void Split_DataCardProducer(string VoI,
     float tempEntries;
     int nChannels = 0;
     int howmanyMC = 0;
-    string mainTTbarSample = "TTDileptMG";
-    string otherTTbarsample = "TTDileptPowheg";
+    string mainTTbarSample;
+    string otherTTbarsample;
+    cout<<"channel  "<<channel<<endl;
+    if(channel == "ttttmu"||channel == "ttttel"){
+        mainTTbarSample = "TTJets_powheg";
+        otherTTbarsample = "TTJets_MLM";
+    }
+    else{
+        mainTTbarSample = "TTDileptMG";
+        otherTTbarsample = "TTDileptPowheg";
+    }
     vector<string> MCdatasets; // contains only MC samples required in datacard
     cout << "\nPRODUCING DATACARD\n" << endl;
 
