@@ -199,20 +199,26 @@ int main(int argc, char** argv)
 
         if(Muon && Electron) {
             Eventtrainer_ = new MVATrainer(
-                "BDT", "MasterMVA_MuEl_18thApril2016_18OSLep", "MVA/MasterMVA_MuEl_18thApril2016_18OSLep.root");
+                "BDT", "MasterMVA_MuEl_21stApril2016_AdaBoost", "MVA/MasterMVA_MuEl_21stApril2016_AdaBoost.root");
         } else if(Muon && !Electron) {
             Eventtrainer_ = new MVATrainer(
-                "BDT", "MasterMVA_MuMu_18thApril2016_18OSLep", "MVA/MasterMVA_MuMu_18thApril2016_18OSLep.root");
+                "BDT", "MasterMVA_MuMu_21stApril2016_AdaBoost", "MVA/MasterMVA_MuMu_21stApril2016_AdaBoost.root");
         } else if(!Muon && Electron) {
             Eventtrainer_ = new MVATrainer(
-                "BDT", "MasterMVA_ElEl_18thApril2016_18OSLep", "MVA/MasterMVA_ElEl_18thApril2016_18OSLep.root");
+                "BDT", "MasterMVA_ElEl_21stApril2016_AdaBoost", "MVA/MasterMVA_ElEl_21stApril2016_AdaBoost.root");
         } else if(!Muon && !Electron && Combined) {
-            Eventtrainer_ = new MVATrainer("BDT", "MasterMVA_DiLep_Combined_18thApril2016_18OSLep",
-                "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root");
+            Eventtrainer_ = new MVATrainer("BDT", "MasterMVA_DiLep_Combined_21stApril2016_AdaBoost",
+                "MVA/MasterMVA_DiLep_Combined_21stApril2016_AdaBoost.root");
         }
 
-//        Eventtrainer_->bookWeight("Weight");
+        Eventtrainer_->bookWeight("Weight");
+        Eventtrainer_->bookInputVar("nJets");
         Eventtrainer_->bookInputVar("topness");
+        Eventtrainer_->bookInputVar("HTb");
+        Eventtrainer_->bookInputVar("HT2M");
+        Eventtrainer_->bookInputVar("HTH");
+        Eventtrainer_->bookInputVar("EventSph");
+        Eventtrainer_->bookInputVar("HTRat");
         Eventtrainer_->bookInputVar("leadLepPt");
         Eventtrainer_->bookInputVar("leadLepEta");
         Eventtrainer_->bookInputVar("dRLep");
@@ -220,17 +226,11 @@ int main(int argc, char** argv)
         Eventtrainer_->bookInputVar("LepFlavor");
         Eventtrainer_->bookInputVar("nLep");
         Eventtrainer_->bookInputVar("dRbb");
-        Eventtrainer_->bookInputVar("HTH");
-        Eventtrainer_->bookInputVar("HTRat");
-        Eventtrainer_->bookInputVar("HTb");
         Eventtrainer_->bookInputVar("nLtags");
         Eventtrainer_->bookInputVar("nMtags");
         Eventtrainer_->bookInputVar("nTtags");
-        Eventtrainer_->bookInputVar("nJets");
         Eventtrainer_->bookInputVar("Jet3Pt");
         Eventtrainer_->bookInputVar("Jet4Pt");
-        Eventtrainer_->bookInputVar("HT2M");
-        Eventtrainer_->bookInputVar("EventSph");
 //        Eventtrainer_->bookInputVar("EventCen");
 //        Eventtrainer_->bookInputVar("DiLepSph");
 //        Eventtrainer_->bookInputVar("DiLepCen");
@@ -357,7 +357,7 @@ int main(int argc, char** argv)
                 // cout<<nJets_tt<<"     "<<jet5and6pt_tttt<<endl;
 
                 if(nJets_tt >= 4) {
-//                    Eventtrainer_->FillWeight("B", "Weight", scaleFactor);
+                    Eventtrainer_->FillWeight("B", "Weight", scaleFactor);
                     Eventtrainer_->Fill("B", "topness", topness_tt);
                     Eventtrainer_->Fill("B", "leadLepPt", leadLepPt_tt);
                     Eventtrainer_->Fill("B", "leadLepEta", leadLepEta_tt);
@@ -387,13 +387,13 @@ int main(int argc, char** argv)
 
             tttt_tup->GetEntry(k);
 
-//            if(weight_tttt < 0)
-//                scaleFactor = -1.0;
-//            else
+            if(weight_tttt < 0)
+                scaleFactor = -1.0;
+            else
                 scaleFactor = 1.0;
 
             if(nJets_tttt >= 4) {
-//                Eventtrainer_->FillWeight("S", "Weight", scaleFactor);
+                Eventtrainer_->FillWeight("S", "Weight", scaleFactor);
                 Eventtrainer_->Fill("S", "topness", topness_tttt);
                 Eventtrainer_->Fill("S", "leadLepPt", leadLepPt_tttt);
                 Eventtrainer_->Fill("S", "leadLepEta", leadLepEta_tttt);
@@ -423,13 +423,13 @@ int main(int argc, char** argv)
         }
         // }
         if(Muon && Electron && !Combined) {
-            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_MuEl18thApril2016_18OSLep", false);
+            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_MuEl21stApril2016_AdaBoost", false);
         } else if(Muon && !Electron && !Combined) {
-            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_MuMu18thApril2016_18OSLep", false);
+            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_MuMu21stApril2016_AdaBoost", false);
         } else if(!Muon && Electron && !Combined) {
-            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_ElEl18thApril2016_18OSLep", false);
+            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_ElEl21stApril2016_AdaBoost", false);
         } else if(!Muon && !Electron && Combined) {
-            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_DilepCombined18thApril2016_18OSLep", false);
+            Eventtrainer_->TrainMVA("Random", "", 0, 0, "", 0, 0, "_DilepCombined21stApril2016_AdaBoost", false);
         }
         cout << "MVA Trained!" << endl;
         delete Eventtrainer_;
@@ -443,7 +443,14 @@ int main(int argc, char** argv)
         vector<string> MVAvars;
         string MVApostfix;
 
+
+        MVAvars.push_back("nJets");
         MVAvars.push_back("topness");
+        MVAvars.push_back("HTb");
+        MVAvars.push_back("HT2M");
+        MVAvars.push_back("HTH");
+        MVAvars.push_back("EventSph");
+        MVAvars.push_back("HTRat");
         MVAvars.push_back("leadLepPt");
         MVAvars.push_back("leadLepEta");
         MVAvars.push_back("dRLep");
@@ -451,17 +458,13 @@ int main(int argc, char** argv)
         MVAvars.push_back("LepFlavor");
         MVAvars.push_back("nLep");
         MVAvars.push_back("dRbb");
-        MVAvars.push_back("HTH");
-        MVAvars.push_back("HTRat");
-        MVAvars.push_back("HTb");
         MVAvars.push_back("nLtags");
         MVAvars.push_back("nMtags");
         MVAvars.push_back("nTtags");
-        MVAvars.push_back("nJets");
         MVAvars.push_back("Jet3Pt");
         MVAvars.push_back("Jet4Pt");
-        MVAvars.push_back("HT2M");
-        MVAvars.push_back("EventSph");
+
+
 //        MVAvars.push_back("EventCen");
 //        MVAvars.push_back("DiLepSph");
 //        MVAvars.push_back("DiLepCen");
@@ -470,21 +473,21 @@ int main(int argc, char** argv)
 
         MVAComputer* Eventcomputer_;
         if(Muon && Electron) {
-            MVApostfix = "_DilepCombined18thApril2016_18OSLep";
-            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root",
-                "MasterMVA_DiLep_Combined_18thApril2016_18OSLep", MVAvars, MVApostfix.c_str());
+            MVApostfix = "_DilepCombined21stApril2016_AdaBoost";
+            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_21stApril2016_AdaBoost.root",
+                "MasterMVA_DiLep_Combined_21stApril2016_AdaBoost", MVAvars, MVApostfix.c_str());
         } else if(Muon && !Electron) {
-            MVApostfix = "_DilepCombined18thApril2016_18OSLep";
-            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root",
-                "MasterMVA_DiLep_Combined_18thApril2016_18OSLep", MVAvars, MVApostfix.c_str());
+            MVApostfix = "_DilepCombined21stApril2016_AdaBoost";
+            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_21stApril2016_AdaBoost.root",
+                "MasterMVA_DiLep_Combined_21stApril2016_AdaBoost", MVAvars, MVApostfix.c_str());
         } else if(!Muon && Electron) {
-            MVApostfix = "_DilepCombined18thApril2016_18OSLep";
-            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root",
-                "MasterMVA_DiLep_Combined_18thApril2016_18OSLep", MVAvars, MVApostfix.c_str());
+            MVApostfix = "_DilepCombined21stApril2016_AdaBoost";
+            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_21stApril2016_AdaBoost.root",
+                "MasterMVA_DiLep_Combined_21stApril2016_AdaBoost", MVAvars, MVApostfix.c_str());
         } else if(!Muon && !Electron && Combined) {
-            MVApostfix = "_DilepCombined18thApril2016_18OSLep";
-            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_18thApril2016_18OSLep.root",
-                "MasterMVA_DiLep_Combined_18thApril2016_18OSLep", MVAvars, MVApostfix.c_str());
+            MVApostfix = "_DilepCombined21stApril2016_AdaBoost";
+            Eventcomputer_ = new MVAComputer("BDT", "MVA/MasterMVA_DiLep_Combined_21stApril2016_AdaBoost.root",
+                "MasterMVA_DiLep_Combined_21stApril2016_AdaBoost", MVAvars, MVApostfix.c_str());
         }
 
         cout << " Initialized Eventcomputer_" << endl;

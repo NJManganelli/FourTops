@@ -980,13 +980,13 @@ void DatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtagCSV
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFTopPt", &SFTopPt); //single lep sfTopPt
 //        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
@@ -1436,17 +1436,18 @@ void SplitDatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight6", &weight6);
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight7", &weight7);
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
-        // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); // single lep SFbtagCSV
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFTopPt", &SFTopPt); //single lep sfTopPt
         //nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
-//        nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
 
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
@@ -1894,13 +1895,13 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtagCSV
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFTopPt", &SFTopPt); //single lep sfTopPt
         //nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
 //        nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
@@ -2257,15 +2258,15 @@ void DataCardProducer(string VoI,
     vector<string> MCdatasets; // contains only MC samples required in datacard
     cout << "\nPRODUCING DATACARD\n" << endl;
 
-    string mainTTbarSample;
+    string mainTTbarsample;
     string otherTTbarsample;
     cout<<"channel  "<<channel<<endl;
     if(channel == "ttttmu"||channel == "ttttel"){
-        mainTTbarSample = "TTJets_powheg";
+        mainTTbarsample = "TTJets_powheg";
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptMG";
+        mainTTbarsample = "TTDileptMG";
         otherTTbarsample = "TTDileptPowheg";
     }
 
@@ -2400,6 +2401,18 @@ void DataCardProducer(string VoI,
                     card << "-                  ";
                 }
                 card << "1.1                    ";
+                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
+                    card << "-                  ";
+                }
+            }
+            card << "\n";
+        } else if(dataSetName.find(mainTTbarsample) != string::npos) {
+            card << dataSetName + "_norm              lnN          ";
+            for(int k = 0; k < nChannels; k++) {
+                for(int dash1 = 0; dash1 < d; dash1++) {
+                    card << "-                  ";
+                }
+                card << "0.936/1.062                    ";
                 for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
                     card << "-                  ";
                 }
@@ -2583,15 +2596,15 @@ void Split_DataCardProducer(string VoI,
     float tempEntries;
     int nChannels = 0;
     int howmanyMC = 0;
-    string mainTTbarSample;
+    string mainTTbarsample;
     string otherTTbarsample;
     cout<<"channel  "<<channel<<endl;
     if(channel == "ttttmu"||channel == "ttttel"){
-        mainTTbarSample = "TTJets_powheg";
+        mainTTbarsample = "TTJets_powheg";
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptMG";
+        mainTTbarsample = "TTDileptMG";
         otherTTbarsample = "TTDileptPowheg";
     }
     vector<string> MCdatasets; // contains only MC samples required in datacard
@@ -2748,6 +2761,18 @@ void Split_DataCardProducer(string VoI,
                     card << "-                  ";
                 }
                 card << "1.1                    ";
+                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
+                    card << "-                  ";
+                }
+            }
+            card << "\n";
+        } else if(dataSetName.find(mainTTbarsample) != string::npos) {
+            card << dataSetName + "_norm              lnN          ";
+            for(int k = 0; k < nChannels; k++) {
+                for(int dash1 = 0; dash1 < d; dash1++) {
+                    card << "-                  ";
+                }
+                card << "0.936/1.062                    ";
                 for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
                     card << "-                  ";
                 }

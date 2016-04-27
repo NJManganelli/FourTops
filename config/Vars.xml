@@ -163,13 +163,15 @@
 		<fileName>config/Run2DiLepton_Craneens_MuEl_Nom.xml</fileName>
 		<fileNameSys>config/Run2DiLepton_Craneens_MuEl_Sys.xml</fileNameSys>
 		<craneenPath>/user/heilman/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Comb/</craneenPath>
-		<datacardVar>BDT_DilepCombined18thApril2016_18OSLep</datacardVar>
+		<datacardVar>BDT_DilepCombined21stApril2016_AdaBoost</datacardVar>
 		<splitting splitVar="nJets" bSplit=4 tSplit=8 wSplit=2 >JS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nMtags" ltSplit=14 gtSplit=15 >JPTS</splitting>
 
-		<var lBound= -1.0 uBound=1.0 nBins=40>BDT_DilepCombined18thApril2016_18OSLep</var>
-		<var lBound= 0 uBound=2000 nBins=50>HT</var>
+		<!--var lBound= -1.0 uBound=1.0 nBins=40>BDTG_DilepCombined19thApril2016_GradNeg</var>
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDTG_DilepCombined19thApril2016_GradBoost</var-->
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDT_DilepCombined21stApril2016_AdaBoost</var>
+		<!--var lBound= 0 uBound=2000 nBins=50>HT</var>
 		<var lBound= 0 uBound=20 nBins=20>nJets</var>
 		<var lBound= 0 uBound=1 nBins=20>EventSph</var>
 		<var lBound= 0 uBound=1 nBins=20>EventCen</var>
@@ -203,7 +205,7 @@
 		<var lBound= 0 uBound=2000 nBins=50>HT2M</var>
                 <var lBound= 0 uBound=40 nBins=40>PU</var>
 		<var lBound= 0 uBound=400 nBins=20>MET</var>
-		<var lBound= 0 uBound=400 nBins=20>diLepMass</var>
+		<var lBound= 0 uBound=400 nBins=20>diLepMass</var-->
 
 	</channel>
 
@@ -214,13 +216,15 @@
 		<fileName>config/Run2DiLepton_Craneens_MuEl_Nom.xml</fileName>
 		<fileNameSys>config/Run2DiLepton_Craneens_MuMu_Sys.xml</fileNameSys>
 		<craneenPath>/user/heilman/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Comb/</craneenPath>
-		<datacardVar>BDT_DilepCombined18thApril2016_18OSLep</datacardVar>
+		<datacardVar>BDT_DilepCombined21stApril2016_AdaBoost</datacardVar>
 		<splitting splitVar="nJets" bSplit=4 tSplit=8 wSplit=2 >JS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nMtags" ltSplit=14 gtSplit=15 >JPTS</splitting>
 
-		<var lBound= -1.0 uBound=1.0 nBins=40>BDT_DilepCombined18thApril2016_18OSLep</var>
-		<var lBound= 0 uBound=2000 nBins=50>HT</var>
+		<!--var lBound= -1.0 uBound=1.0 nBins=40>BDTG_DilepCombined19thApril2016_GradNeg</var>
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDTG_DilepCombined19thApril2016_GradBoost</var-->
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDT_DilepCombined21stApril2016_AdaBoost</var>
+		<!--var lBound= 0 uBound=2000 nBins=50>HT</var>
 		<var lBound= 0 uBound=20 nBins=20>nJets</var>
 		<var lBound= 0 uBound=1 nBins=20>EventSph</var>
 		<var lBound= 0 uBound=1 nBins=20>EventCen</var>
@@ -254,7 +258,7 @@
 		<var lBound= 0 uBound=2000 nBins=50>HT2M</var>
                 <var lBound= 0 uBound=40 nBins=40>PU</var>
 		<var lBound= 0 uBound=400 nBins=20>MET</var>
-		<var lBound= 0 uBound=400 nBins=20>diLepMass</var>
+		<var lBound= 0 uBound=400 nBins=20>diLepMass</var-->
 
 
 	</channel>
@@ -266,12 +270,14 @@
 		<fileName>config/Run2DiLepton_Craneens_MuEl_Nom.xml</fileName>
 		<fileNameSys>config/Run2DiLepton_Craneens_ElEl_Sys.xml</fileNameSys>
 		<craneenPath>/user/heilman/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Comb/</craneenPath>
-		<datacardVar>BDT_DilepCombined18thApril2016_18OSLep</datacardVar>
+		<datacardVar>BDT_DilepCombined21stApril2016_AdaBoost</datacardVar>
 		<splitting splitVar="nJets" bSplit=4 tSplit=8 wSplit=2 >JS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 
-		<var lBound= -1.0 uBound=1.0 nBins=40>BDT_DilepCombined18thApril2016_18OSLep</var>
-		<var lBound= 0 uBound=2000 nBins=50>HT</var>
+		<!--var lBound= -1.0 uBound=1.0 nBins=40>BDTG_DilepCombined19thApril2016_GradNeg</var>
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDTG_DilepCombined19thApril2016_GradBoost</var-->
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDT_DilepCombined21stApril2016_AdaBoost</var>
+		<!--var lBound= 0 uBound=2000 nBins=50>HT</var>
 		<var lBound= 0 uBound=20 nBins=20>nJets</var>
 		<var lBound= 0 uBound=1 nBins=20>EventSph</var>
 		<var lBound= 0 uBound=1 nBins=20>EventCen</var>
@@ -305,7 +311,7 @@
 		<var lBound= 0 uBound=2000 nBins=50>HT2M</var>
                 <var lBound= 0 uBound=40 nBins=40>PU</var>
 		<var lBound= 0 uBound=400 nBins=20>MET</var>
-		<var lBound= 0 uBound=400 nBins=20>diLepMass</var>
+		<var lBound= 0 uBound=400 nBins=20>diLepMass</var-->
 
 	</channel>
 

@@ -25,8 +25,9 @@ date = dd+"_"+mm+"_"+yyyy
 
 # pick one of the following
 # channels = ["Mu","El"] 
-channels = ["Mu"] 
+# channels = ["Mu"] 
 # channels = ["El"] 
+channels = ["Dilep"]
 #channels=["test"]
 
 
@@ -38,6 +39,8 @@ for chan in channels:
         tree = ET.ElementTree(file='config/output_FullMuonTopTrees76.xml')
     elif "El" in chan:
         tree = ET.ElementTree(file='config/output_FullElectronTopTrees76.xml')
+    elif "Dilep" in chan:
+        tree = ET.ElementTree(file='config/Run2DiLepton_TOPTREES.xml')
     elif "test" in chan:
         tree = ET.ElementTree(file='config/test.xml')
     else:
@@ -80,7 +83,10 @@ for chan in channels:
     for d in datasets:
         if d.attrib['add'] == '1':
             print "found dataset to be added..." + str(d.attrib['name'])
-            commandString = "./SLMACROLocal "+str(d.attrib['name'])+" "+str(d.attrib['title'])+" "+str(d.attrib['add'])+" "+str(d.attrib['color'])+" "+str(d.attrib['ls'])+" "+str(d.attrib['lw'])+" "+str(d.attrib['normf'])+" "+str(d.attrib['EqLumi'])+" "+str(d.attrib['xsection'])+" "+str(d.attrib['PreselEff'])
+            if "Dilep" in chan:
+                commandString = "./MACRO "+str(d.attrib['name'])+" "+str(d.attrib['title'])+" "+str(d.attrib['add'])+" "+str(d.attrib['color'])+" "+str(d.attrib['ls'])+" "+str(d.attrib['lw'])+" "+str(d.attrib['normf'])+" "+str(d.attrib['EqLumi'])+" "+str(d.attrib['xsection'])+" "+str(d.attrib['PreselEff'])
+            else:
+                commandString = "./SLMACROLocal "+str(d.attrib['name'])+" "+str(d.attrib['title'])+" "+str(d.attrib['add'])+" "+str(d.attrib['color'])+" "+str(d.attrib['ls'])+" "+str(d.attrib['lw'])+" "+str(d.attrib['normf'])+" "+str(d.attrib['EqLumi'])+" "+str(d.attrib['xsection'])+" "+str(d.attrib['PreselEff'])
             topTrees = glob.glob(d.attrib['filenames'])
 
             # setting the number of file per job depending whether it is data sample or not
