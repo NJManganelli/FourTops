@@ -1,17 +1,44 @@
 <?xml version="1.0"?>
 <datasets>
 
-<d name="NP_overlay_Data_bx50"  title="MuEl Data skim bx50"   add="1"   color="1"  ls="1"  lw="2" normf="1"  EqLumi="2.43310593" xsection="1"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens21_9_2015/NP_overlay_Data_bx50_Run2_TopTree_Study.root"/>
+<d name="Data" title="Data"  add="1"   color="1" ls="0"  lw="2" normf="1"  EqLumi="1" xsection="1" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/MuonEG/crab_MuonEG-Run2015D-PromptReco-v4-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112331/0000/*.root /pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_74X_v8-SILVER/MuonEG/crab_MuonEG-Run2015D-PromptReco-v4-CMSSW_74X_v8-SILVER-74X_dataRun2_Prompt_v2/151126_112331/0001/*.root"/>
 
-<d name="ttttNLO_SUS_MuElSkim" title="NLO SM tttt MUEl Skim"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="12033944.853345051" xsection=".008823" PreselEff="0.0" filenames="./Craneens_MuEl/Craneens21_9_2015/ttttNLO_SUS_MuElSkim_Run2_TopTree_Study.root"/>
+<d name="NP_overlay_ttttNLO" title="NLO SM tttt"  add="1"   color="40" ls="1"  lw="2" normf="0.409539459"  EqLumi="105516972.426672526" xsection="0.009103" PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8-RunIISpring15DR74-Asympt25ns/22102015_181415/Skimmed_TOPTREE*.root"/>
 
-<d name="T_tW_bx50"  title="t tW"  add="1"   color="432"  ls="0"  lw="2" normf="1"  EqLumi="745.146733024" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens21_9_2015/T_tW_bx50_Run2_TopTree_Study.root"/>
+<d name="T_tW"  title="t tW"  add="1"   color="7"  ls="0"  lw="2" normf="1"  EqLumi="28089.887640449" xsection="35.6"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt25ns/23102015_213520/Skimmed_TOPTREE*.root"/>
 
-<d name="Tbar_tW_bx50"  title="tbar tW"  add="1"   color="432"  ls="1"  lw="2" normf="1"  EqLumi="745.695095502" xsection="35.6"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens21_9_2015/Tbar_tW_bx50_Run2_TopTree_Study.root"/>
+<d name="Tbar_tW"  title="tbar tW"  add="1"   color="7"  ls="1"  lw="2" normf="1"  EqLumi="28073.033707865" xsection="35.6"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1-RunIISpring15DR74-Asympt25ns/23102015_221529/Skimmed_TOPTREE*.root"/>
 
-<d name="DYJets_bx50"  title="DY+jets 50ns"   add="1"   color="416"  ls="1"  lw="2" normf="1"  EqLumi="13.13487356" xsection="2008.4"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens21_9_2015/DYJets_bx50_Run2_TopTree_Study.root"/>
+<d name="DYJets"  title="DY+jets"   add="1"   color="214"  ls="1"  lw="2" normf="1"  EqLumi="1494.444665737" xsection="6025.2"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/heilman/Skimmed-TopTrees/CMSSW_74X_v8/MuonEG/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8-RunIISpring15DR74-Asympt25ns/23102015_145642/Skimmed_TOPTREE*.root"/>
 
-<d name="TTJets_bx50"  title="TT+jets MadGraph 50ns"   add="1"   color="632"  ls="1"  lw="2" normf="1"  EqLumi="595.656816932" xsection="831.76"   PreselEff="0.0"   filenames="./Craneens_MuEl/Craneens21_9_2015/TTJets_bx50_Run2_TopTree_Study.root"/>
+<d name="TTDileptMG"  title="TTDiLeptMG"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="294336.597377312" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
+
+<d name="TTDileptPowheg"  title="TTDileptPowheg"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1226460.74892229" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTTo2L2Nu_13TeV-powheg/crab_TTTo2L2Nu13TeVpowhegFall15PU25nsData2015v176XmcRun2asymptoticv12v176XmcRun2asymptoticv12/160201_153604/0000/TOPTREE*.root"/>
+
+<d name="TTDileptPowheg_JESUp"  title="TTDiLeptMG_JESUp"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1226460.74892229" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
+
+<d name="TTDileptPowheg_JESDown"  title="TTDiLeptMG_JESDown"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1226460.74892229" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
+
+<d name="TTDileptPowheg_JERUp"  title="TTDiLeptMG_JERUp"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1226460.74892229" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
+
+<d name="TTDileptPowheg_JERDown"  title="TTDiLeptMG_JERDown"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1226460.74892229" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
+
+<d name="TTDileptPowheg_HScaleUp"  title="TTDiLeptMG_HScaleUp"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="337642.644774998" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
+
+<d name="TTDileptPowheg_HScaleDown"  title="TTDiLeptMG_HScaleDown"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="308074.768054865" xsection="87.31483776"   PreselEff="0.0"
+   filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_iLept13TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153457/0000/TOPTREE*.root"/>
 
 </datasets>
 

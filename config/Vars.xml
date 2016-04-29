@@ -160,8 +160,8 @@
 		<lepton>Muon</lepton>
 		<leptoAbbr>MuEl</leptoAbbr>
 		<chan>ttttmuel</chan>
-		<fileName>config/Run2DiLepton_Craneens_MuEl_Nom.xml</fileName>
-		<fileNameSys>config/Run2DiLepton_Craneens_MuEl_Sys.xml</fileNameSys>
+		<fileName>config/Run2DiLepton_Craneens_Nom.xml</fileName>
+		<fileNameSys>config/Run2DiLepton_Craneens_Sys.xml</fileNameSys>
 		<craneenPath>/user/heilman/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Comb/</craneenPath>
 		<datacardVar>BDT_DilepCombined21stApril2016_AdaBoost</datacardVar>
 		<splitting splitVar="nJets" bSplit=4 tSplit=8 wSplit=2 >JS</splitting>
@@ -213,8 +213,8 @@
 		<lepton>Muon</lepton>
 		<leptoAbbr>MuMu</leptoAbbr>
 		<chan>ttttmumu</chan>
-		<fileName>config/Run2DiLepton_Craneens_MuEl_Nom.xml</fileName>
-		<fileNameSys>config/Run2DiLepton_Craneens_MuMu_Sys.xml</fileNameSys>
+		<fileName>config/Run2DiLepton_Craneens_Nom.xml</fileName>
+		<fileNameSys>config/Run2DiLepton_Craneens_Sys.xml</fileNameSys>
 		<craneenPath>/user/heilman/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Comb/</craneenPath>
 		<datacardVar>BDT_DilepCombined21stApril2016_AdaBoost</datacardVar>
 		<splitting splitVar="nJets" bSplit=4 tSplit=8 wSplit=2 >JS</splitting>
@@ -267,8 +267,8 @@
 		<lepton>Electron</lepton>
 		<leptoAbbr>ElEl</leptoAbbr>
 		<chan>ttttelel</chan>
-		<fileName>config/Run2DiLepton_Craneens_MuEl_Nom.xml</fileName>
-		<fileNameSys>config/Run2DiLepton_Craneens_ElEl_Sys.xml</fileNameSys>
+		<fileName>config/Run2DiLepton_Craneens_Nom.xml</fileName>
+		<fileNameSys>config/Run2DiLepton_Craneens_Sys.xml</fileNameSys>
 		<craneenPath>/user/heilman/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Comb/</craneenPath>
 		<datacardVar>BDT_DilepCombined21stApril2016_AdaBoost</datacardVar>
 		<splitting splitVar="nJets" bSplit=4 tSplit=8 wSplit=2 >JS</splitting>
@@ -320,8 +320,8 @@
 		<lepton>Muon</lepton>
 		<leptoAbbr>Combined</leptoAbbr>
 		<chan>comb</chan>
-		<fileName>config/Run2DiLepton_Craneens_MuEl_Nom.xml</fileName>
-		<fileNameSys>config/Run2DiLepton_Craneens_MuEl_Sys.xml</fileNameSys>
+		<fileName>config/Run2DiLepton_Craneens_Nom.xml</fileName>
+		<fileNameSys>config/Run2DiLepton_Craneens_Sys.xml</fileNameSys>
 		<craneenPath>/user/heilman/CMSSW_7_6_3/src/TopBrussels/FourTops/Craneens_Comb/</craneenPath>
 		<datacardVar>BDT_DilepCombined18thApril2016_18OSLep</datacardVar>
 		<splitting splitVar="nJets" bSplit=4 tSplit=9 wSplit=1 >JS</splitting>
