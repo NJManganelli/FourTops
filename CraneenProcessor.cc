@@ -980,13 +980,13 @@ void DatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtagCSV
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFTopPt", &SFTopPt); //single lep sfTopPt
+        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt); //single lep sfTopPt
 //        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
@@ -1436,17 +1436,18 @@ void SplitDatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight6", &weight6);
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight7", &weight7);
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); // single lep SFbtagCSV
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFTopPt", &SFTopPt); //single lep sfTopPt
+        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt); //single lep sfTopPt
+
         //nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
+        // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
 
@@ -1785,7 +1786,7 @@ void SplitDatasetPlotter(int nBins,
         MultiSamplePlot* temp = it->second;
         temp->setErrorBandFile(scaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 100);
-        temp->Write(shapefile, name, true, pathPNG, "eps");
+        temp->Write(shapefile, name, true, pathPNG, "png");
     }
 
     for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
@@ -1895,13 +1896,13 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtagCSV
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFTopPt", &SFTopPt); //single lep sfTopPt
+        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt);
         //nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
 //        nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
@@ -2548,7 +2549,24 @@ void DataCardProducer(string VoI,
             continue;
         }
     }
-
+    card << "ScaleH                shape           ";
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+            for(int k = 0; k < nChannels; k++) {
+                for(int dash1 = 0; dash1 < d; dash1++) {
+                    card << "-                  ";
+                }
+                card << "1                      ";
+                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
+                    card << "-                  ";
+                }
+            }
+            card << "\n";
+        } else {
+            continue;
+        }
+    }
 
     // card << "heavyFlav               shape           ";
     // for (int d = 0; d<howmanyMC; d++){
@@ -2907,6 +2925,24 @@ void Split_DataCardProducer(string VoI,
         }
     }
 
+    card << "ScaleH                shape           ";
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+            for(int k = 0; k < nChannels; k++) {
+                for(int dash1 = 0; dash1 < d; dash1++) {
+                    card << "-                  ";
+                }
+                card << "1                      ";
+                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
+                    card << "-                  ";
+                }
+            }
+            card << "\n";
+        } else {
+            continue;
+        }
+    }
     card.close();
 };
 
@@ -2984,7 +3020,7 @@ void Split2_DataCardProducer(string VoI,
     cout << "howmanyMC: " << howmanyMC << endl;
 
     card << "imax " + static_cast<ostringstream*>( &(ostringstream() << nChannels) )->str() + "\n";
-    card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << howmanyMC) )->str() + "\n";
+    card << "jmax " + static_cast<ostringstream*>( &(ostringstream() << howmanyMC-1) )->str() + "\n";
     card << "kmax *\n";
     card << "---------------\n";
     card << "shapes * * "+shapefileName+"  $CHANNEL__$PROCESS__nominal  $CHANNEL__$PROCESS__$SYSTEMATIC\n";
@@ -3248,6 +3284,25 @@ void Split2_DataCardProducer(string VoI,
 
 
     card << "matching                shape           ";
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+            for(int k = 0; k < nChannels; k++) {
+                for(int dash1 = 0; dash1 < d; dash1++) {
+                    card << "-                  ";
+                }
+                card << "1                      ";
+                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
+                    card << "-                  ";
+                }
+            }
+            card << "\n";
+        } else {
+            continue;
+        }
+    }
+
+    card << "ScaleH                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
         if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
