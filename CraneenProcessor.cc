@@ -834,8 +834,8 @@ void DatasetPlotter(int nBins,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptMG";
-        otherTTbarsample = "TTDileptPowheg";
+        mainTTbarSample = "TTDileptPowheg";
+        otherTTbarsample = "TTDileptMG";
     }
     double ll_rw = 0.976;
     double bb_rw = 3.;
@@ -986,7 +986,7 @@ void DatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt); //single lep sfTopPt
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt); //single lep sfTopPt
 //        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
@@ -1166,9 +1166,9 @@ void DatasetPlotter(int nBins,
             writename = channel + "__" + mainTTbarSample + "__JERUp";
         } else if(dataSetName.find("JERDown") != string::npos) {
             writename = channel + "__" + mainTTbarSample + "__JERDown";
-        } else if(dataSetName.find("TTScaleup") != string::npos) {
+        } else if(dataSetName.find("ScaleHUp") != string::npos) {
             writename = channel + "__" + mainTTbarSample + "__ScaleHUp";
-        } else if(dataSetName.find("TTScaledown") != string::npos) {
+        } else if(dataSetName.find("ScaleHDown") != string::npos) {
             writename = channel + "__" + mainTTbarSample + "__ScaleHDown";
         } else {
             writename = channel + "__" + dataSetName + "__nominal";
@@ -1215,6 +1215,7 @@ void DatasetPlotter(int nBins,
     // treeLoader.UnLoadDataset();
     string scaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
     string scaleFileName = scaleFileDir + "/Error" + sVarofinterest + ".root";
+    mkdir(scaleFileDir.c_str(), 0777);
     MSPlot[plotname.c_str()]->setErrorBandFile(
         (scaleFileName).c_str()); // set error file for uncertainty bands on multisample plot
     MSPlot[plotname.c_str()]->setDataLumi(2600);
@@ -1223,7 +1224,7 @@ void DatasetPlotter(int nBins,
     for(map<string, MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++) {
         string name = it->first;
         MultiSamplePlot* temp = it->second;
-        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 100);
+        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 20);
         temp->Write(shapefile, name, true, pathPNG, "eps");
     }
     MSPlot.erase(plotname);
@@ -1368,8 +1369,8 @@ void SplitDatasetPlotter(int nBins,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptMG";
-        otherTTbarsample = "TTDileptPowheg";
+        mainTTbarSample = "TTDileptPowheg";
+        otherTTbarsample = "TTDileptMG";
     }
     ///////////////////////////////////////////////////////////// Load Datasets
     /////////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
@@ -1444,7 +1445,7 @@ void SplitDatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt); //single lep sfTopPt
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt); //single lep sfTopPt
 
         //nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
@@ -1724,9 +1725,9 @@ void SplitDatasetPlotter(int nBins,
                 writename = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__JERUp";
             } else if(dataSetName.find("JERDown") != string::npos) {
                 writename = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__JERDown";
-            } else if(dataSetName.find("TTScaleup") != string::npos) {
+            } else if(dataSetName.find("ScaleHUp") != string::npos) {
                 writename = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__ScaleHUp";
-            } else if(dataSetName.find("TTScaledown") != string::npos) {
+            } else if(dataSetName.find("ScaleHDown") != string::npos) {
                 writename = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__ScaleHDown";
             } else {
                 writename = channel + numStr + sSplitVar + "__" + dataSetName + "__nominal";
@@ -1785,7 +1786,7 @@ void SplitDatasetPlotter(int nBins,
         cout << name << " ** " << sVarofinterest << endl;
         MultiSamplePlot* temp = it->second;
         temp->setErrorBandFile(scaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
-        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 100);
+        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 20);
         temp->Write(shapefile, name, true, pathPNG, "png");
     }
 
@@ -1822,8 +1823,8 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptMG";
-        otherTTbarsample = "TTDileptPowheg";
+        mainTTbarSample = "TTDileptPowheg";
+        otherTTbarsample = "TTDileptMG";
     }
     ///////////////////////////////////////////////////////////// Load Datasets
     ////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
@@ -1902,7 +1903,7 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("sfTopPt", &SFTopPt);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
         //nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
 //        nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
@@ -2157,9 +2158,9 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
                     writename = channel  + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__JERUp";
                 } else if(dataSetName.find("JERDown") != string::npos) {
                     writename = channel  + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__JERDown";
-                } else if(dataSetName.find("TTScaleup") != string::npos) {
+                } else if(dataSetName.find("ScaleHUp") != string::npos) {
                     writename = channel  + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__ScaleHUp";
-                } else if(dataSetName.find("TTScaledown") != string::npos) {
+                } else if(dataSetName.find("ScaleHDown") != string::npos) {
                     writename = channel  + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__ScaleHDown";
                 }                 
                 else
@@ -2225,7 +2226,7 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
         temp->setDataLumi(2600);                
 
         temp->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
-        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 100);
+        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 20);
         temp->Write(shapefile, name, true, pathPNG, "png");
     }
     for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
@@ -2267,8 +2268,8 @@ void DataCardProducer(string VoI,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarsample = "TTDileptMG";
-        otherTTbarsample = "TTDileptPowheg";
+        mainTTbarsample = "TTDileptPowheg";
+        otherTTbarsample = "TTDileptMG";
     }
 
     string binname, histoName, dataSetName, datacardname;
@@ -2439,7 +2440,7 @@ void DataCardProducer(string VoI,
     card << "scale                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2458,7 +2459,7 @@ void DataCardProducer(string VoI,
     card << "btag                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2477,7 +2478,7 @@ void DataCardProducer(string VoI,
     card << "PU                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2496,7 +2497,7 @@ void DataCardProducer(string VoI,
     card << "JES                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2515,7 +2516,7 @@ void DataCardProducer(string VoI,
     card << "JER                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2534,7 +2535,7 @@ void DataCardProducer(string VoI,
     card << "matching                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2552,7 +2553,7 @@ void DataCardProducer(string VoI,
     card << "ScaleH                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2622,8 +2623,8 @@ void Split_DataCardProducer(string VoI,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarsample = "TTDileptMG";
-        otherTTbarsample = "TTDileptPowheg";
+        mainTTbarsample = "TTDileptPowheg";
+        otherTTbarsample = "TTDileptMG";
     }
     vector<string> MCdatasets; // contains only MC samples required in datacard
     cout << "\nPRODUCING DATACARD\n" << endl;
@@ -2814,7 +2815,7 @@ void Split_DataCardProducer(string VoI,
     card << "scale                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2832,7 +2833,7 @@ void Split_DataCardProducer(string VoI,
     card << "btag                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2851,7 +2852,7 @@ void Split_DataCardProducer(string VoI,
     card << "PU                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2870,7 +2871,7 @@ void Split_DataCardProducer(string VoI,
     card << "JES                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2889,7 +2890,7 @@ void Split_DataCardProducer(string VoI,
     card << "JER                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2909,7 +2910,7 @@ void Split_DataCardProducer(string VoI,
     card << "matching                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2928,7 +2929,7 @@ void Split_DataCardProducer(string VoI,
     card << "ScaleH                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -2974,16 +2975,16 @@ void Split2_DataCardProducer(string VoI,
     float tempEntries;
     int nChannels = 0;
     int howmanyMC = 0;
-    string mainTTbarSample;
+    string mainTTbarsample;
     string otherTTbarsample;
     cout<<"channel  "<<channel<<endl;
     if(channel == "ttttmu"||channel == "ttttel"){
-        mainTTbarSample = "TTJets_powheg";
+        mainTTbarsample = "TTJets_powheg";
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptMG";
-        otherTTbarsample = "TTDileptPowheg";
+        mainTTbarsample = "TTDileptPowheg";
+        otherTTbarsample = "TTDileptMG";
     }
     vector<string> MCdatasets; // contains only MC samples required in datacard    
     cout<<""<<endl;
@@ -3189,7 +3190,7 @@ void Split2_DataCardProducer(string VoI,
     card << "scale                shape           ";
     for (int d = 0; d<howmanyMC; d++){
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets")!=string::npos || dataSetName.find("TTDileptMG") != string::npos)
+        if(dataSetName.find(mainTTbarsample) != string::npos)
         {
             for(int k = 0; k<nChannels; k++){
                 for (int dash1 = 0; dash1<d; dash1++){
@@ -3209,7 +3210,7 @@ void Split2_DataCardProducer(string VoI,
     card << "btag                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -3228,7 +3229,7 @@ void Split2_DataCardProducer(string VoI,
     card << "PU                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -3247,7 +3248,7 @@ void Split2_DataCardProducer(string VoI,
     card << "JES                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -3266,7 +3267,7 @@ void Split2_DataCardProducer(string VoI,
     card << "JER                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -3286,7 +3287,7 @@ void Split2_DataCardProducer(string VoI,
     card << "matching                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
@@ -3305,7 +3306,7 @@ void Split2_DataCardProducer(string VoI,
     card << "ScaleH                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
-        if(dataSetName.find("TTJets") != string::npos || dataSetName.find("TTDileptMG") != string::npos) {
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
             for(int k = 0; k < nChannels; k++) {
                 for(int dash1 = 0; dash1 < d; dash1++) {
                     card << "-                  ";
