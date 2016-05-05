@@ -1,0 +1,16 @@
+<datasets>
+
+
+<d EqLumi="108865578.601" PreselEff="0.0" add="1" color="40" filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/crab_TTTT13TeVamcatnlopythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext1v176XmcRun2asymptoticv12/160201_153554/0000/TOPTREE_*.root" ls="1" lw="2" name="ttttNLO" normf="0.563529176" title="NLO_SM_tttt" xsection=".008823" />
+
+<d EqLumi="1494.44466574" PreselEff="0.0" add="0" color="214" filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_tsToLLM5013TeVmadgraphMLMpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12v176XmcRun2asymptoticv12/160201_152356/0000/TOPTREE_*.root" ls="1" lw="2" name="DYJets" normf="1" title="DY+jets" xsection="6025.2" />
+
+
+<d EqLumi="116859.763634" PreselEff="0.0" add="1" color="633" filenames="/pnfs/iihe/cms/store/user/fblekman/TopTree/CMSSW_76X_v0/TT_TuneCUETP8M1_13TeV-powheg-pythia8/crab_TT13TeVpowhegpythia8Fall15PU25nsData2015v176XmcRun2asymptoticv12ext3v176XmcRun2asymptoticv12/160201_153628/0000/TOPTREE_*.root" ls="1" lw="2" name="TTJets_powheg" normf="1" title="t\bar{t}+jets_powheg" xsection="831.76" />
+
+</datasets>
+
+
+<analysis>
+<a ElectronCollection="Electrons_slimmedElectrons" GenEventCollection="GenEvent" GenJetCollection="GenJets_slimmedGenJets" JetCollection="PFJets_slimmedJets" JetType="2" MCParticlesCollection="MCParticles" METCollection="PFMET_slimmedMETs" METType="2" MuonCollection="Muons_slimmedMuons" NPGenEventCollection="NPGenEvent" PVCollection="PrimaryVertex" TrackMETCollection="" loadGenEventCollection="0" loadGenJetCollection="0" loadMCParticles="1" loadNPGenEventCollection="0" loadTrackMET="0" type="Collections" />
+</analysis>

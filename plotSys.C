@@ -1,6 +1,6 @@
 {
 	gStyle->SetOptStat(0);
-	TFile *_file0 = TFile::Open("shapefileMu_DATA_BDT_inc.root");
+	TFile *_file0 = TFile::Open("shapefileMu_DATA_BDT_Mu20thApril_adaUnityWeights_inc.root");
 	TH1F* nominal = (TH1F*)_file0->Get("ttttmu__TTJets_powheg__nominal");
 
 	TH1F* PUUp = (TH1F*)_file0->Get("ttttmu__TTJets_powheg__PUUp");
@@ -177,10 +177,11 @@
 	scaleDownOrig->Draw("histsame");
 	nominal->Draw("histsame");
 
+
 	TLegend *legscale = new TLegend(0.5,0.7,0.9,0.9);
-	legscale->AddEntry(scaleUp,"scale Up","l");
+	legscale->AddEntry(scaleUp,"scaleME Up","l");
 	legscale->AddEntry(nominal,"nominal ttbar","l");
-	legscale->AddEntry(scaleDown,"scale Down","l");
+	legscale->AddEntry(scaleDown,"scaleME Down","l");
 	legscale->Draw();
 	cscale1->cd();
 
@@ -193,11 +194,16 @@
 	scaleUp->SetTitle("");
 
 	pad2scale->cd();
+
 	// scaleUp->Sumw2();
 	scaleUp->SetStats(0);
 	scaleUp->Divide(nominal);
 	scaleUp->SetMarkerStyle(1);
+
 	scaleUp->Draw("ep");
+	scaleUp->SetAxisRange(0,2,"Y");
+	scaleUp->Draw("ep");
+
 	// scaleDown>Sumw2();
 	scaleDown->SetStats(0);
 	scaleDown->Divide(nominal);
@@ -233,9 +239,9 @@
 	scaleHDownOrig->Draw("histsame");
 	nominal->Draw("histsame");
 	TLegend *legscaleH = new TLegend(0.5,0.7,0.9,0.9);
-	legscaleH->AddEntry(scaleHUp,"scaleH Up","l");
+	legscaleH->AddEntry(scaleHUp,"scalePS Up","l");
 	legscaleH->AddEntry(nominal,"nominal ttbar","l");
-	legscaleH->AddEntry(scaleHDown,"scaleH Down","l");
+	legscaleH->AddEntry(scaleHDown,"scalePS Down","l");
 	legscaleH->Draw();
 	cscaleH1->cd();
 
@@ -252,11 +258,20 @@
 	scaleHUp->SetStats(0);
 	scaleHUp->Divide(nominal);
 	scaleHUp->SetMarkerStyle(1);
+	scaleHUp->SetAxisRange(0,2,"Y");
+
+	scaleHUp->Draw("ep");
+
+	scaleHUp->SetAxisRange(0,2,"Y");
+
+
 	scaleHUp->Draw("ep");
 	// scaleHDown>Sumw2();
 	scaleHDown->SetStats(0);
 	scaleHDown->Divide(nominal);
 	scaleHDown->SetMarkerStyle(1);
+	scaleHDown->SetAxisRange(0,2,"Y");
+
 	scaleHDown->Draw("epsame");
 	cscaleH1->cd();
 	cscaleH1->SaveAs("scaleHsys.pdf");

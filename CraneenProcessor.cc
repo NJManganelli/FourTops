@@ -1224,7 +1224,7 @@ void DatasetPlotter(int nBins,
         string name = it->first;
         MultiSamplePlot* temp = it->second;
         temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 100);
-        temp->Write(shapefile, name, true, pathPNG, "eps");
+        temp->Write(shapefile, name, true, pathPNG, "png");
     }
     MSPlot.erase(plotname);
     for(map<string, TH1F*>::const_iterator it = histo1D.begin(); it != histo1D.end(); it++) {
