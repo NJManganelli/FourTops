@@ -86,6 +86,8 @@ class HadronicTopReco{
 		float ReturnAngletoplep();
 		float ReturnSumJetMassX();
 		float ReturnHTX();
+		float ReturnBestTopPt();
+		float ReturnAnglet1Jet();
 
 	private:
 		map<string,MultiSamplePlot*> MSPlot;
@@ -125,6 +127,8 @@ class HadronicTopReco{
 		float sumpz_X;
 		float sume_X; 
 		TRootJet sumjet_X;
+		float angleT1AllJets;
+
 
 		// MSPlot["MVA1TriJetMass"];
 		// MSPlot["MVA1DiJetMass"];    
