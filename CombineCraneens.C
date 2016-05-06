@@ -15,10 +15,12 @@ void CombineCraneens()
 	cout << "Getting Files" << endl;
 	TFile *Data = TFile::Open("Craneens_Comb/Data_Run2_TopTree_Study.root", "UPDATE");  //Getting Files
 	TFile *TTDileptMG = TFile::Open("Craneens_Comb/TTDileptMG_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptMG_JERUp = TFile::Open("Craneens_Comb/TTDileptMG_JERUp_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptMG_JERDown = TFile::Open("Craneens_Comb/TTDileptMG_JERDown_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptMG_JESUp = TFile::Open("Craneens_Comb/TTDileptMG_JESUp_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptMG_JESDown = TFile::Open("Craneens_Comb/TTDileptMG_JESDown_Run2_TopTree_Study.root", "UPDATE");
+	TFile *TTDileptPowheg_JERUp = TFile::Open("Craneens_Comb/TTDileptPowheg_JERUp_Run2_TopTree_Study.root", "UPDATE");
+	TFile *TTDileptPowheg_JERDown = TFile::Open("Craneens_Comb/TTDileptPowheg_JERDown_Run2_TopTree_Study.root", "UPDATE");
+	TFile *TTDileptPowheg_JESUp = TFile::Open("Craneens_Comb/TTDileptPowheg_JESUp_Run2_TopTree_Study.root", "UPDATE");
+	TFile *TTDileptPowheg_JESDown = TFile::Open("Craneens_Comb/TTDileptPowheg_JESDown_Run2_TopTree_Study.root", "UPDATE");
+	TFile *TTDileptPowheg_ScaleHUp = TFile::Open("Craneens_Comb/TTDileptPowheg_ScaleHUp_Run2_TopTree_Study.root", "UPDATE");
+	TFile *TTDileptPowheg_ScaleHDown = TFile::Open("Craneens_Comb/TTDileptPowheg_ScaleHDown_Run2_TopTree_Study.root", "UPDATE");
 	TFile *T_tW = TFile::Open("Craneens_Comb/T_tW_Run2_TopTree_Study.root", "UPDATE");
 	TFile *Tbar_tW = TFile::Open("Craneens_Comb/Tbar_tW_Run2_TopTree_Study.root", "UPDATE");
 	TFile *DYJets = TFile::Open("Craneens_Comb/DYJets_Run2_TopTree_Study.root", "UPDATE");
@@ -29,10 +31,12 @@ void CombineCraneens()
 
 	files.push_back(Data);
 	files.push_back(TTDileptMG);
-	files.push_back(TTDileptMG_JERUp);
-	files.push_back(TTDileptMG_JERDown);
-	files.push_back(TTDileptMG_JESUp);
-	files.push_back(TTDileptMG_JESDown);
+	files.push_back(TTDileptPowheg_JERUp);
+	files.push_back(TTDileptPowheg_JERDown);
+	files.push_back(TTDileptPowheg_JESUp);
+	files.push_back(TTDileptPowheg_JESDown);
+	files.push_back(TTDileptPowheg_ScaleHUp);
+	files.push_back(TTDileptPowheg_ScaleHDown);
 	files.push_back(T_tW);
 	files.push_back(Tbar_tW);
 	files.push_back(DYJets);

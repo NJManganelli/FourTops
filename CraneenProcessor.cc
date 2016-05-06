@@ -46,7 +46,8 @@ void DatasetPlotter(int nBins,
     string sVarofinterest,
     string xmlNom,
     string CraneenPath,
-    string shapefileName);
+    string shapefileName,
+    string units);
 
 
 void SplitDatasetPlotter(int nBins,
@@ -64,7 +65,8 @@ void SplitDatasetPlotter(int nBins,
     float fwSplit,
     string xmlNom,
     string CraneenPath,
-    string shapefileName);
+    string shapefileName,
+    string units);
 
 
 void Split2DatasetPlotter(int nBins,
@@ -86,7 +88,8 @@ void Split2DatasetPlotter(int nBins,
     float fwSplit2,
     string xmlNom,
     string CraneenPath,
-    string shapefileName);
+    string shapefileName,
+    string units);
 
 
 void DataCardProducer(string VoI,
@@ -174,7 +177,7 @@ int main(int argc, char** argv)
     int isplit_ttbar = 0;
     float lBound, uBound, bSplit, tSplit, wSplit, bSplit1, tSplit1, wSplit1, bSplit2, tSplit2,
         wSplit2; // + the bottom, top, and width of the splitting for 1 & 2 variables
-    string leptoAbbr, channel, chan, xmlFileName, xmlFileNameSys, CraneenPath, splitVar, splitVar1, splitVar2, VoI;
+    string leptoAbbr, channel, chan, xmlFileName, xmlFileNameSys, CraneenPath, splitVar, splitVar1, splitVar2, VoI, Units;
     string splitting = "inc";
 
     if(argc > 0) {
@@ -311,11 +314,12 @@ int main(int argc, char** argv)
                 child2->QueryFloatAttribute("lBound", &lBound);
                 child2->QueryFloatAttribute("uBound", &uBound);
                 child2->QueryIntAttribute("nBins", &NumberOfBins);
+                Units = child2->Attribute("units");
                 cout << "Variable : " << ppText << "  lBound : " << lBound << "   uBound : " << uBound
                      << "  nBins: " << NumberOfBins << endl;
                 if(jetSplit) {
                     SplitDatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile,
-                        channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath, shapefileName);
+                        channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath, shapefileName, Units);
                     if(VoI.find("BDT")!=string::npos) {
                         Split_DataCardProducer(VoI, shapefile, shapefileName, channel, leptoAbbr, jetSplit, splitVar,
                             bSplit, tSplit, wSplit, xmlFileName, lumiScale);
@@ -324,7 +328,7 @@ int main(int argc, char** argv)
 
                     Split2DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile,
                     channel, VoI, splitVar1, bSplit1, tSplit1, wSplit1, splitVar2, bSplit2, tSplit2, wSplit2,
-                    xmlFileName, CraneenPath ,shapefileName);
+                    xmlFileName, CraneenPath ,shapefileName, Units);
                     if(VoI.find("BDT")!=string::npos){
                         Split2_DataCardProducer(VoI, shapefile, shapefileName ,channel, leptoAbbr, jetSplit, jetTagsplit,
                         splitVar1, bSplit1, tSplit1, wSplit1,splitVar2, bSplit2, tSplit2, wSplit2, xmlFileName,
@@ -332,7 +336,7 @@ int main(int argc, char** argv)
                     }
                 } else {
                     DatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile, channel,
-                        VoI, xmlFileName, CraneenPath, shapefileName);
+                        VoI, xmlFileName, CraneenPath, shapefileName, Units);
                     if(VoI.find("BDT")!=string::npos) {
                         DataCardProducer(VoI, shapefile, shapefileName, channel, leptoAbbr, xmlFileName, lumiScale);
                     }
@@ -780,7 +784,8 @@ void DatasetPlotter(int nBins,
     string sVarofinterest,
     string xmlNom,
     string CraneenPath,
-    string shapefileName)
+    string shapefileName,
+    string units)
 {
     cout << "" << endl;
     cout << "RUNNING NOMINAL DATASETS" << endl;
@@ -891,7 +896,7 @@ void DatasetPlotter(int nBins,
         datasets.push_back(ttbar_ll_down);
     }
     MSPlot[plotname] =
-        new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
+        new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str(), "Events", "", units);
 
     // instantiating these plots outside the dataset loop so that they can be combined between multiple channels of the
     // same main ttbar sample
@@ -1080,7 +1085,7 @@ void DatasetPlotter(int nBins,
                 // cout<<SFbtag<< "   "<<  ScaleFactor<<  "   "<< SFPU<<  "   "<< SFlepton<< "   "<<  ttbbReweight<<
                 // endl;
                 if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
-                    dataSetName.find("JER") == string::npos && dataSetName.find("Scale") == string::npos) {
+                    dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
                     // Since these are instantiated outside the dataset loop, these will combine across multiple
                     // channels of the mainTTbarSample and provide the correct histos for the scale envelope
                     histo1D["Genweight_tt"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
@@ -1179,7 +1184,7 @@ void DatasetPlotter(int nBins,
         string scalesysname = channel + "__" + mainTTbarSample + "__";
 
         if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
-            dataSetName.find("JER") == string::npos) {
+            dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
             // cout<<"  making weights histos"<<endl;
 
             histo1D["Genweight_tt"]->Write("Genweight_tt");
@@ -1259,8 +1264,10 @@ void CutFlowPlotter(TFile* cffile,
     string dataSetName, filepath;
     string plotname = channel + " Cut Flow";
     int nEntries;
-    float ScaleFactor, NormFactor, Luminosity, varofInterest, GenWeight, weight1, weight2, weight3, weight4, weight5,
-        weight6, weight7, weight8, ttbar_flav;
+    float ScaleFactor = 1, NormFactor = 1, Luminosity, varofInterest, GenWeight = 1, weight1 = 1, weight2 = 1,
+          weight3 = 1, weight4 = 1, weight5 = 1, weight6 = 1, weight7 = 1, weight8 = 1, ttbar_flav = 1, SFtrigger = 1,
+          SFlepton = 1, SFbtag = 1, SFbtagUp = 1, SFbtagDown = 1, SFPU = 1, SFPU_up = 1, SFPU_down = 1, SFTopPt = 1,
+          SFbehrends = 1;
     MultiSamplePlot* cutFlowPlot = new MultiSamplePlot(datasets, plotname.c_str(), nCuts, 0, nCuts, "Cut Number");
     std::vector<float> cuts(nCuts);
 
@@ -1281,7 +1288,14 @@ void CutFlowPlotter(TFile* cffile,
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor", &ScaleFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor", &NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity", &Luminosity);
-
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt); //single lep sfTopPt
         nTuple[dataSetName.c_str()]->SetBranchAddress("trigger", &cuts[0]);
         nTuple[dataSetName.c_str()]->SetBranchAddress("isGoodPV", &cuts[1]);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Lep1", &cuts[2]);
@@ -1289,7 +1303,7 @@ void CutFlowPlotter(TFile* cffile,
         nTuple[dataSetName.c_str()]->SetBranchAddress("nJets", &cuts[4]);
         nTuple[dataSetName.c_str()]->SetBranchAddress("nTags", &cuts[5]);
         nTuple[dataSetName.c_str()]->SetBranchAddress("HT", &cuts[6]);
-
+ 
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
         cout << "got variables" << endl;
@@ -1345,7 +1359,8 @@ void SplitDatasetPlotter(int nBins,
     float fwSplit,
     string xmlNom,
     string CraneenPath,
-    string shapefileName)
+    string shapefileName,
+    string units)
 {
     cout << "" << endl;
     cout << "RUNNING NOMINAL DATASETS" << endl;
@@ -1389,7 +1404,7 @@ void SplitDatasetPlotter(int nBins,
         numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
         plotname = sVarofinterest + numStr + sSplitVar;
         MSPlot[plotname.c_str()] =
-            new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str());
+            new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str(), "Events", "", units);
     }
     plotname = "";
 
@@ -1544,7 +1559,7 @@ void SplitDatasetPlotter(int nBins,
                 }
                 // outsiderange = false;
                 else if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
-                    dataSetName.find("JER") == string::npos) {
+                    dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
                     //cout << "Main TTbar Sample Event!  stSplit = " << stSplit << endl;
                     //                    cin.get();
                     histo1D[("Genweight_tt" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
@@ -1737,7 +1752,7 @@ void SplitDatasetPlotter(int nBins,
 
             canv->SaveAs((pathPNG + histoName + ".png").c_str());
             if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
-                dataSetName.find("JER") == string::npos) {
+                dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
                 cout << "  making weights histos" << endl;
 
                 // TCanvas *canv0 = new TCanvas();
@@ -1787,7 +1802,7 @@ void SplitDatasetPlotter(int nBins,
         MultiSamplePlot* temp = it->second;
         temp->setErrorBandFile(scaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 20);
-        temp->Write(shapefile, name, true, pathPNG, "png");
+        temp->Write(shapefile, name, true, pathPNG, "eps");
     }
 
     for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
@@ -1797,9 +1812,28 @@ void SplitDatasetPlotter(int nBins,
     }
 };
 
-void Split2DatasetPlotter(int nBins, float lScale, float plotLow, float plotHigh, string leptoAbbr, TFile *shapefile,
-TFile *errorfile, string channel, string sVarofinterest, string sSplitVar1, float fbSplit1, float ftSplit1, float
-fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, string xmlNom, string CraneenPath, string shapefileName)
+void Split2DatasetPlotter(
+    int nBins, 
+    float lScale, 
+    float plotLow, 
+    float plotHigh, 
+    string leptoAbbr, 
+    TFile *shapefile,
+    TFile *errorfile, 
+    string channel, 
+    string sVarofinterest, 
+    string sSplitVar1, 
+    float fbSplit1, 
+    float ftSplit1, 
+    float fwSplit1, 
+    string sSplitVar2, 
+    float fbSplit2, 
+    float ftSplit2,
+    float fwSplit2, 
+    string xmlNom, 
+    string CraneenPath, 
+    string shapefileName,
+    string units)
 {
     cout<<""<<endl;
     cout<<"RUNNING NOMINAL DATASETS"<<endl;
@@ -1849,7 +1883,7 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
             numStr2 = static_cast<ostringstream*>( &(ostringstream() << t2) )->str();
             plotname = sVarofinterest + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
             MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh,
-    sVarofinterest.c_str());
+    sVarofinterest.c_str(), "Events", "", units);
         }
     }
     plotname = "";
@@ -2059,7 +2093,7 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
                 histo1D[histoName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
             }
             else if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
-                dataSetName.find("JER") == string::npos) {
+                dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
 
                 // cout << "Main TTbar Sample Event!  name nameEnding  "<<nameEnding<< endl;
                 //                    cin.get();
@@ -2113,7 +2147,7 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
                 MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
                         SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * ttbbReweight * LumiFactor * GenWeight);
             } else if(dataSetName.find(otherTTbarsample) == string::npos &&
-                dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos &&
+                dataSetName.find("ScaleH") == string::npos && dataSetName.find("JES") == string::npos &&
                 dataSetName.find("JER") ==
                     string::npos) { // ie. don't add the MLM dataset which is just used for matching
                 MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
@@ -2173,7 +2207,7 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
 
                 canv->SaveAs((pathPNG+histoName+".png").c_str());
                 if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
-                    dataSetName.find("JER") == string::npos) {
+                    dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
                     cout << "  making weights histos" << endl;
 
                     // TCanvas *canv0 = new TCanvas();
@@ -2227,7 +2261,7 @@ fwSplit1, string sSplitVar2, float fbSplit2, float ftSplit2, float fwSplit2, str
 
         temp->setErrorBandFile(scaleFileName.c_str()); //set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 20);
-        temp->Write(shapefile, name, true, pathPNG, "png");
+        temp->Write(shapefile, name, true, pathPNG, "eps");
     }
     for(int s = fbSplit1; s <= ftSplit1; s+=fwSplit1)
     {

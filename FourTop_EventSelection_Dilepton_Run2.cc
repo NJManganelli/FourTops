@@ -1091,7 +1091,8 @@ int main(int argc, char* argv[])
                 // variation 5") << " Weight : " << scaleUp <<endl;
                 // cout <<"Scale Down Weight Index: " << runInfos->getWeightInfo(currentRun).weightIndex("Central scale
                 // variation 9") << " Weight : " << scaleDown <<endl;
-            } else if(dataSetName.find("tttt") != std::string::npos || dataSetName.find("TTTT") != std::string::npos) {
+            } else if(dataSetName.find("TTDileptPowheg") != std::string::npos ||
+                dataSetName.find("ttttNLO") != std::string::npos) {
                 centralWeight = (event->getWeight(1001)) / (abs(event->originalXWGTUP()));
                 weight1 = event->getWeight(1002) / (abs(event->originalXWGTUP()));
                 weight2 = event->getWeight(1003) / (abs(event->originalXWGTUP()));
@@ -1650,7 +1651,7 @@ int main(int argc, char* argv[])
                     fleptonSF1 = electronSFWeight->at(selectedElectrons[0]->Eta(), selectedElectrons[0]->Pt(), 0); // Always set the first lepton to the highest Pt Tight Electron
                     fleptonSF2 = electronSFWeight->at(selectedElectrons[1]->Eta(), selectedElectrons[1]->Pt(), 0); // Always set the first lepton to the highest Pt Tight Electron
                 } else if(Electron && Muon && nEl == 1 && nMu == 1) {
-                    scaleFactor *= 0.91; // Trigger scale factor for EMu channel
+                    //scaleFactor *= 0.91; // Trigger scale factor for EMu channel
                     fleptonSF1 =
                         electronSFWeight->at(selectedElectrons[0]->Eta(), selectedElectrons[0]->Pt(), 0);
                     fleptonSF2 = muonSFWeightID->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
@@ -1669,11 +1670,11 @@ int main(int argc, char* argv[])
 
             float fTriggerSF = 1.0;
             if(Electron && Muon)
-                fleptonSF *= 0.91;
+                fleptonSF *= 0.971;
             else if(!Electron && Muon)
-                fleptonSF *= 1.0;
+                fleptonSF *= 0.931;
             else if(Electron && !Muon)
-                fleptonSF *= 1.0;
+                fleptonSF *= 0.958;
 
 
 	    scaleFactor *= fleptonSF;
