@@ -353,11 +353,11 @@ int main(int argc, char** argv)
             }
         }
     }
-    // string cffileName = "Cut_Flow_"+leptoAbbr+".root";
-    //        cout<<cffileName<<endl;
-    //        TFile *cffile = new TFile((cffileName).c_str(), "RECREATE");
-    // CutFlowPlotter(cffile, leptoAbbr, channel, xmlFileName, CraneenPath, 7, lumiScale);
-    // delete cffile;
+     string cffileName = "Cut_Flow_"+leptoAbbr+".root";
+            cout<<cffileName<<endl;
+            TFile *cffile = new TFile((cffileName).c_str(), "RECREATE");
+     CutFlowPlotter(cffile, leptoAbbr, channel, xmlFileName, CraneenPath, 9, lumiScale);
+     delete cffile;
     cout << " DONE !! " << endl;
 }
 
@@ -985,7 +985,7 @@ void DatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtag
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
@@ -1250,10 +1250,19 @@ void CutFlowPlotter(TFile* cffile,
     cout << "used config file: " << xmlfile << endl;
 
     string pathPNG = "FourTop_Light";
+    string mainTTbarSample, otherTTbarsample;
     pathPNG += leptoAbbr;
     pathPNG += "_MSPlots/";
     mkdir(pathPNG.c_str(), 0777);
     cout << "Making directory :" << pathPNG << endl; // make directory
+    if(channel == "ttttmu"||channel == "ttttel"){
+        mainTTbarSample = "TTJets_powheg";
+        otherTTbarsample = "TTJets_MLM";
+    }
+    else{
+        mainTTbarSample = "TTDileptPowheg";
+        otherTTbarsample = "TTDileptMG";
+    }
 
     ///////////////////////////////////////////////////////////// Load Datasets
     ///////////////////////////////////////////////////////////////////////
@@ -1261,6 +1270,7 @@ void CutFlowPlotter(TFile* cffile,
     vector<Dataset*> datasets;                  // cout<<"vector filled"<<endl;
     treeLoader.LoadDatasets(datasets, xmlfile); // cout<<"datasets loaded"<<endl;
 
+    vector<string> CutsselecTable;
     string dataSetName, filepath;
     string plotname = channel + " Cut Flow";
     int nEntries;
@@ -1271,10 +1281,63 @@ void CutFlowPlotter(TFile* cffile,
     MultiSamplePlot* cutFlowPlot = new MultiSamplePlot(datasets, plotname.c_str(), nCuts, 0, nCuts, "Cut Number");
     std::vector<float> cuts(nCuts);
 
+	if(lScale > 0) // artificial Lumi
+                    {
+                        Luminosity = 1000 * lScale;
+                    }
+        Luminosity = 2628.0;
+
+        if(leptoAbbr.find("muel") != string::npos || leptoAbbr.find("MuEl") != string::npos) {
+            CutsselecTable.push_back(string("initial"));
+            CutsselecTable.push_back(string("Trigger"));
+            CutsselecTable.push_back(string("At least 1 PV"));
+            CutsselecTable.push_back(string("Exactly 1 Loose Isolated Muon"));
+            CutsselecTable.push_back(string("Exactly 1 Loose Electron"));
+            CutsselecTable.push_back(string("At least 2 Jets"));
+            CutsselecTable.push_back(string("At least 3 Jets"));
+            CutsselecTable.push_back(string("At least 4 Jets"));
+            CutsselecTable.push_back(string("At least 2 CSVM Jets"));
+            CutsselecTable.push_back(string("At Least 500 GeV HT"));
+        }
+        else if(leptoAbbr.find("mumu") != string::npos || leptoAbbr.find("MuMu") != string::npos) {
+            CutsselecTable.push_back(string("initial"));
+            CutsselecTable.push_back(string("Trigger"));
+            CutsselecTable.push_back(string("At least 1 PV"));
+            CutsselecTable.push_back(string("Exactly 2 Loose Isolated Muons"));
+            CutsselecTable.push_back(string("Mass Veto"));
+            CutsselecTable.push_back(string("At least 2 Jets"));
+            CutsselecTable.push_back(string("At least 3 Jets"));
+            CutsselecTable.push_back(string("At least 4 Jets"));
+            CutsselecTable.push_back(string("At least 2 CSVM Jets"));
+            CutsselecTable.push_back(string("At Least 500 GeV HT"));
+        }
+        else if(leptoAbbr.find("elel") != string::npos || leptoAbbr.find("ElEl") != string::npos) {
+            CutsselecTable.push_back(string("initial"));
+            CutsselecTable.push_back(string("Trigger"));
+            CutsselecTable.push_back(string("At least 1 PV"));
+            CutsselecTable.push_back(string("Exactly 2 Loose Electrons"));
+            CutsselecTable.push_back(string("Mass Veto"));
+            CutsselecTable.push_back(string("At least 2 Jets"));
+            CutsselecTable.push_back(string("At least 3 Jets"));
+            CutsselecTable.push_back(string("At least 4 Jets"));
+            CutsselecTable.push_back(string("At least 2 CSVM Jets"));
+            CutsselecTable.push_back(string("At Least 500 GeV HT"));
+        }
+    
+
+    SelectionTable selecTable(CutsselecTable, datasets);
+    selecTable.SetLuminosity(Luminosity);
+    selecTable.SetPrecision(2);
+
     for(int d = 0; d < datasets.size(); d++) // Loop through datasets
     {
         dataSetName = datasets[d]->Name();
         cout << "Dataset:  :" << dataSetName << endl;
+        if(dataSetName.find(otherTTbarsample) != string::npos ||
+                    dataSetName.find("Scale") != string::npos || dataSetName.find("JES") != string::npos ||
+                    dataSetName.find("JER") != string::npos) {
+	    continue;
+	}
 
         filepath = CraneenPath + dataSetName + "_Run2_TopTree_Study.root"; // cout<<"filepath: "<<filepath<<endl;
 
@@ -1288,21 +1351,24 @@ void CutFlowPlotter(TFile* cffile,
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor", &ScaleFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor", &NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity", &Luminosity);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt); //single lep sfTopPt
+//	nTuple[dataSetName.c_str()]->SetBranchAddress("GenWeight", &GenWeight);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtag
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_up", &SFPU_up);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU_down", &SFPU_down);
+//        nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt); //single lep sfTopPt
         nTuple[dataSetName.c_str()]->SetBranchAddress("trigger", &cuts[0]);
         nTuple[dataSetName.c_str()]->SetBranchAddress("isGoodPV", &cuts[1]);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Lep1", &cuts[2]);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Lep2", &cuts[3]);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("nJets", &cuts[4]);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("nTags", &cuts[5]);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("HT", &cuts[6]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("nJets2", &cuts[4]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("nJets3", &cuts[5]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("nJets4", &cuts[6]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("nTags", &cuts[7]);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("HT", &cuts[8]);
  
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
@@ -1311,28 +1377,28 @@ void CutFlowPlotter(TFile* cffile,
 
         for(int j = 0; j < nEntries; j++) {
             nTuple[dataSetName.c_str()]->GetEntry(j);
-
+	    selecTable.Fill(d, 0, NormFactor * ScaleFactor);
             for(int cutnum = 0; cutnum < nCuts; cutnum++) {
                 if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                     dataSetName.find("DATA") != string::npos) {
-                    if(cuts[cutnum] == 1)
+                    if(cuts[cutnum] == 1){
                         cutFlowPlot->Fill(cutnum, datasets[d], true, 1);
+			selecTable.Fill(d, (cutnum+1), 1);
+		    }
                 } else {
-                    if(lScale > 0) // artificial Lumi
-                    {
-                        Luminosity = 1000 * lScale;
-                    }
-                    Luminosity = 2581.340;
+                    
                     NormFactor = 1;
                     if(dataSetName.find("tttt") != string::npos) {
-                        NormFactor = 0.5635;
+                        NormFactor = 1.0/0.4095;
                     } else if(dataSetName.find("WJets") != string::npos) {
-                        NormFactor = 0.6312;
-                        // cout<<"voi: "<<varofInterest<<"  NormFactor: "<<NormFactor<<"  ScaleFactor: "<<ScaleFactor<<"
-                        // lumi: "<<Luminosity<<endl;
+                        NormFactor = 1.0/0.522796;
+                    } else if(dataSetName.find("DYJets") != string::npos) {
+                        NormFactor = 1.0/0.566;
                     }
-                    if(cuts[cutnum] == 1)
-                        cutFlowPlot->Fill(cutnum, datasets[d], true, NormFactor * ScaleFactor * Luminosity);
+                    if(cuts[cutnum] == 1) {
+                        cutFlowPlot->Fill(cutnum, datasets[d], true, GenWeight * NormFactor * ScaleFactor * Luminosity);
+                        selecTable.Fill(d, (cutnum+1), GenWeight * NormFactor * ScaleFactor);
+		    }
                 }
             }
         }
@@ -1342,6 +1408,13 @@ void CutFlowPlotter(TFile* cffile,
     cout << "Writing Cut Flow Plot" << endl;
     cutFlowPlot->Draw("Cut Flow", 2, false, true, false, 100);
     cutFlowPlot->Write(cffile, "CutFlow", true, pathPNG, "eps");
+    //(bool mergeTT, bool mergeQCD, bool mergeW, bool mergeZ, bool mergeST)
+    selecTable.TableCalculator(true, true, true, true, true);
+
+    // Options : WithError (false), writeMerged (true), useBookTabs (false), addRawsyNumbers (false), addEfficiencies
+    // (false), addTotalEfficiencies (false), writeLandscape (false)
+    selecTable.Write("FourTop" + leptoAbbr + "_Table" + ".tex",
+        false, true, true, true, false, false, true);
 }
 
 void SplitDatasetPlotter(int nBins,
@@ -1454,7 +1527,7 @@ void SplitDatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtag
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
@@ -1931,7 +2004,7 @@ void Split2DatasetPlotter(
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
-        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagCSV", &SFbtag); //SFbtag
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtag
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagDown", &SFbtagDown);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFPU", &SFPU);
