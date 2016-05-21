@@ -167,6 +167,8 @@ void CutFlowPlotter(TFile* cffile,
     int nCuts,
     float lScale);
 
+float PythiaTune(int jets);
+
 string DatacardVar = "BDT"; // variable of interest for plotting //global
 
 int main(int argc, char** argv)
@@ -353,11 +355,11 @@ int main(int argc, char** argv)
             }
         }
     }
-     string cffileName = "Cut_Flow_"+leptoAbbr+".root";
-            cout<<cffileName<<endl;
-            TFile *cffile = new TFile((cffileName).c_str(), "RECREATE");
-     CutFlowPlotter(cffile, leptoAbbr, channel, xmlFileName, CraneenPath, 9, lumiScale);
-     delete cffile;
+//     string cffileName = "Cut_Flow_"+leptoAbbr+".root";
+//            cout<<cffileName<<endl;
+//            TFile *cffile = new TFile((cffileName).c_str(), "RECREATE");
+//     CutFlowPlotter(cffile, leptoAbbr, channel, xmlFileName, CraneenPath, 9, lumiScale);
+//     delete cffile;
     cout << " DONE !! " << endl;
 }
 
@@ -818,7 +820,7 @@ void DatasetPlotter(int nBins,
     float ScaleFactor = 1, NormFactor = 1, Luminosity, varofInterest, GenWeight = 1, weight1 = 1, weight2 = 1,
           weight3 = 1, weight4 = 1, weight5 = 1, weight6 = 1, weight7 = 1, weight8 = 1, ttbar_flav = 1, SFtrigger = 1,
           SFlepton = 1, SFbtag = 1, SFbtagUp = 1, SFbtagDown = 1, SFPU = 1, SFPU_up = 1, SFPU_down = 1, SFTopPt = 1,
-          SFbehrends = 1;
+          SFbehrends = 1, nJets = 1, alphaTune = 1;
     Dataset* ttbar_ll;
     Dataset* ttbar_ll_up;
     Dataset* ttbar_ll_down;
@@ -911,6 +913,8 @@ void DatasetPlotter(int nBins,
     histo1D["weight8_tt"] = new TH1F("weight8", "weight8", nBins, plotLow, plotHigh);
     histo1D["PU_Up"] = new TH1F("PU_Up", "PU_Up", nBins, plotLow, plotHigh);
     histo1D["PU_Down"] = new TH1F("PU_Down", "PU_Down", nBins, plotLow, plotHigh);
+    histo1D["AlphaS_Up"] = new TH1F("AlphaS_Up", "AlphaS_Up", nBins, plotLow, plotHigh);
+    histo1D["AlphaS_Down"] = new TH1F("AlphaS_Down", "AlphaS_Down", nBins, plotLow, plotHigh);
     histo1D["btag_Up"] = new TH1F("btag_Up", "btag_Up", nBins, plotLow, plotHigh);
     histo1D["btag_Down"] = new TH1F("btag_Down", "btag_Down", nBins, plotLow, plotHigh);
     histo1D["heavyFlav_Up"] = new TH1F("heavyFlav_Up", "heavyFlav_Up", nBins, plotLow, plotHigh);
@@ -970,6 +974,8 @@ void DatasetPlotter(int nBins,
         nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();
         cout << "                 nEntries: " << nEntries << endl;
 
+	nTuple[dataSetName.c_str()]->SetBranchAddress("nJets", &nJets);
+
         nTuple[dataSetName.c_str()]->SetBranchAddress(sVarofinterest.c_str(), &varofInterest);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor", &ScaleFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor", &NormFactor);
@@ -983,7 +989,6 @@ void DatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight6", &weight6);
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight7", &weight7);
         nTuple[dataSetName.c_str()]->SetBranchAddress("weight8", &weight8);
-        // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtrigger", &SFtrigger);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFlepton", &SFlepton);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtag", &SFbtag); //SFbtag
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFbtagUp", &SFbtagUp);
@@ -1041,6 +1046,10 @@ void DatasetPlotter(int nBins,
                 {
                     Luminosity = 1000 * lScale;
                 }
+
+		///////////////////////////////////
+		//  NormFactors from neg weights //
+		///////////////////////////////////
                 NormFactor = 1;
                 if(dataSetName.find("tttt") != string::npos) {
                     NormFactor = 1.0/0.4095;
@@ -1048,7 +1057,63 @@ void DatasetPlotter(int nBins,
                     NormFactor = 1.0/0.522796;
                 } else if(dataSetName.find("DYJets") != string::npos) {
                     NormFactor = 1.0/0.566;
+                } 
+
+		/////////////////////////////////////
+		//  Scale Factors for alpha s tune //
+		/////////////////////////////////////
+
+		alphaTune = 1;
+		if(dataSetName.find(mainTTbarSample) != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+2);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
                 }
+		else if(dataSetName.find(otherTTbarsample) != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+2);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+		else if(dataSetName.find("tttt") != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest-4);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+		else if(dataSetName.find("DYJets") != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+4);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+4);
+		    }		    
+                }
+		else if(dataSetName.find("T_tW") != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+2);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+		else if(dataSetName.find("Tbar_tW") != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+2);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+
+		NormFactor *= (1.0/alphaTune);
 
                 ////////////////////////////////////////////////////////
                 /////                    Fill plots                /////
@@ -1085,7 +1150,7 @@ void DatasetPlotter(int nBins,
                 // cout<<SFbtag<< "   "<<  ScaleFactor<<  "   "<< SFPU<<  "   "<< SFlepton<< "   "<<  ttbbReweight<<
                 // endl;
                 if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
-                    dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
+                    dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos && dataSetName.find("AlphaS") == string::npos) {
                     // Since these are instantiated outside the dataset loop, these will combine across multiple
                     // channels of the mainTTbarSample and provide the correct histos for the scale envelope
                     histo1D["Genweight_tt"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU *
@@ -1110,6 +1175,10 @@ void DatasetPlotter(int nBins,
                     histo1D["PU_Up"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU_up *
                             SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi * ttbbReweight * LumiFactor);
                     histo1D["PU_Down"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * SFPU_down *
+                            SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi * ttbbReweight * LumiFactor);
+		    histo1D["AlphaS_Up"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * 1.159 *
+                            SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi * ttbbReweight * LumiFactor);
+                    histo1D["AlphaS_Down"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag * 0.867 *
                             SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi * ttbbReweight * LumiFactor);
                     histo1D["btag_Up"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtagUp * SFPU *
                             SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi * ttbbReweight * LumiFactor);
@@ -1146,8 +1215,7 @@ void DatasetPlotter(int nBins,
                             SFlepton * SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * ttbbReweight * LumiFactor);
                 } else if(dataSetName.find(otherTTbarsample) == string::npos &&
                     dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos &&
-                    dataSetName.find("JER") ==
-                        string::npos) { // ie. don't add the MLM dataset which is just used for matching
+                    dataSetName.find("JER") == string::npos && dataSetName.find("AlphaS") == string::npos) { // ie. don't add the MLM dataset which is just used for matching
                     MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * GenWeight * SFtrigger *
                             SFlepton * SFbtag * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight * ttbbReweight *
                             LumiFactor);
@@ -1175,6 +1243,10 @@ void DatasetPlotter(int nBins,
             writename = channel + "__" + mainTTbarSample + "__ScaleHUp";
         } else if(dataSetName.find("ScaleHDown") != string::npos) {
             writename = channel + "__" + mainTTbarSample + "__ScaleHDown";
+        } else if(dataSetName.find("AlphaSUp") != string::npos) {
+            writename = channel + "__" + mainTTbarSample + "__AlphaSUp";
+        } else if(dataSetName.find("AlphaSDown") != string::npos) {
+            writename = channel + "__" + mainTTbarSample + "__AlphaSDown";
         } else {
             writename = channel + "__" + dataSetName + "__nominal";
         }
@@ -1184,7 +1256,8 @@ void DatasetPlotter(int nBins,
         string scalesysname = channel + "__" + mainTTbarSample + "__";
 
         if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
-            dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
+            dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos && 
+	    dataSetName.find("AlphaS") == string::npos) {
             // cout<<"  making weights histos"<<endl;
 
             histo1D["Genweight_tt"]->Write("Genweight_tt");
@@ -1277,7 +1350,7 @@ void CutFlowPlotter(TFile* cffile,
     float ScaleFactor = 1, NormFactor = 1, Luminosity, varofInterest, GenWeight = 1, weight1 = 1, weight2 = 1,
           weight3 = 1, weight4 = 1, weight5 = 1, weight6 = 1, weight7 = 1, weight8 = 1, ttbar_flav = 1, SFtrigger = 1,
           SFlepton = 1, SFbtag = 1, SFbtagUp = 1, SFbtagDown = 1, SFPU = 1, SFPU_up = 1, SFPU_down = 1, SFTopPt = 1,
-          SFbehrends = 1;
+          SFbehrends = 1, alphaTune = 1, nJets = 0;
     MultiSamplePlot* cutFlowPlot = new MultiSamplePlot(datasets, plotname.c_str(), nCuts, 0, nCuts, "Cut Number");
     std::vector<float> cuts(nCuts);
 
@@ -1348,6 +1421,8 @@ void CutFlowPlotter(TFile* cffile,
         nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();
         cout << "                 nEntries: " << nEntries << endl;
 
+	nTuple[dataSetName.c_str()]->SetBranchAddress("nJets", &nJets);
+
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor", &ScaleFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("NormFactor", &NormFactor);
         nTuple[dataSetName.c_str()]->SetBranchAddress("Luminosity", &Luminosity);
@@ -1395,6 +1470,45 @@ void CutFlowPlotter(TFile* cffile,
                     } else if(dataSetName.find("DYJets") != string::npos) {
                         NormFactor = 1.0/0.566;
                     }
+
+		/////////////////////////////////////
+		//  Scale Factors for alpha s tune //
+		/////////////////////////////////////
+
+		alphaTune = 1;
+		if(dataSetName.find(mainTTbarSample) != string::npos) {
+		    
+			alphaTune = PythiaTune(nJets+2);
+		  		    
+                }
+		else if(dataSetName.find(otherTTbarsample) != string::npos) {
+		    
+			alphaTune = PythiaTune(nJets+2);
+		   	    
+                }
+		else if(dataSetName.find("tttt") != string::npos) {
+		    
+			alphaTune = PythiaTune(nJets+2);
+		   	    
+                }
+		else if(dataSetName.find("DYJets") != string::npos) {
+		    
+			alphaTune = PythiaTune(nJets+4);
+		   	    
+                }
+		else if(dataSetName.find("T_tW") != string::npos) {
+		    
+			alphaTune = PythiaTune(nJets+2);
+		    		    
+                }
+		else if(dataSetName.find("Tbar_tW") != string::npos) {
+		    
+			alphaTune = PythiaTune(nJets+2);
+		    		    
+                }
+
+		NormFactor *= (1.0/alphaTune);
+
                     if(cuts[cutnum] == 1) {
                         cutFlowPlot->Fill(cutnum, datasets[d], true, GenWeight * NormFactor * ScaleFactor * Luminosity);
                         selecTable.Fill(d, (cutnum+1), GenWeight * NormFactor * ScaleFactor);
@@ -1488,7 +1602,7 @@ void SplitDatasetPlotter(int nBins,
     float ScaleFactor = 1, NormFactor = 1, Luminosity, varofInterest, splitVar, GenWeight = 1, weight1 = 1, weight2 = 1,
           weight3 = 1, weight4 = 1, weight5 = 1, weight6 = 1, weight7 = 1, weight8 = 1, ttbar_flav = 1, SFtrigger = 1,
           SFlepton = 1, SFbtag = 1, SFbtagUp = 1, SFbtagDown = 1, SFPU = 1, SFPU_up = 1, SFPU_down = 1, SFTopPt = 1,
-          SFbehrends = 1;
+          SFbehrends = 1, nJets = 1, alphaTune = 1;
     float PtLepton;
     bool reweight_ttbar = false;
     for(int d = 0; d < datasets.size(); d++) // Loop through datasets
@@ -1510,6 +1624,8 @@ void SplitDatasetPlotter(int nBins,
             (TNtuple*)FileObj[dataSetName.c_str()]->Get(nTuplename.c_str()); // get ntuple for each dataset
         nEntries = (int)nTuple[dataSetName.c_str()]->GetEntries();
         cout << "                 nEntries: " << nEntries << endl;
+
+	nTuple[dataSetName.c_str()]->SetBranchAddress("nJets", &nJets);
 
         nTuple[dataSetName.c_str()]->SetBranchAddress(sVarofinterest.c_str(), &varofInterest);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ScaleFactor", &ScaleFactor);
@@ -1616,6 +1732,62 @@ void SplitDatasetPlotter(int nBins,
             } else if(dataSetName.find("DYJets") != string::npos) {
                 NormFactor = 1.0/0.566;
             }
+
+		/////////////////////////////////////
+		//  Scale Factors for alpha s tune //
+		/////////////////////////////////////
+
+		alphaTune = 1;
+		if(dataSetName.find(mainTTbarSample) != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+2);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+		else if(dataSetName.find(otherTTbarsample) != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+2);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+		else if(dataSetName.find("tttt") != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest-4);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+		else if(dataSetName.find("DYJets") != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+4);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+4);
+		    }		    
+                }
+		else if(dataSetName.find("T_tW") != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+2);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+		else if(dataSetName.find("Tbar_tW") != string::npos) {
+		    if(sVarofinterest.find("nJets") != string::npos){
+                        alphaTune = PythiaTune(varofInterest+2);
+		    }
+		    else{
+			alphaTune = PythiaTune(nJets+2);
+		    }		    
+                }
+
+		NormFactor *= (1.0/alphaTune);
             if(splitVar >=
                 ftSplit) // Check if this entry belongs in the last bin.  Done here to optimize number of checks
             {
@@ -2544,6 +2716,18 @@ void DataCardProducer(string VoI,
         }
     }
 
+    card << "alphaSTune                lnN           "; //applied to all MC datasets
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
+            dataSetName.find("DATA") != string::npos) {
+            card << "-                      ";
+        } else {
+            card << "1.15/0.86                      ";
+        }
+    }
+    card << "\n";
+
     card << "scale                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
@@ -2868,6 +3052,15 @@ void Split_DataCardProducer(string VoI,
     card << "lumi                  lnN           ";
     for(int i = 0; i < nChannels * howmanyMC; i++) {
         card << "1.027                ";
+    }
+    card << "\n";
+
+    cout << "alphaSTune" << endl;
+    card << "\n";
+    card << "---------------------------\n";
+    card << "alphaSTune                  lnN           ";
+    for(int i = 0; i < nChannels * howmanyMC; i++) {
+        card << "1.15/0.86                ";
     }
     card << "\n";
     for(int d = 0; d < howmanyMC; d++) {
@@ -3436,4 +3629,22 @@ std::string intToStr(int number)
     std::ostringstream buff;
     buff << number;
     return buff.str();
+}
+
+float PythiaTune(int jets){
+    float sf = 1;
+    
+    if(jets == 0) sf = 0.9747749;
+    else if(jets == 1) sf = 0.9764329;
+    else if(jets == 2) sf = 0.9733197;
+    else if(jets == 3) sf = 0.9815515;
+    else if(jets == 4) sf = 0.9950933;
+    else if(jets == 5) sf = 1.0368650;
+    else if(jets == 6) sf = 1.1092038;
+    else if(jets == 7) sf = 1.1842445;
+    else if(jets == 8) sf = 1.3019452;
+    else if(jets == 9) sf = 1.1926751;
+    else if(jets >= 10) sf = 1.5920859;
+
+    return sf;
 }
