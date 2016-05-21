@@ -209,12 +209,29 @@ int main (int argc, char *argv[])
     bool bLeptonSF         = true;
     bool debug             = false;
     bool applyJER          = true;
-    bool applyJEC          = false;
+    bool applyJEC          = true;
     bool JERNom            = false;
     bool JERUp             = false;
     bool JERDown           = false;
     bool JESUp             = false;
     bool JESDown           = false;
+    // bool LFUp              = false;
+    // bool LFDown            = false;
+    // bool HFUp              = false;
+    // bool HFDown            = false;
+    // bool CSVHFStats1Down   = false;
+    // bool CSVHFStats1Up     = false;
+    // bool CSVHFStats2Down   = false;
+    // bool CSVHFStats2Up     = false;
+    // bool CSVLFStats1Down   = false;
+    // bool CSVLFStats1Up     = false;
+    // bool CSVLFStats2Down   = false;
+    // bool CSVLFStats2Up     = false;
+    // bool CSVCFErr1Down     = false;
+    // bool CSVCFErr1Up       = false;
+    // bool CSVCFErr2Down     = false;
+    // bool CSVCFErr2Up       = false;
+
     bool fillingbTagHistos = false;
     bool bTopPt            = true;
     string MVAmethod       = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
@@ -288,6 +305,24 @@ int main (int argc, char *argv[])
     BTagCalibrationReader * bTagReaderUp;
     BTagCalibrationReader * bTagReaderDown;
     BTagCalibrationReader * reader_csvv2; //for csv reshaping 
+    BTagCalibrationReader * reader_JESUp;
+    BTagCalibrationReader * reader_JESDown;
+    BTagCalibrationReader * reader_LFUp;
+    BTagCalibrationReader * reader_LFDown;
+    BTagCalibrationReader * reader_HFUp;
+    BTagCalibrationReader * reader_HFDown;
+    BTagCalibrationReader * reader_HFStats1Up;
+    BTagCalibrationReader * reader_HFStats1Down;
+    BTagCalibrationReader * reader_HFStats2Up;
+    BTagCalibrationReader * reader_HFStats2Down;
+    BTagCalibrationReader * reader_LFStats1Up;
+    BTagCalibrationReader * reader_LFStats1Down;
+    BTagCalibrationReader * reader_LFStats2Up;
+    BTagCalibrationReader * reader_LFStats2Down;
+    BTagCalibrationReader * reader_CFErr1Up;
+    BTagCalibrationReader * reader_CFErr1Down;
+    BTagCalibrationReader * reader_CFErr2Up;
+    BTagCalibrationReader * reader_CFErr2Down;
 
     BTagWeightTools *btwt;
     BTagWeightTools *btwtUp;
@@ -324,12 +359,110 @@ int main (int argc, char *argv[])
     }
 
     if(bTagCSVReweight && !isData){
-        // BTagCalibration calib_csvv2("csvv2", "../TopTreeAnalysisBase/Calibrations/BTagging/ttH_BTV_CSVv2_13TeV_2015D_20151120.csv");
         BTagCalibration calib_csvv2("csvv2", "../TopTreeAnalysisBase/Calibrations/BTagging/CSVv2_76X_combToMujets.csv");
         reader_csvv2 = new BTagCalibrationReader(&calib_csvv2, // calibration instance
               BTagEntry::OP_RESHAPING, // operating point
               "iterativefit", // measurement type
               "central"); // systematics type
+
+        // JESUp
+        reader_JESUp = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_jes"); // systematics type
+        // JESDown
+        reader_JESDown = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_jes"); // systematics type
+
+        // LFUp
+        reader_LFUp = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_lf"); // systematics type
+        // LFDown
+        reader_LFDown = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_lf"); // systematics type
+
+        // HFUp
+        reader_HFUp = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_hf"); // systematics type
+        // HFDown
+        reader_HFDown = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_hf"); // systematics type
+
+        // HFStats1Up
+        reader_HFStats1Up = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_hfstats1"); // systematics type
+        // HFStats1Down
+        reader_HFStats1Down = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_hfstats1"); // systematics type
+
+        // HFStats2Up
+        reader_HFStats2Up = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_hfstats2"); // systematics type
+        // HFStats2Down
+        reader_HFStats2Down = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_hfstats2"); // systematics type
+
+        // LFStats1Up
+        reader_LFStats1Up = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_lfstats1"); // systematics type
+        // LFStats1Down
+        reader_LFStats1Down = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_lfstats1"); // systematics type
+
+        // LFStats2Up
+        reader_LFStats2Up = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_lfstats2"); // systematics type
+        // LFStats2Down
+        reader_LFStats2Down = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_lfstats2"); // systematics type
+
+        // CFErr1Up
+        reader_CFErr1Up = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_cferr1"); // systematics type
+        // CFErr1Down
+        reader_CFErr1Down = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_cferr1"); // systematics type
+
+        // CFErr2Up
+        reader_CFErr2Up = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "up_cferr2"); // systematics type
+        // CFErr2Down
+        reader_CFErr2Down = new BTagCalibrationReader(&calib_csvv2, // calibration instance
+                       BTagEntry::OP_RESHAPING, // operating point
+                       "iterativefit", // measurement type
+                       "down_cferr2"); // systematics type        
     }
 
     /////////////////////////////////////////////////
@@ -389,7 +522,7 @@ int main (int argc, char *argv[])
     /////////////////////////////////////////////////
     //               Output ROOT file              //
     /////////////////////////////////////////////////
-    string rootFileName ("FourTop"+postfix+"_"+dName+channelpostfix+".root"); //eg. FourTop_Run2_TopTree_Study_Data_Mu.root
+    string rootFileName ("outputfiles"+channelpostfix+"/FourTop"+postfix+"_"+dName+channelpostfix+".root"); //eg. FourTop_Run2_TopTree_Study_Data_Mu.root
     TFile *fout = new TFile (rootFileName.c_str(), "RECREATE");
 
 
@@ -459,9 +592,9 @@ int main (int argc, char *argv[])
     /////////////////////////////////////////////////
     //                 Cuts table                  //
     /////////////////////////////////////////////////
-    // CutsTable *cutsTable = new CutsTable(Muon, Electron);
-    // cutsTable->AddSelections();
-    // cutsTable->CreateTable(datasets, Luminosity);
+    CutsTable *cutsTable = new CutsTable(Muon, Electron);
+    cutsTable->AddSelections();
+    cutsTable->CreateTable(datasets, Luminosity);
 
     /////////////////////////////////////////////////
     //                Z peak maker                 //
@@ -548,6 +681,63 @@ int main (int argc, char *argv[])
             JESUp=true;
         }    
 
+        // if(dataSetName.find("LFDown")!=string::npos){
+        //     LFDown=true;
+        // }
+        // else if(dataSetName.find("LFUp")!=string::npos){
+        //     LFUp=true;
+        // }    
+        // if(dataSetName.find("HFDown")!=string::npos){
+        //     HFDown=true;
+        // }
+        // else if(dataSetName.find("HFUp")!=string::npos){
+        //     HFUp=true;
+        // }   
+
+        // if(dataSetName.find("CSVHFStats1Down")!=string::npos){
+        //     CSVHFStats1Down=true;
+        // }
+        // else if(dataSetName.find("CSVHFStats1Up")!=string::npos){
+        //     CSVHFStats1Up=true;
+        // }   
+
+        // if(dataSetName.find("CSVHFStats2Down")!=string::npos){
+        //     CSVHFStats2Down=true;
+        // }
+        // else if(dataSetName.find("CSVHFStats2Up")!=string::npos){
+        //     CSVHFStats2Up=true;
+        // }   
+
+        // if(dataSetName.find("CSVLFStats1Down")!=string::npos){
+        //     CSVLFStats1Down=true;
+        // }
+        // else if(dataSetName.find("CSVLFStats1Up")!=string::npos){
+        //     CSVLFStats1Up=true;
+        // }   
+
+        // if(dataSetName.find("CSVLFStats2Down")!=string::npos){
+        //     CSVLFStats2Down=true;
+        // }
+        // else if(dataSetName.find("CSVLFStats2Up")!=string::npos){
+        //     CSVLFStats2Up=true;
+        // }   
+
+
+        // if(dataSetName.find("CSVCFErr1Down")!=string::npos){
+        //     CSVCFErr1Down=true;
+        // }
+        // else if(dataSetName.find("CSVCFErr1Up")!=string::npos){
+        //     CSVCFErr1Up=true;
+        // }   
+
+        // if(dataSetName.find("CSVCFErr2Down")!=string::npos){
+        //     CSVCFErr2Down=true;
+        // }
+        // else if(dataSetName.find("CSVCFErr2Up")!=string::npos){
+        //     CSVCFErr2Up=true;
+        // }   
+
+
         // ofstream MLoutput;
         // MLoutput.open(("MLvariables"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+".csv").c_str());
 
@@ -581,12 +771,14 @@ int main (int argc, char *argv[])
         
         string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
         TFile * tupfile    = new TFile(Ntupname.c_str(),"RECREATE");
-        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFTopPt:SFlepton:SFbtagCSV:SFbtag:SFbtagUp:SFbtagDown:SFPU:SFPU_up:SFPU_down:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJetcsv1:csvJetcsv2:csvJetcsv3:csvJetcsv4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4:anglebjet1bjet2:angleBestTopAllJet:bestTopPt:geoMeanJet5and6Pt:fSphericity:fOblateness:Aplanarity:fh10:fh20:fh30:fh40:fh50:fh60:fht:fht3:fet0:fsqrts:fnjetW:fet56:fcentrality");
-       
-        // string Ntup4j0bname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_4j0b_" + dataSetName + postfix + ".root";     
-        // TFile * tup4j0bfile    = new TFile(Ntupname.c_str(),"RECREATE");
-        // TNtuple * tup4j0b      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:multitopness:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFlepton:SFbtag:SFPU:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt:leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso");
-        
+        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:BDT_trijet2:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFtopPt"
+            ":SFlepton:SFbtagCSV:SFbtag:SFbtagUp:SFbtagDown:SFPU:SFPU_up:SFPU_down:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt"
+            ":leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJet1:csvJet2:csvJet3:csvJet4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4:anglebjet1bjet2:angleBestTopAllJet"
+            ":bestTopPt:geoMeanJet5and6Pt:Sphericity:Oblateness:Aplanarity:h10:h20:h30:h40:h50:h60:ht:ht3:et0:sqrts:njetW:njetW105:njetW115:njetW135:njetW145:njetW160:et56:centrality:nLtagsExcl:nMtagsExcl:HTbLoose:HTbTight"
+            ":btagWeightCSVLFUp:btagWeightCSVLFDown:btagWeightCSVHFUp:btagWeightCSVHFDown:btagWeightCSVHFStats1Up:btagWeightCSVHFStats1Down:btagWeightCSVHFStats2Up:btagWeightCSVHFStats2Down:btagWeightCSVLFStats1Up:"
+            "btagWeightCSVLFStats1Down:btagWeightCSVLFStats2Up:btagWeightCSVLFStats2Down:btagWeightCSVCFErr1Up:btagWeightCSVCFErr1Down:btagWeightCSVCFErr2Up:btagWeightCSVCFErr2Down");
+
+
 
         string Ntupjetname = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenJets_" + dataSetName + postfix + ".root";
         TFile * tupjetfile = new TFile(Ntupjetname.c_str(),"RECREATE");
@@ -600,13 +792,7 @@ int main (int argc, char *argv[])
         string NtupCutsname = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenCuts_" + dataSetName + postfix + ".root";
         TFile * tupCutfile   = new TFile(NtupCutsname.c_str(),"RECREATE");
 
-        // string elTuptitle = "Craneen_" + channelpostfix + "_ElecID";
-        // string muTuptitle = "Craneen_" + channelpostfix + "_MuonID";
-        // string jetTuptitle = "Craneen_" + channelpostfix + "_JetID";
         string cutTuptitle = "Craneen_" + channelpostfix + "_CutFlow";
-        // TNtuple * eltup = new TNtuple(elTuptitle.c_str(),elTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:ElSuperclusterEta:Elfull5x5:EldEdatIn:EldPhiIn:ElhOverE:ElRelIso:ElEmP:Eld0:Eldz:ElMissingHits:ElE:ElP");
-        // TNtuple * mutup = new TNtuple(muTuptitle.c_str(),muTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:MuPt:MuEta:MuRelIso");
-        // TNtuple * jettup = new TNtuple(jetTuptitle.c_str(),jetTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:NHF:NEMF:nConstituents:CHF:CMultiplicity:CEMF");
         TNtuple * cuttup = new TNtuple(cutTuptitle.c_str(),cutTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:trigger:isGoodPV:Lep1:Lep2:nJets:nTags:HT");
 
 
@@ -614,10 +800,10 @@ int main (int argc, char *argv[])
         //       Define object containers and initalisations      //
         ////////////////////////////////////////////////////////////
 
-        float BDTScore, MHT, MHTSig, STJet,leptoneta, leptonpt, leptonphi, electronpt, electroneta, bjetpt, EventMass, EventMassX, SumJetMass, SumJetMassX, H, HX;
-        float HTHi, HTRat, HT, HTX, HTH, HTXHX, sumpx_X, sumpy_X, sumpz_X, sume_X, sumpx, sumpy, sumpz, sume, jetpt, PTBalTopEventX, PTBalTopSumJetX, PTBalTopMuMet;     
+        float BDTScore=-1, MHT=-1, MHTSig=-1, STJet=-1,leptoneta=-1, leptonpt=-1, leptonphi=-1, electronpt=-1, electroneta=-1, bjetpt=-1, EventMass=-1, EventMassX=-1, SumJetMass=-1, SumJetMassX=-1, H=-1, HX=-1;
+        float HTHi=-1, HTRat=-1, HT=-1, HTX=-1, HTH=-1, HTXHX=-1, sumpx_X=-1, sumpy_X=-1, sumpz_X=-1, sume_X=-1, sumpx=-1, sumpy=-1, sumpz=-1, sume=-1, jetpt=-1, PTBalTopEventX=-1, PTBalTopSumJetX=-1, PTBalTopMuMet=-1;     
         int itrigger = -1, previousRun = -1;
-        int currentRun;           
+        int currentRun=-1;           
         vector<TRootElectron*> selectedElectrons;
         vector<TRootPFJet*>    selectedOrigJets; //all original jets before jet lepton cleaning
         vector<TRootPFJet*>    selectedJets; //all jets after jet lepton cleaning
@@ -827,7 +1013,7 @@ int main (int argc, char *argv[])
             //cout<<nMu<<"<--nmu  nEl-->"<<nEl<<endl;
             if(Muon && nMu>0){
                 for (int origJets=0; origJets<selectedOrigJets.size(); origJets++){
-                    if(selectedOrigJets[origJets]->Pt()<30) cout<<selectedOrigJets[origJets]->Pt()<<endl;
+                    if(selectedOrigJets[origJets]->Pt()<30) cout<<"jet pt less than 30 --> "<<selectedOrigJets[origJets]->Pt()<<endl;
                     //cout<<"DR: "<< selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])<<endl;
                     if(selectedOrigJets[origJets]->DeltaR(*selectedMuons[0])>0.4){
                         selectedJets.push_back(selectedOrigJets[origJets]);
@@ -842,8 +1028,9 @@ int main (int argc, char *argv[])
                     }                       
                 }
             }
-            else selectedJets = selectedOrigJets;
-
+            else {
+                selectedJets = selectedOrigJets;
+            }
             ///////////////////////////////////////////////////////////////////////////////////
             // Preselection looping over Jet Collection                                      //
             // Summing HT and calculating leading, lagging, and ratio for Selected and BJets //
@@ -856,11 +1043,15 @@ int main (int argc, char *argv[])
             selectedMBJetsEXCL.clear(); //exclusively medium
             selectedLBJetsEXCL.clear(); //exclusively loose
 
-            float HTb = 0.;  //calculate assigning loose, medium and tight tags
+            float HTb = 0.;  //calculate assigning medium
+            float HTbLoose = 0.;  //calculate assigning loose
+            float HTbTight = 0.;  //calculate assigning tight tags
+
             for (Int_t seljet =0; seljet < selectedJets.size(); seljet++ )
             {
                 if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.46   ) //0.605
                 {
+                    HTbLoose += selectedJets[seljet]->Pt();
                     selectedLBJets.push_back(selectedJets[seljet]);
                     if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.80) //0.890
                     {
@@ -868,6 +1059,7 @@ int main (int argc, char *argv[])
                         selectedMBJets.push_back(selectedJets[seljet]);
                         if (selectedJets[seljet]->btag_combinedInclusiveSecondaryVertexV2BJetTags() > 0.935) //0.970
                         {
+                            HTbTight += selectedJets[seljet]->Pt();                       
                             selectedTBJets.push_back(selectedJets[seljet]);
                         }
                         else{
@@ -894,18 +1086,18 @@ int main (int argc, char *argv[])
 
 
             //htrat leading lagging calculation
-            float temp_HT = 0.;
-            float HT_leading = 0.;
-            float HT_lagging = 0.;
-            float HTRat = 0;
-            for (Int_t seljet0 =0; seljet0 < selectedJets.size(); seljet0++ ){
-                temp_HT += selectedJets[seljet0]->Pt();
-                if (seljet0 < 4){
-                    HT_leading += selectedJets[seljet0]->Pt();
-                }else{
-                    HT_lagging += selectedJets[seljet0]->Pt();
-                }
-            }
+            // float temp_HT = 0.;
+            // float HT_leading = 0.;
+            // float HT_lagging = 0.;
+            // float HTRat = 0;
+            // for (Int_t seljet0 =0; seljet0 < selectedJets.size(); seljet0++ ){
+            //     temp_HT += selectedJets[seljet0]->Pt();
+            //     if (seljet0 < 4){
+            //         HT_leading += selectedJets[seljet0]->Pt();
+            //     }else{
+            //         HT_lagging += selectedJets[seljet0]->Pt();
+            //     }
+            // }
 
             //HTRat = HT_leading/HT_lagging;
 
@@ -914,7 +1106,7 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////
 
             bool isGoodPV = r2selection.isPVSelected(vertex, 4, 24., 2);
-            if (debug)	cout <<"PrimaryVertexBit: " << isGoodPV << " TriggerBit: " << trigged <<endl;
+            if (debug)  cout <<"PrimaryVertexBit: " << isGoodPV << " TriggerBit: " << trigged <<endl;
             if (debug) cin.get();
 
 
@@ -930,7 +1122,7 @@ int main (int argc, char *argv[])
             trigged = trigger->checkIfFired(currentRun, datasets, d);
             // trigged=true;
             tupCutfile->cd();
-            // cutsTable->FillTable(d, normfactor, Luminosity, isGoodPV, trigged, scaleFactor, nMu, nLooseMu, nEl, nLooseEl, nJets, nLtags, nMtags, nTtags, cuttup);   if(debug) cout<<"cuts table filled"<<endl;
+            cutsTable->FillTable(d, normfactor, Luminosity, isGoodPV, trigged, scaleFactor, nMu, nLooseMu, nEl, nLooseEl, nJets, nLtags, nMtags, nTtags, cuttup);   if(debug) cout<<"cuts table filled"<<endl;
  
             /////////////////////////////////
             //       Primary vertex        //
@@ -1015,6 +1207,22 @@ int main (int argc, char *argv[])
             if (debug) cout<<"getMCEventWeight for btag"<<endl;
             float btagWeight = 1;
             float btagWeightCSV = 1;
+            float btagWeightCSVLFUp = 1;
+            float btagWeightCSVLFDown = 1;
+            float btagWeightCSVHFUp = 1;
+            float btagWeightCSVHFDown = 1;
+            float btagWeightCSVHFStats1Up = 1;
+            float btagWeightCSVHFStats1Down = 1;
+            float btagWeightCSVHFStats2Up = 1;
+            float btagWeightCSVHFStats2Down = 1;            
+            float btagWeightCSVLFStats1Up = 1;
+            float btagWeightCSVLFStats1Down = 1;
+            float btagWeightCSVLFStats2Up = 1;
+            float btagWeightCSVLFStats2Down = 1; 
+            float btagWeightCSVCFErr1Up = 1;
+            float btagWeightCSVCFErr1Down = 1;
+            float btagWeightCSVCFErr2Up = 1;
+            float btagWeightCSVCFErr2Down = 1; 
 
             float btagWeightUp = 1;
             float btagWeightDown = 1;
@@ -1031,7 +1239,22 @@ int main (int argc, char *argv[])
             // {
             //     cout<<"btagweight: "<<btagWeight<<endl;
             // }
-
+            float bTagEff_LFUp;
+            float bTagEff_LFDown;
+            float bTagEff_HFUp;
+            float bTagEff_HFDown;
+            float bTagEff_HFStats1Up;
+            float bTagEff_HFStats1Down;
+            float bTagEff_HFStats2Up;
+            float bTagEff_HFStats2Down;
+            float bTagEff_LFStats1Up;
+            float bTagEff_LFStats1Down;
+            float bTagEff_LFStats2Up;
+            float bTagEff_LFStats2Down;
+            float bTagEff_CFErr1Up;
+            float bTagEff_CFErr1Down;
+            float bTagEff_CFErr2Up;
+            float bTagEff_CFErr2Down;
             ////csv discriminator reweighting
             // float TotalCSVbtagweight=1;
             if(bTagCSVReweight && !isData){
@@ -1040,20 +1263,65 @@ int main (int argc, char *argv[])
                     float jetpt = selectedJets[jetbtag]->Pt();
                     float jeteta = selectedJets[jetbtag]->Eta();
                     float jetdisc = selectedJets[jetbtag]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
+                    bool isBFlav = false;
+                    bool isLFlav = false;
+                    bool isCFlav = false;
+                    if(jetdisc<0.0) jetdisc = -0.05;
+                    if(jetdisc>1.0) jetdisc = 1.0;
                     BTagEntry::JetFlavor jflav;
                     int jetpartonflav = std::abs(selectedJets[jetbtag]->partonFlavour());
                     if(debug) cout<<"parton flavour: "<<jetpartonflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
                     if(jetpartonflav == 5){
                         jflav = BTagEntry::FLAV_B;
+                        isBFlav =true;
                     }
                     else if(jetpartonflav == 4){
                         jflav = BTagEntry::FLAV_C;
+                        isCFlav=true;
                     }
                     else{
                         jflav = BTagEntry::FLAV_UDSG;
+                        isLFlav = true;
                     }
-                    bTagEff = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);   
+                    if( dataSetName.find("JESUp") )        bTagEff = reader_JESUp->eval(jflav, jeteta, jetpt, jetdisc);
+                    else if( dataSetName.find("JESDown") ) bTagEff = reader_JESDown->eval(jflav, jeteta, jetpt, jetdisc);
+                    else bTagEff = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+
+                    if( isBFlav ) bTagEff_LFUp = reader_LFUp->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isBFlav ) bTagEff_LFDown = reader_LFDown->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isLFlav ) bTagEff_HFUp = reader_HFUp->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isLFlav ) bTagEff_HFDown = reader_HFDown->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isBFlav ) bTagEff_HFStats1Up = reader_HFStats1Up->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isBFlav ) bTagEff_HFStats1Down = reader_HFStats1Down->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isBFlav ) bTagEff_HFStats2Up = reader_HFStats2Up->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isBFlav ) bTagEff_HFStats2Down = reader_HFStats2Down->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isLFlav ) bTagEff_LFStats1Up = reader_LFStats1Up->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isLFlav ) bTagEff_LFStats1Down = reader_LFStats1Down->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isLFlav ) bTagEff_LFStats2Up = reader_LFStats2Up->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isLFlav ) bTagEff_LFStats2Down = reader_LFStats2Down->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isCFlav ) bTagEff_CFErr1Up = reader_CFErr1Up->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isCFlav ) bTagEff_CFErr1Down = reader_CFErr1Down->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isCFlav ) bTagEff_CFErr2Up = reader_CFErr2Up->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( isCFlav ) bTagEff_CFErr2Down = reader_CFErr2Down->eval(jflav, jeteta, jetpt, jetdisc);
+                    // bTagEff = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);   
                     // cout<<bTagEff<<endl;
+                    btagWeightCSVLFUp *= bTagEff_LFUp;
+                    btagWeightCSVLFDown *= bTagEff_LFDown;
+                    btagWeightCSVHFUp *= bTagEff_HFUp;
+                    btagWeightCSVHFDown *= bTagEff_HFDown;
+                    btagWeightCSVHFStats1Up *= bTagEff_HFStats1Up;
+                    btagWeightCSVHFStats1Down *= bTagEff_HFStats1Down;
+                    btagWeightCSVHFStats2Up *= bTagEff_HFStats2Up;
+                    btagWeightCSVHFStats2Down *= bTagEff_HFStats2Down;            
+                    btagWeightCSVLFStats1Up *= bTagEff_LFStats1Up;
+                    btagWeightCSVLFStats1Down *= bTagEff_LFStats1Down;
+                    btagWeightCSVLFStats2Up *= bTagEff_LFStats2Up;
+                    btagWeightCSVLFStats2Down *= bTagEff_LFStats2Down; 
+                    btagWeightCSVCFErr1Up *= bTagEff_CFErr1Up;
+                    btagWeightCSVCFErr1Down *= bTagEff_CFErr1Down;
+                    btagWeightCSVCFErr2Up *= bTagEff_CFErr2Up;
+                    btagWeightCSVCFErr2Down *= bTagEff_CFErr2Down; 
+
                     btagWeightCSV*=bTagEff;
              
                     if(debug)cout<<"btag efficiency = "<<bTagEff<<endl;       
@@ -1070,10 +1338,10 @@ int main (int argc, char *argv[])
 
             float fleptonSF = 1;
             if(bLeptonSF){ ///lepton SF for ID and ISO
-                if(Muon && nMu>0){
+                if(Muon && nMu>0&& !isData){
                     fleptonSF = muonSFWeightID_TT->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0) * muonSFWeightIso_TT->at(selectedMuons[0]->Eta(), selectedMuons[0]->Pt(), 0);
                 }
-                else if(Electron && nEl>0){
+                else if(Electron && nEl>0&& !isData){
                     fleptonSF = electronSFWeight->at(selectedElectrons[0]->Eta(),selectedElectrons[0]->Pt(),0);
                 }
             }
@@ -1276,6 +1544,10 @@ int main (int argc, char *argv[])
                         nTops++;
                     }
                 }
+                if( nTops<2){
+                    cout<<"less than two tops"<<endl;
+                    cout<<"topsf: "<<fTopPtsf<<"    antitopsf: "<<fAntitopPtsf<<endl;
+                }
                 fTopPtReWeightsf = sqrt(fTopPtsf*fAntitopPtsf);
                 scaleFactor *= fTopPtReWeightsf;
                 // if(nTops > 2)
@@ -1293,7 +1565,7 @@ int main (int argc, char *argv[])
             //////////////////////////////////////////
             //     TMVA for mass Reconstruction     //
             //////////////////////////////////////////
-            float diTopness = 0;
+            float diTopness = 0, topness=0 ;
             if (debug) cout<<"TMVA mass reco"<<endl;
             sort(selectedJets.begin(),selectedJets.end(),HighestCVSBtag());
             float csvJetcsv1 = 1, csvJetcsv2 = 1, csvJetcsv3 =1, csvJetcsv4 =1, anglebjet1bjet2=0, angleBestTopAllJet=0, bestTopPt=0;
@@ -1320,7 +1592,10 @@ int main (int argc, char *argv[])
                 if(!TrainMVA){ //if not training, but computing 
                     hadronicTopReco->Compute1st(d, selectedJets, datasets);
                     hadronicTopReco->Compute2nd(d, selectedJets, datasets);
+                    topness = hadronicTopReco->ReturnTopness();
                     diTopness = hadronicTopReco->ReturnDiTopness();
+                    // hadronicTopReco->Compute3rd(d, selectedJets, datasets);
+                    // triTopness = hadronicTopReco->ReturnTriTopness();
                     SumJetMassX = hadronicTopReco->ReturnSumJetMassX();
                     HTX = hadronicTopReco->ReturnHTX();// cout<<"HTX: "<<HTX<<endl;
                     bestTopPt = hadronicTopReco->ReturnBestTopPt();
@@ -1395,6 +1670,9 @@ int main (int argc, char *argv[])
                 // jettup->Fill(scaleFactor,normfactor,Luminosity,selectedJets[seljet1]->neutralHadronEnergyFraction(),selectedJets[seljet1]->neutralEmEnergyFraction(),selectedJets[seljet1]->nConstituents(),selectedJets[seljet1]->chargedHadronEnergyFraction(),selectedJets[seljet1]->chargedMultiplicity(),selectedJets[seljet1]->chargedEmEnergyFraction());
                 TLVjetholder.push_back(*selectedJets[seljet1]);
             }
+
+            HTH = HT/H;
+            HTRat = HTHi/HT;
             // cout<<TLVjetholder[0].X()<<"  "<<TLVjetholder[0].Y()<<"  "<<TLVjetholder[0].Z()<<"  "<<TLVjetholder[0].T()<<endl;
             ////////////////////////////////////////////
             //        Topological variables           //
@@ -1413,7 +1691,13 @@ int main (int argc, char *argv[])
             float fht3 = topologyW->get_ht3();
             float fet0 = topologyW->get_et0();
             float fsqrts = topologyW->get_sqrts();
-            float fnjetW = topologyW->get_njetW(); 
+            float fnjetW = topologyW->get_njetW(); //125
+            float fnjetW105 = topologyW->get_njetW105(); 
+            float fnjetW115 = topologyW->get_njetW115(); 
+            float fnjetW135 = topologyW->get_njetW135(); 
+            float fnjetW145 = topologyW->get_njetW145(); 
+            float fnjetW160 = topologyW->get_njetW160(); 
+
             float fet56 = topologyW->get_et56(); 
             float fcentrality = topologyW->get_centrality();
 
@@ -1428,8 +1712,7 @@ int main (int argc, char *argv[])
                 csvJetpt4 = selectedJets[3]->btag_combinedInclusiveSecondaryVertexV2BJetTags();                
             }
             // cout<<"pt : "<<csvJetpt1<<endl;
-            HTH = HT/H;
-            HTRat = HTHi/HT;
+
 
             //////////////////////
             // Jets Based Plots //
@@ -1564,10 +1847,18 @@ int main (int argc, char *argv[])
             float jet5and6Pt = jet5Pt+jet6Pt;
             float geoMeanJet5and6Pt = sqrt(jet5Pt*jet6Pt);
 
-            float vals[85] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,
+
+
+
+
+
+            float vals[110] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,
                 btagWeightCSV,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,lumiWeight_up,lumiWeight_down,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,
                 angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt, csvJetcsv1, csvJetcsv2, csvJetcsv3, csvJetcsv4, csvJetpt1, csvJetpt2, csvJetpt3, csvJetpt4,anglebjet1bjet2,
-                 angleBestTopAllJet, bestTopPt, geoMeanJet5and6Pt,fSphericity,fOblateness,fAplanarity,fh10,fh20,fh30,fh40,fh50,fh60,fht,fht3,fet0,fsqrts,fnjetW,fet56,fcentrality};
+                 angleBestTopAllJet, bestTopPt, geoMeanJet5and6Pt,fSphericity,fOblateness,fAplanarity,fh10,fh20,fh30,fh40,fh50,fh60,fht,fht3,fet0,fsqrts,fnjetW,fnjetW105,fnjetW115,fnjetW135,fnjetW145,fnjetW160,fet56,fcentrality, nLtagsEXCL, 
+                 nMtagsEXCL, HTbLoose, HTbTight,btagWeightCSVLFUp ,btagWeightCSVLFDown ,btagWeightCSVHFUp ,btagWeightCSVHFDown ,btagWeightCSVHFStats1Up,btagWeightCSVHFStats1Down,
+                btagWeightCSVHFStats2Up,btagWeightCSVHFStats2Down,btagWeightCSVLFStats1Up,btagWeightCSVLFStats1Down,btagWeightCSVLFStats2Up,
+                btagWeightCSVLFStats2Down,btagWeightCSVCFErr1Up,btagWeightCSVCFErr1Down,btagWeightCSVCFErr2Up,btagWeightCSVCFErr2Down};
             tupfile->cd();
             tup->Fill(vals);
             // tupCutfile->cd();
@@ -1618,7 +1909,8 @@ int main (int argc, char *argv[])
     delete zPeakMaker;
 
     // cutsTable->Calc_Write(postfix, dName, channelpostfix);
-    // delete cutsTable;
+
+
 
     if(fillingbTagHistos && bTagReweight && dataSetName.find("Data")==string::npos){
         delete btwt;
@@ -1631,7 +1923,7 @@ int main (int argc, char *argv[])
     cout<<"preTrig: "<<preTrig<<"   postTrig: "<<postTrig<<endl;
     cout<<"********"<<endl;
     if(postTrig>0){
-        cout<<"negative weight NormFactor: "<< ( (postTrig - (2*negWeights))/postTrig )<<endl;
+        cout<<"negative weight NormFactor: "<< ( ((float)postTrig - (2*(float)negWeights))/(float)postTrig )<<endl;
     }
 
     delete trigger;
