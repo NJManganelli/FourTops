@@ -1046,11 +1046,12 @@ void DatasetPlotter(int nBins,
                 NormFactor = 1;
                 if(dataSetName.find("tttt") != string::npos) {
                     NormFactor = 1.0/0.4095;
-                } else if(dataSetName.find("WJets") != string::npos) {
-                    NormFactor = 1.0/0.522796;
-                } else if(dataSetName.find("DYJets") != string::npos) {
-                    NormFactor = 1.0/0.566;
                 } 
+                // else if(dataSetName.find("WJets") != string::npos) {
+                //     NormFactor = 1.0/0.522796;
+                // } else if(dataSetName.find("DYJets") != string::npos) {
+                //     NormFactor = 1.0/0.566;
+                // } 
 
 
                 ////////////////////////////////////////////////////////
@@ -1399,11 +1400,12 @@ void CutFlowPlotter(TFile* cffile,
                     NormFactor = 1;
                     if(dataSetName.find("tttt") != string::npos) {
                         NormFactor = 1.0/0.4095;
-                    } else if(dataSetName.find("WJets") != string::npos) {
-                        NormFactor = 1.0/0.522796;
-                    } else if(dataSetName.find("DYJets") != string::npos) {
-                        NormFactor = 1.0/0.566;
-                    }
+                    } 
+                    // else if(dataSetName.find("WJets") != string::npos) {
+                    //     NormFactor = 1.0/0.522796;
+                    // } else if(dataSetName.find("DYJets") != string::npos) {
+                    //     NormFactor = 1.0/0.566;
+                    // }
 
                     if(cuts[cutnum] == 1) {
                         cutFlowPlot->Fill(cutnum, datasets[d], true, GenWeight * NormFactor * ScaleFactor * Luminosity);
@@ -1626,11 +1628,12 @@ void SplitDatasetPlotter(int nBins,
             if(dataSetName.find("tttt") != string::npos) {
                 //cout << "SF: " << ScaleFactor << " Aggrigate: " << (GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends) << endl;
                 NormFactor = 1.0/0.409;
-            } else if(dataSetName.find("WJets") != string::npos) {
-                NormFactor = 1.0/0.522796;
-            } else if(dataSetName.find("DYJets") != string::npos) {
-                NormFactor = 1.0/0.566;
-            }
+            } 
+            // else if(dataSetName.find("WJets") != string::npos) {
+            //     NormFactor = 1.0/0.522796;
+            // } else if(dataSetName.find("DYJets") != string::npos) {
+            //     NormFactor = 1.0/0.566;
+            // }
 
 		
             if(splitVar >=
@@ -2106,11 +2109,12 @@ void Split2DatasetPlotter(
             if(dataSetName.find("tttt") != string::npos) {
                 //cout << "SF: " << ScaleFactor << " Aggrigate: " << (GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends) << endl;
                 NormFactor = 1.0/0.409;
-            } else if(dataSetName.find("WJets") != string::npos) {
-                NormFactor = 1.0/0.522796;
-            } else if(dataSetName.find("DYJets") != string::npos) {
-                NormFactor = 1.0/0.566;
-            }
+            } 
+            // else if(dataSetName.find("WJets") != string::npos) {
+            //     NormFactor = 1.0/0.522796;
+            // } else if(dataSetName.find("DYJets") != string::npos) {
+            //     NormFactor = 1.0/0.566;
+            // }
 
             bool outsiderange = true; 
             string nameEnding = "";
