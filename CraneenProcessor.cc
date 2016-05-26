@@ -1020,6 +1020,9 @@ void DatasetPlotter(int nBins,
             SFtrigger = 1;
             // SFTopPt = 1;
             SFbehrends = 1;
+
+             SFalphaTune=1;
+
             if((dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                    dataSetName.find("DATA") != string::npos || dataSetName.find("NP_overlay_Data") != string::npos) &&
                 (dataSetName.find("Pseudo") == string::npos || dataSetName.find("pseudo") == string::npos)) {
@@ -1556,7 +1559,6 @@ void SplitDatasetPlotter(int nBins,
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
-
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
 
@@ -2037,6 +2039,7 @@ void Split2DatasetPlotter(
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar1.c_str(), &splitVar1);
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar2.c_str(), &splitVar2);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFalphaTune", &SFalphaTune);
 
 
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
