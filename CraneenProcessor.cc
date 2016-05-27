@@ -831,8 +831,8 @@ void DatasetPlotter(int nBins,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptPowheg";
-        otherTTbarsample = "TTDileptMG";
+        mainTTbarSample = "TTJetsPowheg";
+        otherTTbarsample = "TTJetsMG";
     }
     double ll_rw = 0.976;
     double bb_rw = 3.;
@@ -923,12 +923,12 @@ void DatasetPlotter(int nBins,
         //            if(dataSetName.find("Data") != string::npos) {
         //                filepath = CraneenPath + "Data_Run2_TopTree_Study.root"; // cout<<"filepath:
         //                "<<filepath<<endl;
-        //            } else if(dataSetName.find("TTDileptMG_TopPt") != string::npos) {
+        //            } else if(dataSetName.find("TTJetsMG_TopPt") != string::npos) {
         //                filepath =
-        //                    CraneenPath + "TTDileptMG_TopPt_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //                    CraneenPath + "TTJetsMG_TopPt_Run2_TopTree_Study.root"; // cout<<"filepath:
         //                    "<<filepath<<endl;
-        //            } else if(dataSetName.find("TTDileptMG") != string::npos) {
-        //                filepath = CraneenPath + "TTDileptMG_Run2_TopTree_Study.root"; // cout<<"filepath:
+        //            } else if(dataSetName.find("TTJetsMG") != string::npos) {
+        //                filepath = CraneenPath + "TTJetsMG_Run2_TopTree_Study.root"; // cout<<"filepath:
         //                "<<filepath<<endl;
         //            } else if(dataSetName.find("DYJets") != string::npos) {
         //                filepath = CraneenPath + "DYJets_Run2_TopTree_Study.root"; // cout<<"filepath:
@@ -1268,8 +1268,8 @@ void CutFlowPlotter(TFile* cffile,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptPowheg";
-        otherTTbarsample = "TTDileptMG";
+        mainTTbarSample = "TTJetsPowheg";
+        otherTTbarsample = "TTJetsMG";
     }
 
     ///////////////////////////////////////////////////////////// Load Datasets
@@ -1469,8 +1469,8 @@ void SplitDatasetPlotter(int nBins,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptPowheg";
-        otherTTbarsample = "TTDileptMG";
+        mainTTbarSample = "TTJetsPowheg";
+        otherTTbarsample = "TTJetsMG";
     }
     ///////////////////////////////////////////////////////////// Load Datasets
     /////////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
@@ -1950,8 +1950,8 @@ void Split2DatasetPlotter(
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarSample = "TTDileptPowheg";
-        otherTTbarsample = "TTDileptMG";
+        mainTTbarSample = "TTJetsPowheg";
+        otherTTbarsample = "TTJetsMG";
     }
     ///////////////////////////////////////////////////////////// Load Datasets
     ////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
@@ -2398,8 +2398,8 @@ void DataCardProducer(string VoI,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarsample = "TTDileptPowheg";
-        otherTTbarsample = "TTDileptMG";
+        mainTTbarsample = "TTJetsPowheg";
+        otherTTbarsample = "TTJetsMG";
     }
 
     string binname, histoName, dataSetName, datacardname;
@@ -2765,8 +2765,8 @@ void Split_DataCardProducer(string VoI,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarsample = "TTDileptPowheg";
-        otherTTbarsample = "TTDileptMG";
+        mainTTbarsample = "TTJetsPowheg";
+        otherTTbarsample = "TTJetsMG";
     }
     vector<string> MCdatasets; // contains only MC samples required in datacard
     cout << "\nPRODUCING DATACARD\n" << endl;
@@ -3134,8 +3134,8 @@ void Split2_DataCardProducer(string VoI,
         otherTTbarsample = "TTJets_MLM";
     }
     else{
-        mainTTbarsample = "TTDileptPowheg";
-        otherTTbarsample = "TTDileptMG";
+        mainTTbarsample = "TTJetsPowheg";
+        otherTTbarsample = "TTJetsMG";
     }
     vector<string> MCdatasets; // contains only MC samples required in datacard    
     cout<<""<<endl;
