@@ -1559,13 +1559,13 @@ int main (int argc, char *argv[])
                     // if(abs(mcParticles_flav[part]->type()) == 5) cout << "Type: " << mcParticles_flav[part]->type() << " Status: " << mcParticles_flav[part]->status() << endl;
                     // if(abs(mcParticles_flav[part]->type()) <= 6 || abs(mcParticles_flav[part]->type()) == 21) cout << "Type: " << mcParticles_flav[part]->type() << " Status: " << mcParticles_flav[part]->status() << endl;
                     // if(abs(mcParticles_flav[part]->status()) <= 59 && abs(mcParticles_flav[part]->status()) >=30) cout << "Type: " << mcParticles_flav[part]->type() << " Status: " << mcParticles_flav[part]->status() << endl;
-                    if(mcParticles_flav[part]->type() == 6 && mcParticles_flav[part]->status() == 22)
+                    if(mcParticles_flav[part]->type() == 6 && mcParticles_flav[part]->status() > 20 && mcParticles_flav[part]->status() < 30)
                     {
                         if(mcParticles_flav[part]->Pt() < 400) fTopPtsf = exp(0.148-(0.00129*mcParticles_flav[part]->Pt()));
                         else fTopPtsf = exp(0.148-(0.00129*400));
                         nTops++;
                     }
-                    else if(mcParticles_flav[part]->type() == -6 && mcParticles_flav[part]->status() == 22)
+                    else if(mcParticles_flav[part]->type() == -6 && mcParticles_flav[part]->status() > 20 && mcParticles_flav[part]->status() < 30)
                     {
                         if(mcParticles_flav[part]->Pt() < 400) fAntitopPtsf = exp(0.148-(0.00129*mcParticles_flav[part]->Pt()));
                         else fAntitopPtsf = exp(0.148-(0.00129*400));
@@ -1574,6 +1574,10 @@ int main (int argc, char *argv[])
                 }
                 if( nTops<2){
                     cout<<"less than two tops"<<endl;
+                    cout<<"topsf: "<<fTopPtsf<<"    antitopsf: "<<fAntitopPtsf<<endl;
+                }
+                else if( nTops>2){
+                    cout<<"more than two tops"<<endl;
                     cout<<"topsf: "<<fTopPtsf<<"    antitopsf: "<<fAntitopPtsf<<endl;
                 }
                 fTopPtReWeightsf = sqrt(fTopPtsf*fAntitopPtsf);
