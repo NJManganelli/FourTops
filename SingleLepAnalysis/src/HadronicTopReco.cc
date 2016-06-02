@@ -28,7 +28,7 @@ HadronicTopReco::HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool
 	selectedJets3rdPass(), //remaining jets after removing highest & second highest ranked tri jet
 	MVASelJets1(), //the selected jets from the highest ranked tri jet
 	MVASelJets2(), //the selected jets from the second highest ranked tri jet
-	jetCombiner(new JetCombiner(TrainMVA, Lumi, datasets, MVAmethodIn, false)),
+	jetCombiner(new JetCombiner(TrainMVA, Lumi, datasets, MVAmethodIn, false, "","" )), //_13TeV in last arg for 13tev training
 	bestTopMass1(0),
 	bestTopMass2(0),
 	bestTopMass2ndPass(0), 
