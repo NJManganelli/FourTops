@@ -89,6 +89,7 @@ struct HighestCVSBtag
     }
 };
 
+float PythiaTune(int jets);
 
 int main (int argc, char *argv[])
 {
@@ -215,6 +216,11 @@ int main (int argc, char *argv[])
     bool JERDown           = false;
     bool JESUp             = false;
     bool JESDown           = false;
+    bool fillingbTagHistos = false;
+    bool bTopPt            = true;
+    string MVAmethod       = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
+    float Luminosity       = 2628.0 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
+    //bool split_ttbar     = false;
     // bool LFUp              = false;
     // bool LFDown            = false;
     // bool HFUp              = false;
@@ -231,12 +237,6 @@ int main (int argc, char *argv[])
     // bool CSVCFErr1Up       = false;
     // bool CSVCFErr2Down     = false;
     // bool CSVCFErr2Up       = false;
-
-    bool fillingbTagHistos = false;
-    bool bTopPt            = true;
-    string MVAmethod       = "BDT"; // MVAmethod to be used to get the good jet combi calculation (not for training! this is chosen in the jetcombiner class)
-    float Luminosity       = 2628.0 ; //pb^-1 shown is C+D, D only is 2094.08809124; silverJson
-    //bool split_ttbar     = false;
 
     if (batch && inputChannel=="Mu"){
         Muon = true;
@@ -341,20 +341,20 @@ int main (int argc, char *argv[])
 
         if(fillingbTagHistos) {
             if (Muon) {
-                btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu.root",false,30,500,2.4);
-                // btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Up.root",false,30,500,2.4);
-                // btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Down.root",false,30,500,2.4);
+                btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu.root",false,30,510,2.4);
+                // btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Up.root",false,30,510,2.4);
+                // btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_Mu_Down.root",false,30,510,2.4);
             }
             else if (Electron) {
-                btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El.root",false,30,500,2.4);
-                // btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Up.root",false,30,500,2.4);
-                // btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Down.root",false,30,500,2.4);
+                btwt = new BTagWeightTools(bTagReader,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El.root",false,30,510,2.4);
+                // btwtUp = new BTagWeightTools(bTagReaderUp,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Up.root",false,30,510,2.4);
+                // btwtDown = new BTagWeightTools(bTagReaderDown,"HistosPtEta_"+dataSetName+ numberOfRootFile2 + numberOfRootFile1 + numberOfRootFile+"_El_Down.root",false,30,510,2.4);
             }
         }    
         else {
-            btwt = new BTagWeightTools(bTagReader,"histos/HistobtagPowhegJEC76X.root",false,30,500,2.4); 
-            btwtUp = new BTagWeightTools(bTagReaderUp,"histos/HistobtagPowhegJEC76X.root",false,30,500,2.4); 
-            btwtDown = new BTagWeightTools(bTagReaderDown,"histos/HistobtagPowhegJEC76X.root",false,30,500,2.4); 
+            btwt = new BTagWeightTools(bTagReader,"histos/HistosPtEta_JECon_76X_v1.root",false,30,510,2.4); 
+            btwtUp = new BTagWeightTools(bTagReaderUp,"histos/HistosPtEta_JECon_76X_v1.root",false,30,510,2.4); 
+            btwtDown = new BTagWeightTools(bTagReaderDown,"histos/HistosPtEta_JECon_76X_v1.root",false,30,510,2.4); 
         }
     }
 
@@ -776,7 +776,7 @@ int main (int argc, char *argv[])
             ":leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJet1:csvJet2:csvJet3:csvJet4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4:anglebjet1bjet2:angleBestTopAllJet"
             ":bestTopPt:geoMeanJet5and6Pt:Sphericity:Oblateness:Aplanarity:h10:h20:h30:h40:h50:h60:ht:ht3:et0:sqrts:njetW:njetW105:njetW115:njetW135:njetW145:njetW160:et56:centrality:nLtagsExcl:nMtagsExcl:HTbLoose:HTbTight"
             ":btagWeightCSVLFUp:btagWeightCSVLFDown:btagWeightCSVHFUp:btagWeightCSVHFDown:btagWeightCSVHFStats1Up:btagWeightCSVHFStats1Down:btagWeightCSVHFStats2Up:btagWeightCSVHFStats2Down:btagWeightCSVLFStats1Up:"
-            "btagWeightCSVLFStats1Down:btagWeightCSVLFStats2Up:btagWeightCSVLFStats2Down:btagWeightCSVCFErr1Up:btagWeightCSVCFErr1Down:btagWeightCSVCFErr2Up:btagWeightCSVCFErr2Down");
+            "btagWeightCSVLFStats1Down:btagWeightCSVLFStats2Up:btagWeightCSVLFStats2Down:btagWeightCSVCFErr1Up:btagWeightCSVCFErr1Down:btagWeightCSVCFErr2Up:btagWeightCSVCFErr2Down:SFalphaTune");
 
 
 
@@ -793,7 +793,7 @@ int main (int argc, char *argv[])
         TFile * tupCutfile   = new TFile(NtupCutsname.c_str(),"RECREATE");
 
         string cutTuptitle = "Craneen_" + channelpostfix + "_CutFlow";
-        TNtuple * cuttup = new TNtuple(cutTuptitle.c_str(),cutTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:trigger:isGoodPV:Lep1:Lep2:nJets:nTags:HT");
+        TNtuple * cuttup = new TNtuple(cutTuptitle.c_str(),cutTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:isGoodPV:trigger:Lep1:Lep2:nJet1:nJets6:nTags:HT");
 
 
         ////////////////////////////////////////////////////////////
@@ -1401,6 +1401,34 @@ int main (int argc, char *argv[])
                 // }
             }
 
+
+            /////////////////////////////////
+            //           alphaS            //
+            /////////////////////////////////
+
+            float alphaTune = 1;
+            if(dataSetName.find("TTJets") != string::npos) {
+                alphaTune = PythiaTune(nJets);
+            }
+            else if(dataSetName.find("tttt") != string::npos) {
+                alphaTune = PythiaTune(nJets-6);
+            }
+            else if(dataSetName.find("DYJets") != string::npos) {
+                alphaTune = PythiaTune(nJets+2);
+            }
+            else if(dataSetName.find("WJets") != string::npos) {
+                alphaTune = PythiaTune(nJets+2);
+            }
+            else if(dataSetName.find("T_tW") != string::npos) {
+                alphaTune = PythiaTune(nJets+1);
+            }
+            else if(dataSetName.find("Tbar_tW") != string::npos) {
+                alphaTune = PythiaTune(nJets+1);
+            }
+            else if(dataSetName.find("ttH") != string::npos) {
+                alphaTune = PythiaTune(nJets);
+            }
+
             /////////////////////////////////////////////////
             //            neg weights counter              //
             /////////////////////////////////////////////////
@@ -1852,13 +1880,13 @@ int main (int argc, char *argv[])
 
 
 
-            float vals[110] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,
+            float vals[111] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,
                 btagWeightCSV,btagWeight,btagWeightUp,btagWeightDown,lumiWeight,lumiWeight_up,lumiWeight_down,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,
                 angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt, csvJetcsv1, csvJetcsv2, csvJetcsv3, csvJetcsv4, csvJetpt1, csvJetpt2, csvJetpt3, csvJetpt4,anglebjet1bjet2,
                  angleBestTopAllJet, bestTopPt, geoMeanJet5and6Pt,fSphericity,fOblateness,fAplanarity,fh10,fh20,fh30,fh40,fh50,fh60,fht,fht3,fet0,fsqrts,fnjetW,fnjetW105,fnjetW115,fnjetW135,fnjetW145,fnjetW160,fet56,fcentrality, nLtagsEXCL, 
                  nMtagsEXCL, HTbLoose, HTbTight,btagWeightCSVLFUp ,btagWeightCSVLFDown ,btagWeightCSVHFUp ,btagWeightCSVHFDown ,btagWeightCSVHFStats1Up,btagWeightCSVHFStats1Down,
                 btagWeightCSVHFStats2Up,btagWeightCSVHFStats2Down,btagWeightCSVLFStats1Up,btagWeightCSVLFStats1Down,btagWeightCSVLFStats2Up,
-                btagWeightCSVLFStats2Down,btagWeightCSVCFErr1Up,btagWeightCSVCFErr1Down,btagWeightCSVCFErr2Up,btagWeightCSVCFErr2Down};
+                btagWeightCSVLFStats2Down,btagWeightCSVCFErr1Up,btagWeightCSVCFErr1Down,btagWeightCSVCFErr2Up,btagWeightCSVCFErr2Down,alphaTune};
             tupfile->cd();
             tup->Fill(vals);
             // tupCutfile->cd();
@@ -1962,7 +1990,23 @@ int main (int argc, char *argv[])
     
     return 0;
 }
+float PythiaTune(int jets){
+    float sf = 1;
+    
+    if(jets == 0) sf = 0.9747749;
+    else if(jets == 1) sf = 0.9764329;
+    else if(jets == 2) sf = 0.9733197;
+    else if(jets == 3) sf = 0.9815515;
+    else if(jets == 4) sf = 0.9950933;
+    else if(jets == 5) sf = 1.0368650;
+    else if(jets == 6) sf = 1.1092038;
+    else if(jets == 7) sf = 1.1842445;
+    else if(jets == 8) sf = 1.3019452;
+    else if(jets == 9) sf = 1.1926751;
+    else if(jets >= 10) sf = 1.5920859;
 
+    return sf;
+}
 // CalcWmul(vector < TRootJet* > jetsvector, int ptUpperBound, int ptLowerBound ){
 
 //     Int_t njets = jetsvector.size();
