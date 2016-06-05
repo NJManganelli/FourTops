@@ -84,6 +84,7 @@ class CutsTable{
 		int cfPV;
 		int cfLep1;
 		int cfLep2;
+		int cfJets1;
 		int cfJets;
 		int cfTags;
 		int cfHT;

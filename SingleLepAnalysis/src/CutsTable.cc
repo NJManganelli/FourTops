@@ -12,6 +12,7 @@ CutsTable::CutsTable(bool isMuon, bool isElectron):
     cfPV(0),
     cfLep1(0),
     cfLep2(0),
+    cfJets1(0),
     cfJets(0),
     cfTags(0),
     cfHT(0) 
@@ -43,7 +44,7 @@ void CutsTable::AddSelections(){
 	    CutsselecTable.push_back(string("Exactly 1 Loose Electron"));
 	    CutsselecTable.push_back(string("Exactly zero muons"));
 	}
-    CutsselecTable.push_back(string("At least 4 Jets"));
+    CutsselecTable.push_back(string("At least 1 Jets"));
     CutsselecTable.push_back(string("At least 5 Jets"));
 	CutsselecTable.push_back(string("At least 6 Jets"));
 	CutsselecTable.push_back(string("At least 1 CSVM Jet"));
@@ -79,6 +80,14 @@ void CutsTable::CreateTable(vector < Dataset* > datasets, float Luminosity){
 void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bool isGoodPV, bool trigged, float scaleFactor, int nMu, int nLooseMu, int nEl, int nLooseEl, int nJets, int nLtags, int nMtags, int nTtags, TNtuple *cuttup ){
 
     selecTable->Fill(d,0,scaleFactor);
+    cfTrigger=0;
+    cfPV=0;
+    cfLep1=0;
+    cfLep2=0;
+    cfJets1=0;
+    cfJets=0;
+    cfTags=0;
+    cfHT=0;
 
     if(leptonChoice == "Muon")   //Muon-Electron Selection Table
     {
@@ -101,8 +110,9 @@ void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bo
                         {
                             selecTable->Fill(d,5,scaleFactor);
                             cfLep2 = 1;
-                            if(nJets>=4)
+                            if(nJets>=1)
                             {
+				cfJets1=1;
                             	selecTable->Fill(d,6,scaleFactor);
                                 if(nJets>=5)
                                 {
@@ -151,8 +161,9 @@ void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bo
                         {
                             cfLep2 =1;
                             selecTable->Fill(d,5,scaleFactor);
-                            if(nJets>=4)
+                            if(nJets>=1)
                             {
+				cfJets1=1;
                                 selecTable->Fill(d,6,scaleFactor);
                                 if(nJets>=5)
                                 {
@@ -179,7 +190,7 @@ void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bo
             }
         }         
     }
-    cuttup->Fill(scaleFactor,normfactor,Luminosity,cfTrigger,cfPV,cfLep1,cfLep2,cfJets,cfTags,cfHT);
+    cuttup->Fill(scaleFactor,normfactor,Luminosity,cfPV,cfTrigger,cfLep1,cfLep2,cfJets1,cfJets,cfTags,cfHT);
 }
 void CutsTable::FillTableMuons(unsigned int d, float scaleFactor, vector < TRootMuon* > init_muons){
 
