@@ -173,7 +173,7 @@ string DatacardVar = "BDT"; // variable of interest for plotting //global
 int main(int argc, char** argv)
 {
     int NumberOfBins;     // fixed width nBins
-    float lumiScale = -1; // Amount of luminosity to MESscale to in fb^-1
+    float lumiScale = -1; // Amount of luminosity to MEScale to in fb^-1
     bool jetSplit = false, jetTagsplit = false, split_ttbar = false;
     int isplit_ttbar = 0;
     float lBound, uBound, bSplit, tSplit, wSplit, bSplit1, tSplit1, wSplit1, bSplit2, tSplit2,
@@ -322,7 +322,7 @@ int main(int argc, char** argv)
                 if(jetSplit) {
                     SplitDatasetPlotter(NumberOfBins, lumiScale, lBound, uBound, leptoAbbr, shapefile, errorfile,
                         channel, VoI, splitVar, bSplit, tSplit, wSplit, xmlFileName, CraneenPath, shapefileName, Units);
-                    if(VoI.find("BDT") != string::npos) {
+                    if(VoI.find("BDT") != string::npos || VoI.find("HT") != string::npos) {
                         Split_DataCardProducer(VoI, shapefile, shapefileName, channel, leptoAbbr, jetSplit, splitVar,
                             bSplit, tSplit, wSplit, xmlFileName, lumiScale);
                     }
@@ -378,7 +378,7 @@ void GetScaleEnvelope(int nBins,
     string mainTTbarSample)
 {
 
-    cout << "Producing envelope for MESscale uncertainty" << endl;
+    cout << "Producing envelope for MEScale uncertainty" << endl;
     histo1D["weightPlus"] = new TH1F("Plus", "Plus", nBins, plotLow, plotHigh);
     histo1D["weightMinus"] = new TH1F("Minus", "Minus", nBins, plotLow, plotHigh);
 
@@ -423,10 +423,10 @@ void GetScaleEnvelope(int nBins,
     histo1D["weight0"]->Write("Nominal");
     cout << "wrote weights in errorfile" << endl;
     shapefile->cd();
-    string MESscalesysname = channel + "__" + mainTTbarSample + "__MESscale";
-    histo1D["weightMinus"]->Write((MESscalesysname + "Down").c_str());
-    histo1D["weightPlus"]->Write((MESscalesysname + "Up").c_str());
-    cout << "wrote sys MESscale shapes in shapefile" << endl;
+    string MEScalesysname = channel + "__" + mainTTbarSample + "__MEScale";
+    histo1D["weightMinus"]->Write((MEScalesysname + "Down").c_str());
+    histo1D["weightPlus"]->Write((MEScalesysname + "Up").c_str());
+    cout << "wrote sys MEScale shapes in shapefile" << endl;
 }
 
 void GetMatching(int nBins,
@@ -444,7 +444,7 @@ void GetMatching(int nBins,
     string otherTTbarsample)
 {
 
-    cout << "Producing envelope for MESscale uncertainty" << endl;
+    cout << "Producing envelope for MEScale uncertainty" << endl;
     histo1D["ttGeneratorPlus"] = new TH1F("Plus", "Plus", nBins, plotLow, plotHigh);
     histo1D["ttGeneratorMinus"] = new TH1F("Minus", "Minus", nBins, plotLow, plotHigh);
 
@@ -491,7 +491,7 @@ void GetMatchingSplit(int nBins,
     string sbSplit = static_cast<ostringstream*>(&(ostringstream() << fbSplit))->str();
     string stSplit = static_cast<ostringstream*>(&(ostringstream() << ftSplit))->str();
     string swSplit = static_cast<ostringstream*>(&(ostringstream() << fwSplit))->str();
-    cout << "Producing envelope for MESscale uncertainty" << endl;
+    cout << "Producing envelope for MEScale uncertainty" << endl;
     for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
         numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
 
@@ -547,7 +547,7 @@ void GetScaleEnvelopeSplit(int nBins,
     string stSplit = static_cast<ostringstream*>(&(ostringstream() << ftSplit))->str();
     string swSplit = static_cast<ostringstream*>(&(ostringstream() << fwSplit))->str();
 
-    cout << "Producing envelope for MESscale uncertainty" << endl;
+    cout << "Producing envelope for MEScale uncertainty" << endl;
     for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
         numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
         histo1D[("weightPlus" + numStr).c_str()] = new TH1F("Plus", "Plus", nBins, plotLow, plotHigh);
@@ -596,11 +596,11 @@ void GetScaleEnvelopeSplit(int nBins,
         histo1D[("weight0_tt" + numStr).c_str()]->Write("Nominal");
         cout << "wrote weights in errorfile" << endl;
         shapefile->cd();
-        string MESscalesysname = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__MESscale";
-        cout << MESscalesysname << endl;
-        histo1D[("weightMinus" + numStr).c_str()]->Write((MESscalesysname + "Down").c_str());
-        histo1D[("weightPlus" + numStr).c_str()]->Write((MESscalesysname + "Up").c_str());
-        cout << "wrote sys MESscale shapes in shapefile" << endl;
+        string MEScalesysname = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__MEScale";
+        cout << MEScalesysname << endl;
+        histo1D[("weightMinus" + numStr).c_str()]->Write((MEScalesysname + "Down").c_str());
+        histo1D[("weightPlus" + numStr).c_str()]->Write((MEScalesysname + "Up").c_str());
+        cout << "wrote sys MEScale shapes in shapefile" << endl;
     }
 }
 
@@ -636,7 +636,7 @@ void GetScaleEnvelopeSplit2(int nBins,
     string stSplit2 = static_cast<ostringstream*>(&(ostringstream() << ftSplit2))->str();
     string swSplit2 = static_cast<ostringstream*>(&(ostringstream() << fwSplit2))->str();
 
-    cout << "Producing envelope for MESscale uncertainty" << endl;
+    cout << "Producing envelope for MEScale uncertainty" << endl;
 
     for(int s = fbSplit1; s <= ftSplit1; s += fwSplit1) {
         numStr1 = static_cast<ostringstream*>(&(ostringstream() << s))->str();
@@ -703,14 +703,14 @@ void GetScaleEnvelopeSplit2(int nBins,
             histo1D[("weight0_tt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write("Nominal");
             cout << "wrote weights in errorfile" << endl;
             shapefile->cd();
-            string MESscalesysname =
-                channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__MESscale";
-            cout << MESscalesysname << endl;
+            string MEScalesysname =
+                channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__MEScale";
+            cout << MEScalesysname << endl;
             histo1D[("weightMinus" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                (MESscalesysname + "Down").c_str());
+                (MEScalesysname + "Down").c_str());
             histo1D[("weightPlus" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                (MESscalesysname + "Up").c_str());
-            cout << "wrote sys MESscale shapes in shapefile" << endl;
+                (MEScalesysname + "Up").c_str());
+            cout << "wrote sys MEScale shapes in shapefile" << endl;
         }
     }
 }
@@ -845,6 +845,7 @@ void DatasetPlotter(int nBins,
     bool split_ttbar = false;
     bool reweight_ttbar = false;
     string mainTTbarSample, otherTTbarsample;
+    string chanText;
     cout << "channel  " << channel << endl;
     if(channel == "ttttmu" || channel == "ttttel") {
         mainTTbarSample = "TTJets_powheg";
@@ -853,6 +854,12 @@ void DatasetPlotter(int nBins,
         mainTTbarSample = "TTJetsPowheg";
         otherTTbarsample = "TTJetsMG";
     }
+    if(channel == "ttttmu") chanText = "Single Lepton: #mu";
+    else if(channel == "ttttel") chanText = "Single Lepton: e";
+    else if(channel == "ttttmumu") chanText = "Dilepton: #mu#mu";
+    else if(channel == "ttttmuel") chanText = "Dilepton: e#mu";
+    else if(channel == "ttttmumu") chanText = "Dilepton: ee";
+    else if(channel == "comb") chanText = "Dilepton: Combined";
     double ll_rw = 0.976;
     double bb_rw = 3.;
     double ll_rw_up = 0.976;
@@ -907,7 +914,7 @@ void DatasetPlotter(int nBins,
         datasets.push_back(ttbar_ll_down);
     }
     MSPlot[plotname] = new MultiSamplePlot(
-        datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events", "", units);
+        datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events", chanText.c_str(), units);
 
     // instantiating these plots outside the dataset loop so that they can be combined between multiple channels of the
     // same main ttbar sample
@@ -1052,9 +1059,9 @@ void DatasetPlotter(int nBins,
                 histo1D[dataSetName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
 
                 ////////DATA BLINDED ////
-                //                if(sVarofinterest.find("BDT")==string::npos) MSPlot[plotname]->Fill(varofInterest,
-                //                datasets[d], true, 1);
-                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
+                                if(sVarofinterest.find("BDT")==string::npos) MSPlot[plotname]->Fill(varofInterest,
+                                datasets[d], true, 1);
+                //MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
 
                 //                }
             } else {
@@ -1113,7 +1120,7 @@ void DatasetPlotter(int nBins,
                     dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos &&
                     dataSetName.find("AlphaS") == string::npos) {
                     // Since these are instantiated outside the dataset loop, these will combine across multiple
-                    // channels of the mainTTbarSample and provide the correct histos for the MESscale envelope
+                    // channels of the mainTTbarSample and provide the correct histos for the MEScale envelope
                     histo1D["Genweight_tt"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag *
                             SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi * ttbbReweight *
                             LumiFactor);
@@ -1227,7 +1234,7 @@ void DatasetPlotter(int nBins,
         histo1D[dataSetName.c_str()]->Write((writename).c_str());
         canv->SaveAs((pathPNG + dataSetName + ".png").c_str());
 
-        string MESscalesysname = channel + "__" + mainTTbarSample + "__";
+        string MEScalesysname = channel + "__" + mainTTbarSample + "__";
 
         if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
             dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos &&
@@ -1245,12 +1252,12 @@ void DatasetPlotter(int nBins,
                 // canv1->SaveAs(("weight"+weightstring+".png").c_str());
             }
 
-            histo1D["PU_Up"]->Write((MESscalesysname + "PUUp").c_str());
-            histo1D["PU_Down"]->Write((MESscalesysname + "PUDown").c_str());
-            histo1D["btag_Up"]->Write((MESscalesysname + "btagUp").c_str());
-            histo1D["btag_Down"]->Write((MESscalesysname + "btagDown").c_str());
-            histo1D["heavyFlav_Up"]->Write((MESscalesysname + "heavyFlavUp").c_str());
-            histo1D["heavyFlav_Down"]->Write((MESscalesysname + "heavyFlavDown").c_str());
+            histo1D["PU_Up"]->Write((MEScalesysname + "PUUp").c_str());
+            histo1D["PU_Down"]->Write((MEScalesysname + "PUDown").c_str());
+            histo1D["btag_Up"]->Write((MEScalesysname + "btagUp").c_str());
+            histo1D["btag_Down"]->Write((MEScalesysname + "btagDown").c_str());
+            histo1D["heavyFlav_Up"]->Write((MEScalesysname + "heavyFlavUp").c_str());
+            histo1D["heavyFlav_Down"]->Write((MEScalesysname + "heavyFlavDown").c_str());
         }
 
         // cout<<"saved histos"<<endl;
@@ -1265,19 +1272,19 @@ void DatasetPlotter(int nBins,
     errorfile->Close();
 
     // treeLoader.UnLoadDataset();
-    string MESscaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
-    string MESscaleFileName = MESscaleFileDir + "/Error" + sVarofinterest + ".root";
-    mkdir(MESscaleFileDir.c_str(), 0777);
+    string MEScaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
+    string MEScaleFileName = MEScaleFileDir + "/Error" + sVarofinterest + ".root";
+    mkdir(MEScaleFileDir.c_str(), 0777);
     MSPlot[plotname.c_str()]->setErrorBandFile(
-        (MESscaleFileName).c_str()); // set error file for uncertainty bands on multisample plot
+        (MEScaleFileName).c_str()); // set error file for uncertainty bands on multisample plot
     MSPlot[plotname.c_str()]->setDataLumi(2600);
     // MSPlot[plotname.c_str()]->setMaxY(1000000);
 
     for(map<string, MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++) {
         string name = it->first;
         MultiSamplePlot* temp = it->second;
-        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 20);
-        temp->Write(shapefile, name, true, pathPNG, "eps");
+        temp->Draw(sVarofinterest.c_str(), 0, false, true, true, 20);
+        temp->Write(shapefile, name, true, pathPNG, "root");
     }
     MSPlot.erase(plotname);
     for(map<string, TH1F*>::const_iterator it = histo1D.begin(); it != histo1D.end(); it++) {
@@ -1502,6 +1509,7 @@ void SplitDatasetPlotter(int nBins,
     cout << "Making directory :" << pathPNG << endl; // make directory
     string mainTTbarSample;
     string otherTTbarsample;
+    string chanText;
     cout << "channel  " << channel << endl;
     if(channel == "ttttmu" || channel == "ttttel") {
         mainTTbarSample = "TTJets_powheg";
@@ -1510,6 +1518,12 @@ void SplitDatasetPlotter(int nBins,
         mainTTbarSample = "TTJetsPowheg";
         otherTTbarsample = "TTJetsMG";
     }
+    if(channel == "ttttmu") chanText = "Single Lepton: #mu";
+    else if(channel == "ttttel") chanText = "Single Lepton: e";
+    else if(channel == "ttttmumu") chanText = "Dilepton: #mu#mu";
+    else if(channel == "ttttmuel") chanText = "Dilepton: e#mu";
+    else if(channel == "ttttmumu") chanText = "Dilepton: ee";
+    else if(channel == "comb") chanText = "Dilepton: Combined";
     ///////////////////////////////////////////////////////////// Load Datasets
     /////////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
     TTreeLoader treeLoader;
@@ -1519,6 +1533,7 @@ void SplitDatasetPlotter(int nBins,
     //***************************************************CREATING
     // PLOTS****************************************************
     string plotname; ///// Jet Split plot
+    string plotaxis = plotVarNames(sVarofinterest);
     string numStr;
     string sbSplit = static_cast<ostringstream*>(&(ostringstream() << fbSplit))->str();
     string stSplit = static_cast<ostringstream*>(&(ostringstream() << ftSplit))->str();
@@ -1527,7 +1542,7 @@ void SplitDatasetPlotter(int nBins,
         numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
         plotname = sVarofinterest + numStr + sSplitVar;
         MSPlot[plotname.c_str()] = new MultiSamplePlot(
-            datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str(), "Events", "", units);
+            datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events", chanText.c_str(), units);
     }
     plotname = "";
 
@@ -1903,14 +1918,14 @@ void SplitDatasetPlotter(int nBins,
                     histo1D[weighthisto]->Write(("weight" + weightstring + "_tt" + numStr).c_str());
                     // canv1->SaveAs(("weight"+weightstring+"_tt"+numStr+".png").c_str());
                 }
-                string MESscalesysname = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__";
+                string MEScalesysname = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__";
 
-                histo1D[("PU_Up" + numStr).c_str()]->Write((MESscalesysname + "PUUp").c_str());
-                histo1D[("PU_Down" + numStr).c_str()]->Write((MESscalesysname + "PUDown").c_str());
-                histo1D[("btag_Up" + numStr).c_str()]->Write((MESscalesysname + "btagUp").c_str());
-                histo1D[("btag_Down" + numStr).c_str()]->Write((MESscalesysname + "btagDown").c_str());
-                histo1D[("heavyFlav_Up" + numStr).c_str()]->Write((MESscalesysname + "heavyFlavUp").c_str());
-                histo1D[("heavyFlav_Down" + numStr).c_str()]->Write((MESscalesysname + "heavyFlavDown").c_str());
+                histo1D[("PU_Up" + numStr).c_str()]->Write((MEScalesysname + "PUUp").c_str());
+                histo1D[("PU_Down" + numStr).c_str()]->Write((MEScalesysname + "PUDown").c_str());
+                histo1D[("btag_Up" + numStr).c_str()]->Write((MEScalesysname + "btagUp").c_str());
+                histo1D[("btag_Down" + numStr).c_str()]->Write((MEScalesysname + "btagDown").c_str());
+                histo1D[("heavyFlav_Up" + numStr).c_str()]->Write((MEScalesysname + "heavyFlavUp").c_str());
+                histo1D[("heavyFlav_Down" + numStr).c_str()]->Write((MEScalesysname + "heavyFlavDown").c_str());
                 MSPlot[plotname.c_str()]->setDataLumi(2600);
             }
         }
@@ -1924,19 +1939,19 @@ void SplitDatasetPlotter(int nBins,
 
     // treeLoader.UnLoadDataset();
 
-    string MESscaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
-    mkdir(MESscaleFileDir.c_str(), 0777);
-    string MESscaleFileName = MESscaleFileDir + "/Error" + sVarofinterest + ".root";
+    string MEScaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
+    mkdir(MEScaleFileDir.c_str(), 0777);
+    string MEScaleFileName = MEScaleFileDir + "/Error" + sVarofinterest + ".root";
     // MSPlot[plotname.c_str()]->setErrorBandFile(
-    // MESscaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
+    // MEScaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
     MSPlot[plotname.c_str()]->setDataLumi(2600);
     for(map<string, MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++) {
         string name = it->first;
         cout << name << " ** " << sVarofinterest << endl;
         MultiSamplePlot* temp = it->second;
-        temp->setErrorBandFile(MESscaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
-        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 20);
-        temp->Write(shapefile, name, true, pathPNG, "eps");
+        temp->setErrorBandFile(MEScaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
+        temp->Draw(sVarofinterest.c_str(), 0, false, true, true, 20);
+        temp->Write(shapefile, name, true, pathPNG, "root");
     }
 
     for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
@@ -1985,6 +2000,8 @@ void Split2DatasetPlotter(int nBins,
     string mainTTbarSample;
     string otherTTbarsample;
     cout << "channel  " << channel << endl;
+    string chanText;
+    cout << "channel  " << channel << endl;
     if(channel == "ttttmu" || channel == "ttttel") {
         mainTTbarSample = "TTJets_powheg";
         otherTTbarsample = "TTJets_MLM";
@@ -1992,6 +2009,12 @@ void Split2DatasetPlotter(int nBins,
         mainTTbarSample = "TTJetsPowheg";
         otherTTbarsample = "TTJetsMG";
     }
+    if(channel == "ttttmu") chanText = "Single Lepton: #mu";
+    else if(channel == "ttttel") chanText = "Single Lepton: e";
+    else if(channel == "ttttmumu") chanText = "Dilepton: #mu#mu";
+    else if(channel == "ttttmuel") chanText = "Dilepton: e#mu";
+    else if(channel == "ttttmumu") chanText = "Dilepton: ee";
+    else if(channel == "comb") chanText = "Dilepton: Combined";
     ///////////////////////////////////////////////////////////// Load Datasets
     ////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
     TTreeLoader treeLoader;
@@ -2001,6 +2024,7 @@ void Split2DatasetPlotter(int nBins,
     // //***************************************************CREATING
     // PLOTS****************************************************
     string plotname; ///// Jet Split plot
+    string plotaxis = plotVarNames(sVarofinterest);
     string numStr1;
     string numStr2;
     string sbSplit1 = static_cast<ostringstream*>(&(ostringstream() << fbSplit1))->str();
@@ -2015,7 +2039,7 @@ void Split2DatasetPlotter(int nBins,
             numStr2 = static_cast<ostringstream*>(&(ostringstream() << t2))->str();
             plotname = sVarofinterest + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
             MSPlot[plotname.c_str()] = new MultiSamplePlot(
-                datasets, plotname.c_str(), nBins, plotLow, plotHigh, sVarofinterest.c_str(), "Events", "", units);
+                datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events", chanText.c_str(), units);
         }
     }
     plotname = "";
@@ -2078,7 +2102,7 @@ void Split2DatasetPlotter(int nBins,
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar1.c_str(), &splitVar1);
         nTuple[dataSetName.c_str()]->SetBranchAddress(sSplitVar2.c_str(), &splitVar2);
-        // nTuple[dataSetName.c_str()]->SetBranchAddress("SFalphaTune", &SFalphaTune);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("SFalphaTune", &SFalphaTune);
 
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
@@ -2369,22 +2393,22 @@ void Split2DatasetPlotter(int nBins,
                             ("weight" + weightstring + "_tt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
                         // canv1->SaveAs(("weight"+weightstring+"_tt"+numStr+".png").c_str());
                     }
-                    string MESscalesysname =
+                    string MEScalesysname =
                         channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__";
 
                     histo1D[("PU_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                        (MESscalesysname + "PUUp").c_str());
+                        (MEScalesysname + "PUUp").c_str());
                     histo1D[("PU_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                        (MESscalesysname + "PUDown").c_str());
+                        (MEScalesysname + "PUDown").c_str());
                     histo1D[("btag_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                        (MESscalesysname + "btagUp").c_str());
+                        (MEScalesysname + "btagUp").c_str());
                     histo1D[("btag_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                        (MESscalesysname + "btagDown").c_str());
+                        (MEScalesysname + "btagDown").c_str());
                     histo1D[("heavyFlav_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                        (MESscalesysname + "heavyFlavUp").c_str());
+                        (MEScalesysname + "heavyFlavUp").c_str());
                     histo1D[("heavyFlav_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                        (MESscalesysname + "heavyFlavDown").c_str());
-                    // MSPlot[plotname.c_str()]->setErrorBandFile(MESscaleFileName.c_str()); //set error file for
+                        (MEScalesysname + "heavyFlavDown").c_str());
+                    // MSPlot[plotname.c_str()]->setErrorBandFile(MEScaleFileName.c_str()); //set error file for
                     // uncertainty bands on multisample plot
                 }
             }
@@ -2400,10 +2424,10 @@ void Split2DatasetPlotter(int nBins,
     errorfile->Close();
     // treeLoader.UnLoadDataset();
 
-    string MESscaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
-    mkdir(MESscaleFileDir.c_str(), 0777);
-    string MESscaleFileName = MESscaleFileDir + "/Error" + sVarofinterest + ".root";
-    // MSPlot[plotname.c_str()]->setErrorBandFile(MESscaleFileName.c_str()); //set error file for uncertainty bands on
+    string MEScaleFileDir = "ScaleFiles" + leptoAbbr + "_light";
+    mkdir(MEScaleFileDir.c_str(), 0777);
+    string MEScaleFileName = MEScaleFileDir + "/Error" + sVarofinterest + ".root";
+    // MSPlot[plotname.c_str()]->setErrorBandFile(MEScaleFileName.c_str()); //set error file for uncertainty bands on
     // multisample plot
     // MSPlot[plotname.c_str()]->setDataLumi(2600);
 
@@ -2412,9 +2436,9 @@ void Split2DatasetPlotter(int nBins,
         MultiSamplePlot* temp = it->second;
         temp->setDataLumi(2600);
 
-        temp->setErrorBandFile(MESscaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
-        temp->Draw(sVarofinterest.c_str(), 1, true, true, true, 20);
-        temp->Write(shapefile, name, true, pathPNG, "eps");
+        temp->setErrorBandFile(MEScaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
+        temp->Draw(sVarofinterest.c_str(), 0, false, true, true, 20);
+        temp->Write(shapefile, name, true, pathPNG, "root");
     }
     for(int s = fbSplit1; s <= ftSplit1; s += fwSplit1) {
         numStr1 = static_cast<ostringstream*>(&(ostringstream() << s))->str();
@@ -2474,7 +2498,7 @@ void DataCardProducer(string VoI,
         if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
             dataSetName.find("DATA") != string::npos || dataSetName.find("JER") != string::npos ||
             dataSetName.find("JES") != string::npos || dataSetName.find("MLM") != string::npos ||
-            dataSetName.find("MESscale") != string::npos || dataSetName.find("Scale") != string::npos ||
+            dataSetName.find("MEScale") != string::npos || dataSetName.find("Scale") != string::npos ||
             dataSetName.find(otherTTbarsample) != string::npos) {
             continue;
         } else {
@@ -2634,7 +2658,7 @@ void DataCardProducer(string VoI,
     }
     card << "\n";
 
-    card << "MESscale                shape           ";
+    card << "MEScale                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
         if(dataSetName.find(mainTTbarsample) != string::npos) {
@@ -2842,7 +2866,7 @@ void Split_DataCardProducer(string VoI,
         if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
             dataSetName.find("DATA") != string::npos || dataSetName.find("JER") != string::npos ||
             dataSetName.find("JES") != string::npos || dataSetName.find("MLM") != string::npos ||
-            dataSetName.find("MESscale") != string::npos || dataSetName.find("Scale") != string::npos ||
+            dataSetName.find("MEScale") != string::npos || dataSetName.find("Scale") != string::npos ||
             dataSetName.find(otherTTbarsample) != string::npos) {
             continue;
         } else {
@@ -3017,7 +3041,7 @@ void Split_DataCardProducer(string VoI,
         }
     }
 
-    card << "MESscale                shape           ";
+    card << "MEScale                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
         if(dataSetName.find(mainTTbarsample) != string::npos) {
@@ -3211,7 +3235,7 @@ void Split2_DataCardProducer(string VoI,
         if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
             dataSetName.find("DATA") != string::npos || dataSetName.find("JER") != string::npos ||
             dataSetName.find("JES") != string::npos || dataSetName.find("MLM") != string::npos ||
-            dataSetName.find("MESscale") != string::npos || dataSetName.find("Scale") != string::npos ||
+            dataSetName.find("MEScale") != string::npos || dataSetName.find("Scale") != string::npos ||
             dataSetName.find(otherTTbarsample) != string::npos) {
             continue;
         } else {
@@ -3397,7 +3421,7 @@ void Split2_DataCardProducer(string VoI,
         }
     }
 
-    card << "MESscale                shape           ";
+    card << "MEScale                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
         dataSetName = MCdatasets[d];
         if(dataSetName.find(mainTTbarsample) != string::npos) {
