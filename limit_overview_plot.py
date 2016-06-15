@@ -1,3 +1,13 @@
+# limit overview plot as asked by the conveners.
+#
+# in py root, so execute by 
+# >> python limit_overview_plot.py
+#
+# note: the observed and expected limit values are manually added to the tables annotated in the first half of the code
+#
+# the macro requires the official pyRoot root style macros provided by CMS and documented here:
+# https://ghm.web.cern.ch/ghm/plots/
+
 import ROOT as rt
 import CMS_lumi, tdrstyle
 import array
