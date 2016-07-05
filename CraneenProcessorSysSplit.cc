@@ -782,6 +782,109 @@ void GetScaleEnvelopeSplit_tttt(int nBins,
     }
 }
 
+void GetScaleEnvelopeSplit2_tttt(int nBins,
+    float lScale,
+    float plotLow,
+    float plotHigh,
+    string leptoAbbr,
+    TFile* shapefile,
+    TFile* errorfile,
+    string channel,
+    string sVarofinterest,
+    string sSplitVar1,
+    float fbSplit1,
+    float ftSplit1,
+    float fwSplit1,
+    string sSplitVar2,
+    float fbSplit2,
+    float ftSplit2,
+    float fwSplit2,
+    string xmlNom,
+    string CraneenPath,
+    string shapefileName,
+    string mainTTbarSample)
+{
+    string plotname; ///// Jet Split plot
+    string numStr1;
+    string numStr2;
+    string sbSplit1 = static_cast<ostringstream*>(&(ostringstream() << fbSplit1))->str();
+    string stSplit1 = static_cast<ostringstream*>(&(ostringstream() << ftSplit1))->str();
+    string swSplit1 = static_cast<ostringstream*>(&(ostringstream() << fwSplit1))->str();
+    string sbSplit2 = static_cast<ostringstream*>(&(ostringstream() << fbSplit2))->str();
+    string stSplit2 = static_cast<ostringstream*>(&(ostringstream() << ftSplit2))->str();
+    string swSplit2 = static_cast<ostringstream*>(&(ostringstream() << fwSplit2))->str();
+
+    cout << "Producing envelope for MEScale uncertainty" << endl;
+
+    for(int s = fbSplit1; s <= ftSplit1; s += fwSplit1) {
+        numStr1 = static_cast<ostringstream*>(&(ostringstream() << s))->str();
+        for(int t2 = fbSplit2; t2 <= ftSplit2; t2 += fwSplit2) {
+            numStr2 = static_cast<ostringstream*>(&(ostringstream() << t2))->str();
+            cout << numStr1 + sSplitVar1 + numStr2 + sSplitVar2 << endl;
+            histo1D[("weightPlus_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                new TH1F("Plus_tttt", "Plus_tttt", nBins, plotLow, plotHigh);
+            histo1D[("weightMinus_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                new TH1F("Minus_tttt", "Minus_tttt", nBins, plotLow, plotHigh);
+
+            // TFile * reopenSF = new TFile(shapefileName.c_str());
+            histo1D[("weight0_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("Genweight_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+            histo1D[("weight1_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("weight1_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+            histo1D[("weight2_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("weight2_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+            histo1D[("weight3_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("weight3_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+            histo1D[("weight4_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("weight4_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+            histo1D[("weight5_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("weight5_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+            histo1D[("weight6_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("weight6_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+            histo1D[("weight7_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("weight7_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+            histo1D[("weight8_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                (TH1F*)shapefile->Get(("weight8_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+
+            cout << "Got weights" << endl;
+
+            for(int binN = 1; binN < nBins + 1; ++binN) {
+                float binContentMax = -1, binContentMin = 1000000000000000;
+
+                for(int weightIt = 1; weightIt < 9; ++weightIt) {
+                    if(weightIt == 6 || weightIt == 8) {
+                        continue; // extreme weights with 1/2u and 2u
+                    }
+
+                    string weightStr = static_cast<ostringstream*>(&(ostringstream() << weightIt))->str();
+                    string weightHistoName =
+                        ("weight" + weightStr + "_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str();
+                    // cout << weightHistoName << endl;
+                    if(binContentMin > histo1D[weightHistoName]->GetBinContent(binN))
+                        binContentMin = histo1D[weightHistoName]->GetBinContent(binN);
+                    if(binContentMax < histo1D[weightHistoName]->GetBinContent(binN))
+                        binContentMax = histo1D[weightHistoName]->GetBinContent(binN);
+                    // cout << "binContentMax: " << binContentMax << "binContentMin: " << binContentMin << endl;
+                    // cout<<"bin number : "<<binN<<"   bincontent: "<<histo1D["weight0"]->GetBinContent(binN)<<endl;
+                }
+                histo1D[("weightPlus_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->SetBinContent(
+                    binN, binContentMax);
+                histo1D[("weightMinus_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->SetBinContent(
+                    binN, binContentMin);
+            }
+
+            shapefile->cd();
+            string MEScalesysname =
+                channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + "NP_overlay_ttttNLO" + "__ttttMEScale";
+            cout << MEScalesysname << endl;
+            histo1D[("weightMinus_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                (MEScalesysname + "Down").c_str());
+            histo1D[("weightPlus_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                (MEScalesysname + "Up").c_str());
+            cout << "wrote sys MEScale shapes in shapefile" << endl;
+        }
+    }
+}
 void GetScaleEnvelopeSplit2(int nBins,
     float lScale,
     float plotLow,
@@ -882,7 +985,7 @@ void GetScaleEnvelopeSplit2(int nBins,
             cout << "wrote weights in errorfile" << endl;
             shapefile->cd();
             string MEScalesysname =
-                channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__MEScale";
+                channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__ttMEScale";
             cout << MEScalesysname << endl;
             histo1D[("weightMinus" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
                 (MEScalesysname + "Down").c_str());
@@ -1267,7 +1370,7 @@ void DatasetPlotter(int nBins,
                 histo1D[dataSetName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
 
                 ////////DATA BLINDED ////
-                if(sVarofinterest.find("BDT") == string::npos)
+                // if(sVarofinterest.find("BDT") == string::npos)
                     MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
                 // MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
 
@@ -1284,6 +1387,9 @@ void DatasetPlotter(int nBins,
                 NormFactor = 1;
                 if(dataSetName.find("tttt") != string::npos) {
                     NormFactor = 1.0 / 0.4095;
+                }
+                else if(dataSetName.find("TTJets_aMCatNLO") != string::npos) {
+                    NormFactor = 1.0 / 0.3304;
                 }
                 // else if(dataSetName.find("WJets") != string::npos) {
                 //     NormFactor = 1.0/0.522796;
@@ -1314,7 +1420,7 @@ void DatasetPlotter(int nBins,
 
                 histo1D[dataSetName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
                         SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi *
-                        ttbbReweight);
+                        ttbbReweight*LumiFactor);
 
                 // SFbtag = 1;
                 // ScaleFactor=1;
@@ -1457,7 +1563,7 @@ void DatasetPlotter(int nBins,
                             SFbtag_light * SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             GenWeight * eqlumi * ttbbReweight * LumiFactor);
 
-                } else if(dataSetName.find(otherTTbarsample) == string::npos &&
+                } else if(dataSetName.find(otherTTbarsample) == string::npos && dataSetName.find("TTJets_aMCatNLO")==string::npos &&
                     dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos &&
                     dataSetName.find("JER") == string::npos &&
                     dataSetName.find("AlphaS") ==
@@ -1485,9 +1591,9 @@ void DatasetPlotter(int nBins,
             writename = channel + "__" + mainTTbarSample + "__JERUp";
         } else if(dataSetName.find("JERDown") != string::npos && dataSetName.find(mainTTbarSample) != string::npos) {
             writename = channel + "__" + mainTTbarSample + "__JERDown";
-        } else if(dataSetName.find("ScaleHUp") != string::npos && dataSetName.find(mainTTbarSample) != string::npos) {
+        } else if(dataSetName.find("ScaleHUp") != string::npos ) {
             writename = channel + "__" + mainTTbarSample + "__ScaleHUp";
-        } else if(dataSetName.find("ScaleHDown") != string::npos && dataSetName.find(mainTTbarSample) != string::npos) {
+        } else if(dataSetName.find("ScaleHDown") != string::npos ) {
             writename = channel + "__" + mainTTbarSample + "__ScaleHDown";
             // } else if(dataSetName.find("AlphaSUp") != string::npos && dataSetName.find(mainTTbarSample) !=
             // string::npos) {
@@ -1684,7 +1790,7 @@ void CutFlowPlotter(TFile* cffile,
         dataSetName = datasets[d]->Name();
         cout << "Dataset:  :" << dataSetName << endl;
         if(dataSetName.find(otherTTbarsample) != string::npos || dataSetName.find("Scale") != string::npos ||
-            dataSetName.find("JES") != string::npos || dataSetName.find("JER") != string::npos) {
+            dataSetName.find("JES") != string::npos || dataSetName.find("JER") != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         }
 
@@ -1731,6 +1837,9 @@ void CutFlowPlotter(TFile* cffile,
             NormFactor = 1;
             if(dataSetName.find("tttt") != string::npos) {
                 NormFactor = 1.0 / 0.4095;
+            }
+            else if(dataSetName.find("TTJets_aMCatNLO") != string::npos) {
+                    NormFactor = 1.0 / 0.3304;
             }
             if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                 dataSetName.find("DATA") != string::npos) {
@@ -2030,6 +2139,9 @@ void SplitDatasetPlotter(int nBins,
                 // (GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends) << endl;
                 NormFactor = 1.0 / 0.409;
             }
+            else if(dataSetName.find("TTJets_aMCatNLO") != string::npos) {
+                NormFactor = 1.0 / 0.3304;
+            }
             // else if(dataSetName.find("WJets") != string::npos) {
             //     NormFactor = 1.0/0.522796;
             // } else if(dataSetName.find("DYJets") != string::npos) {
@@ -2046,7 +2158,7 @@ void SplitDatasetPlotter(int nBins,
                 if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                     dataSetName.find("DATA") != string::npos || dataSetName.find("NP_overlay_Data") != string::npos) {
                     ////////DATA BLINDED ////
-                    if(sVarofinterest.find("BDT") == string::npos)
+                    // if(sVarofinterest.find("BDT") == string::npos)
                         MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
                     // MSPlot[plotname]->Fill(varofInterest, datasets[d], true, LumiFactor);
                     histo1D[histoName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
@@ -2172,7 +2284,7 @@ void SplitDatasetPlotter(int nBins,
                             ttbbReweight);
                     // cout<<dataSetName<<" "<<varofInterest<<"  "<<NormFactor<<"  "<<SFlepton<<"  "<<SFbtag<<"
                     // "<<SFPU<<"  "<<Luminosity<<"  "<<ttbbReweight<<"  "<<LumiFactor<<"  "<<GenWeight<<endl;
-                } else if(dataSetName.find(otherTTbarsample) == string::npos &&
+                } else if(dataSetName.find(otherTTbarsample) == string::npos && dataSetName.find("TTJets_aMCatNLO")==string::npos &&
                     dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos &&
                     dataSetName.find("JER") ==
                         string::npos) { // ie. don't add the MLM dataset which is just used for ttGenerator
@@ -2203,7 +2315,7 @@ void SplitDatasetPlotter(int nBins,
                             dataSetName.find("DATA") != string::npos ||
                             dataSetName.find("NP_overlay_Data") != string::npos) {
                             ////////DATA BLINDED ////
-                            if(sVarofinterest.find("BDT") == string::npos)
+                            // if(sVarofinterest.find("BDT") == string::npos)
                                 MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
                             histo1D[histoName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
                         } else if(dataSetName == mainTTbarSample && dataSetName.find("JES") == string::npos &&
@@ -2323,7 +2435,7 @@ void SplitDatasetPlotter(int nBins,
                                     eqlumi * ttbbReweight);
                             // cout<<dataSetName<<" "<<varofInterest<<"  "<<NormFactor<<"  "<<SFlepton<<"  "<<SFbtag<<"
                             // "<<SFPU<<"  "<<Luminosity<<"  "<<ttbbReweight<<"  "<<LumiFactor<<"  "<<GenWeight<<endl;
-                        } else if(dataSetName.find(otherTTbarsample) == string::npos &&
+                        } else if(dataSetName.find(otherTTbarsample) == string::npos && dataSetName.find("TTJets_aMCatNLO")==string::npos &&
                             dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos &&
                             dataSetName.find("JER") ==
                                 string::npos) { // ie. don't add the MLM dataset which is just used for ttGenerator
@@ -2371,9 +2483,9 @@ void SplitDatasetPlotter(int nBins,
                 writename = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__JERUp";
             } else if(dataSetName.find("JERDown") != string::npos && dataSetName.find(mainTTbarSample) != string::npos) {
                 writename = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__JERDown";
-            } else if(dataSetName.find("ScaleHUp") != string::npos && dataSetName.find(mainTTbarSample) != string::npos) {
+            } else if(dataSetName.find("ScaleHUp") != string::npos) {
                 writename = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__ScaleHUp";
-            } else if(dataSetName.find("ScaleHDown") != string::npos && dataSetName.find(mainTTbarSample) != string::npos) {
+            } else if(dataSetName.find("ScaleHDown") != string::npos) {
                 writename = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__ScaleHDown";
             } else if(dataSetName.find("JESUp") != string::npos && dataSetName.find("tttt") != string::npos) {
                 writename = channel + numStr + sSplitVar + "__" + "NP_overlay_ttttNLO" + "__JESUp";
@@ -2644,7 +2756,8 @@ void Split2DatasetPlotter(int nBins,
                 numStr2 = static_cast<ostringstream*>(&(ostringstream() << t2))->str();
                 histoName = dataSetName + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
                 histo1D[histoName.c_str()] = new TH1F(histoName.c_str(), histoName.c_str(), nBins, plotLow, plotHigh);
-                if(dataSetName.find(mainTTbarSample) != string::npos) {
+                if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
+                    dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
                     histo1D[("Genweight_tt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
                         new TH1F(("Genweight_tt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "Genweight",
                             nBins, plotLow, plotHigh);
@@ -2678,18 +2791,72 @@ void Split2DatasetPlotter(int nBins,
                     histo1D[("PU_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
                         new TH1F(("PU_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "PU_Down", nBins,
                             plotLow, plotHigh);
-                    histo1D[("btag_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
-                        new TH1F(("btag_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_Up", nBins,
+                    histo1D[("btag_lightUp" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                        new TH1F(("btag_lightUp" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_lightUp", nBins,
                             plotLow, plotHigh);
-                    histo1D[("btag_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
-                        new TH1F(("btag_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_Down",
+                    histo1D[("btag_lightDown" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                        new TH1F(("btag_lightDown" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_lightDown",
                             nBins, plotLow, plotHigh);
+                    histo1D[("btag_heavyUp" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                        new TH1F(("btag_heavyUp" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_heavyUp", nBins,
+                            plotLow, plotHigh);
+                    histo1D[("btag_heavyDown" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                        new TH1F(("btag_heavyDown" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_heavyDown",
+                            nBins, plotLow, plotHigh);                        
                     histo1D[("heavyFlav_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
                         new TH1F(("heavyFlav_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "heavyFlav_Up",
                             nBins, plotLow, plotHigh);
                     histo1D[("heavyFlav_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
                         new TH1F(("heavyFlav_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(),
                             "heavyFlav_Down", nBins, plotLow, plotHigh);
+                }
+                else if(dataSetName.find("tttt") != string::npos && dataSetName.find("JES") == string::npos &&
+                dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
+                histo1D[("Genweight_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("Genweight_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "Genweight_tttt",
+                        nBins, plotLow, plotHigh);
+                histo1D[("weight1_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("weight1_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "weight1_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("weight2_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("weight2_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "weight2_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("weight3_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("weight3_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "weight3_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("weight4_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("weight4_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "weight4_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("weight5_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("weight5_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "weight5_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("weight6_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("weight6_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "weight6_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("weight7_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("weight7_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "weight7_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("weight8_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("weight8_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "weight8_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("PU_Up_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("PU_Up_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "PU_Up_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("PU_Down_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("PU_Down_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "PU_Down_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("btag_lightUp_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("btag_lightUp_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_lightUp_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("btag_lightDown_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("btag_lightDown_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_lightDown_tttt",
+                        nBins, plotLow, plotHigh);
+                histo1D[("btag_heavyUp_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("btag_heavyUp_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_heavyUp_tttt", nBins,
+                        plotLow, plotHigh);
+                histo1D[("btag_heavyDown_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()] =
+                    new TH1F(("btag_heavyDown_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str(), "btag_heavyDown_tttt",
+                        nBins, plotLow, plotHigh);                        
                 }
             }
         }
@@ -2788,7 +2955,7 @@ void Split2DatasetPlotter(int nBins,
             }
             if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                 dataSetName.find("DATA") != string::npos || dataSetName.find("NP_overlay_Data") != string::npos) {
-                if(sVarofinterest.find("BDT") == string::npos)
+                // if(sVarofinterest.find("BDT") == string::npos)
                     MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
                 histo1D[histoName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
             } else if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
@@ -2829,12 +2996,19 @@ void Split2DatasetPlotter(int nBins,
                 histo1D[("PU_Down" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
                         SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU_down * SFTopPt * SFbehrends * Luminosity *
                         eqlumi * ttbbReweight * LumiFactor * GenWeight);
-                histo1D[("btag_Up" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
-                        SFbtag_lightUp * SFbtag_heavyUp * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                histo1D[("btag_lightUp" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_lightUp * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                         eqlumi * ttbbReweight * LumiFactor * GenWeight);
-                histo1D[("btag_Down" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
-                        SFbtag_lightDown * SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                histo1D[("btag_lightDown" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_lightDown * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                         eqlumi * ttbbReweight * LumiFactor * GenWeight);
+                histo1D[("btag_heavyUp" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavyUp * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                        eqlumi * ttbbReweight * LumiFactor * GenWeight);
+                histo1D[("btag_heavyDown" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                        eqlumi * ttbbReweight * LumiFactor * GenWeight);
+
                 histo1D[("heavyFlav_Up" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
                         SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
                         ttbbReweight_up * LumiFactor * GenWeight);
@@ -2847,7 +3021,63 @@ void Split2DatasetPlotter(int nBins,
                 MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
                         SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                         ttbbReweight * LumiFactor * GenWeight);
-            } else if(dataSetName.find(otherTTbarsample) == string::npos &&
+            } else if(dataSetName.find("tttt") != string::npos && dataSetName.find("JES") == string::npos &&
+                dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
+
+                // cout << "Main TTbar Sample Event!  name nameEnding  "<<nameEnding<< endl;
+                //                    cin.get();
+                histo1D[("Genweight_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * GenWeight);
+                histo1D[("weight1_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * weight1);
+                histo1D[("weight2_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * weight2);
+                histo1D[("weight3_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * weight3);
+                histo1D[("weight4_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * weight4);
+                histo1D[("weight5_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * weight5);
+                histo1D[("weight6_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * weight6);
+                histo1D[("weight7_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * weight7);
+                histo1D[("weight8_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * eqlumi *
+                        ttbbReweight * LumiFactor * weight8);
+                histo1D[("PU_Up_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU_up * SFTopPt * SFbehrends * Luminosity *
+                        eqlumi * ttbbReweight * LumiFactor * GenWeight);
+                histo1D[("PU_Down_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU_down * SFTopPt * SFbehrends * Luminosity *
+                        eqlumi * ttbbReweight * LumiFactor * GenWeight);
+                histo1D[("btag_lightUp_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_lightUp * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                        eqlumi * ttbbReweight * LumiFactor * GenWeight);
+                histo1D[("btag_lightDown_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_lightDown * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                        eqlumi * ttbbReweight * LumiFactor * GenWeight);
+                histo1D[("btag_heavyUp_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavyUp * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                        eqlumi * ttbbReweight * LumiFactor * GenWeight);
+                histo1D[("btag_heavyDown_tttt" + nameEnding).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                        eqlumi * ttbbReweight * LumiFactor * GenWeight);
+                histo1D[histoName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
+                        SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * GenWeight * Luminosity * eqlumi *
+                        ttbbReweight);
+                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
+                        SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                        ttbbReweight * LumiFactor * GenWeight);
+            } else if(dataSetName.find(otherTTbarsample) == string::npos &&  dataSetName.find("TTJets_aMCatNLO")==string::npos &&
                 dataSetName.find("ScaleH") == string::npos && dataSetName.find("JES") == string::npos &&
                 dataSetName.find("JER") ==
                     string::npos) { // ie. don't add the MLM dataset which is just used for ttGenerator
@@ -2883,16 +3113,16 @@ void Split2DatasetPlotter(int nBins,
                 if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                     dataSetName.find("DATA") != string::npos) {
                     writename = channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__data_obs__nominal";
-                } else if(dataSetName.find("JESUp") != string::npos) {
+                } else if(dataSetName.find("JESUp") != string::npos&& dataSetName.find(mainTTbarSample) != string::npos) {
                     writename =
                         channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__JESUp";
-                } else if(dataSetName.find("JESDown") != string::npos) {
+                } else if(dataSetName.find("JESDown") != string::npos&& dataSetName.find(mainTTbarSample) != string::npos) {
                     writename =
                         channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__JESDown";
-                } else if(dataSetName.find("JERUp") != string::npos) {
+                } else if(dataSetName.find("JERUp") != string::npos&& dataSetName.find(mainTTbarSample) != string::npos) {
                     writename =
                         channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__JERUp";
-                } else if(dataSetName.find("JERDown") != string::npos) {
+                } else if(dataSetName.find("JERDown") != string::npos&& dataSetName.find(mainTTbarSample) != string::npos) {
                     writename =
                         channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__JERDown";
                 } else if(dataSetName.find("ScaleHUp") != string::npos) {
@@ -2901,6 +3131,18 @@ void Split2DatasetPlotter(int nBins,
                 } else if(dataSetName.find("ScaleHDown") != string::npos) {
                     writename =
                         channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__ScaleHDown";
+                } else if(dataSetName.find("JESUp") != string::npos && dataSetName.find("tttt") != string::npos) {
+                    writename =
+                        channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + "NP_overlay_ttttNLO" + "__JESUp";
+                } else if(dataSetName.find("JESDown") != string::npos && dataSetName.find("tttt") != string::npos) {
+                    writename =
+                        channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + "NP_overlay_ttttNLO" + "__JESDown";
+                } else if(dataSetName.find("JERUp") != string::npos && dataSetName.find("tttt") != string::npos) {
+                    writename =
+                        channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + "NP_overlay_ttttNLO" + "__JERUp";
+                } else if(dataSetName.find("JERDown") != string::npos && dataSetName.find("tttt") != string::npos) {
+                    writename =
+                        channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + "NP_overlay_ttttNLO" + "__JERDown";
                 } else {
                     writename =
                         channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + dataSetName + "__nominal";
@@ -2936,10 +3178,14 @@ void Split2DatasetPlotter(int nBins,
                         (MEScalesysname + "PUUp").c_str());
                     histo1D[("PU_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
                         (MEScalesysname + "PUDown").c_str());
-                    histo1D[("btag_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                        (MEScalesysname + "btagUp").c_str());
-                    histo1D[("btag_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
-                        (MEScalesysname + "btagDown").c_str());
+                    histo1D[("btag_lightUp" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "btag_lightUp").c_str());
+                    histo1D[("btag_lightDown" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "btag_lightDown").c_str());
+                    histo1D[("btag_heavyUp" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "btag_heavyUp").c_str());
+                    histo1D[("btag_heavyDown" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "btag_heavyDown").c_str());                    
                     histo1D[("heavyFlav_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
                         (MEScalesysname + "heavyFlavUp").c_str());
                     histo1D[("heavyFlav_Down" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
@@ -2947,11 +3193,53 @@ void Split2DatasetPlotter(int nBins,
                     // MSPlot[plotname.c_str()]->setErrorBandFile(MEScaleFileName.c_str()); //set error file for
                     // uncertainty bands on multisample plot
                 }
+                if(dataSetName.find(mainTTbarSample) != string::npos && dataSetName.find("JES") == string::npos &&
+                    dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
+                    cout << "  making weights histos" << endl;
+
+                    // TCanvas *canv0 = new TCanvas();
+                    // histo1D[("Genweight_tt"+numStr).c_str()]->Draw();
+                    histo1D[("Genweight_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        ("Genweight_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+                    // canv0->SaveAs(("Genweight_tt"+numStr+".png").c_str());
+
+                    for(int ii = 1; ii < 9; ii++) {
+                        // TCanvas *canv1 = new TCanvas();
+                        string weightstring = static_cast<ostringstream*>(&(ostringstream() << ii))->str();
+                        string weighthisto =
+                            "weight" + weightstring + "_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2;
+                        // histo1D[weighthisto]->Draw();
+                        histo1D[weighthisto]->Write(
+                            ("weight" + weightstring + "_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str());
+                        // canv1->SaveAs(("weight"+weightstring+"_tt"+numStr+".png").c_str());
+                    }
+                    string MEScalesysname =
+                        channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + "NP_overlay_ttttNLO" + "__";
+
+                    histo1D[("PU_Up_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "PUUp").c_str());
+                    histo1D[("PU_Down_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "PUDown").c_str());
+                    histo1D[("btag_lightUp_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "btag_lightUp").c_str());
+                    histo1D[("btag_lightDown_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "btag_lightDown").c_str());
+                    histo1D[("btag_heavyUp_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "btag_heavyUp").c_str());
+                    histo1D[("btag_heavyDown_tttt" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
+                        (MEScalesysname + "btag_heavyDown").c_str());                    
+
+                    // MSPlot[plotname.c_str()]->setErrorBandFile(MEScaleFileName.c_str()); //set error file for
+                    // uncertainty bands on multisample plot
+                }                
             }
         }
     } // end dataset loop
 
     GetScaleEnvelopeSplit2(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
+        sSplitVar1, fbSplit1, ftSplit1, fwSplit1, sSplitVar2, fbSplit2, ftSplit2, fwSplit2, xmlNom, CraneenPath,
+        shapefileName, mainTTbarSample);
+    GetScaleEnvelopeSplit2_tttt(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
         sSplitVar1, fbSplit1, ftSplit1, fwSplit1, sSplitVar2, fbSplit2, ftSplit2, fwSplit2, xmlNom, CraneenPath,
         shapefileName, mainTTbarSample);
     GetMatchingSplit2(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
@@ -3035,7 +3323,7 @@ void DataCardProducer(string VoI,
             dataSetName.find("DATA") != string::npos || dataSetName.find("JER") != string::npos ||
             dataSetName.find("JES") != string::npos || dataSetName.find("MLM") != string::npos ||
             dataSetName.find("MEScale") != string::npos || dataSetName.find("Scale") != string::npos ||
-            dataSetName.find(otherTTbarsample) != string::npos) {
+            dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         } else {
             MCdatasets.push_back(dataSetName);
@@ -3088,9 +3376,9 @@ void DataCardProducer(string VoI,
             dataSetName.find("DATA") != string::npos) {
             continue;
         } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
-            dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
+            dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos  ) {
             continue;
-        } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+        } else if(dataSetName.find(otherTTbarsample) != string::npos || dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         } else {
             card << dataSetName + "           ";
@@ -3116,7 +3404,7 @@ void DataCardProducer(string VoI,
         } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
             dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
             continue;
-        } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+        } else if(dataSetName.find(otherTTbarsample) != string::npos || dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         } else {
             histoName = channel + "__" + dataSetName + "__nominal";
@@ -3139,7 +3427,7 @@ void DataCardProducer(string VoI,
             dataSetName.find("DATA") != string::npos) {
             continue;
         } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
-            dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
+            dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos || dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         } else if(dataSetName.find("tttt") != string::npos) {
             card << "tttt_norm              lnN          ";
@@ -3403,7 +3691,7 @@ void Split_DataCardProducer(string VoI,
             dataSetName.find("DATA") != string::npos || dataSetName.find("JER") != string::npos ||
             dataSetName.find("JES") != string::npos || dataSetName.find("MLM") != string::npos ||
             dataSetName.find("MEScale") != string::npos || dataSetName.find("Scale") != string::npos ||
-            dataSetName.find(otherTTbarsample) != string::npos) {
+            dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         } else {
             MCdatasets.push_back(dataSetName);
@@ -3469,7 +3757,7 @@ void Split_DataCardProducer(string VoI,
             } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
                 dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
                 continue;
-            } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+            } else if(dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
                 continue;
             } else {
                 card << dataSetName + "           ";
@@ -3500,7 +3788,7 @@ void Split_DataCardProducer(string VoI,
             } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
                 dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
                 continue;
-            } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+            } else if(dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
                 continue;
             } else {
                 histoName = channel + numStr1 + sSplitVar1 + "__" + dataSetName + "__nominal";
@@ -3536,7 +3824,7 @@ void Split_DataCardProducer(string VoI,
         } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
             dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
             continue;
-        } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+        } else if(dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         } else if(dataSetName.find("tttt") != string::npos) {
             card << "tttt_norm              lnN          ";
@@ -3772,7 +4060,7 @@ void Split2_DataCardProducer(string VoI,
             dataSetName.find("DATA") != string::npos || dataSetName.find("JER") != string::npos ||
             dataSetName.find("JES") != string::npos || dataSetName.find("MLM") != string::npos ||
             dataSetName.find("MEScale") != string::npos || dataSetName.find("Scale") != string::npos ||
-            dataSetName.find(otherTTbarsample) != string::npos) {
+            dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         } else {
             MCdatasets.push_back(dataSetName);
@@ -3845,7 +4133,7 @@ void Split2_DataCardProducer(string VoI,
                 } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
                     dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
                     continue;
-                } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+                } else if(dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
                     continue;
                 } else {
                     card << dataSetName + "           ";
@@ -3879,7 +4167,7 @@ void Split2_DataCardProducer(string VoI,
                 } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
                     dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
                     continue;
-                } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+                } else if(dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
                     continue;
                 } else {
                     histoName =
@@ -3915,7 +4203,7 @@ void Split2_DataCardProducer(string VoI,
         } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
             dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos) {
             continue;
-        } else if(dataSetName.find(otherTTbarsample) != string::npos) {
+        } else if(dataSetName.find(otherTTbarsample) != string::npos|| dataSetName.find("TTJets_aMCatNLO")!=string::npos) {
             continue;
         } else if(dataSetName.find("tttt") != string::npos) {
             card << "tttt_norm              lnN          ";
@@ -3957,135 +4245,135 @@ void Split2_DataCardProducer(string VoI,
         }
     }
 
-    card << "MEScale                shape           ";
-    for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+     card << "ttMEScale                shape           ";
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else {
+                 card << "-                  ";
+            }
         }
     }
-    card << "btag                shape           ";
-    for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+    card << "\n";
+    card << "ttttMEScale                shape           ";
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else {
+                 card << "-                  ";
+            }
         }
     }
-
+   card << "\n";
+    card << "btag_light                shape           ";
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
+            }
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
+        }
+    }
+    card << "\n";
+    card << "btag_heavy                shape           ";
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
+            }
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
+        }
+    }
+    card << "\n";
     card << "PU                shape           ";
-    for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
         }
     }
-
+    card << "\n";
     card << "JES                shape           ";
-    for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
         }
     }
-
+    card << "\n";
     card << "JER                shape           ";
-    for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
         }
     }
-
+    card << "\n";
     card << "ttGenerator                shape           ";
-    for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else {
+                 card << "-                  ";
+            }
         }
     }
-
+    card << "\n";
     card << "ScaleH                shape           ";
-    for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else {
+                 card << "-                  ";
+            }
         }
     }
     card.close();
@@ -4101,15 +4389,16 @@ std::string intToStr(int number)
 std::string plotVarNames(string s)
 {
     string rs;
-    // if(s.find("BDT") != std::string::npos)
+    // if(s.find("BDT") != std::string::npos && s.find("trijet") == std::string::npos )
     //     rs = "BDT";
-    if(s.find("nJets") != std::string::npos)
+     if(s.find("nJets") != std::string::npos)
         rs = "N_{j}";
+    else if(s.find("SumJetMass") != std::string::npos)
+        rs = "M^{H}_{Re}";
     else if(s.find("topness") != std::string::npos)
         rs = "BDT_{trijet1}";
-    else if(s.find("angleBestTopAllJet") != std::string::npos)
-        rs = "#Delta#phi_{trijet1-j}";
-
+    else if(s.find("angleBestTopAllJetCorrect") != std::string::npos)
+        rs = "T";
     else if(s.find("BDT_trijet2") != std::string::npos)
         rs = "BDT_{trijet2}";
     else if(s.find("EventSph") != std::string::npos)
@@ -4121,10 +4410,12 @@ std::string plotVarNames(string s)
     else if(s.find("njetW") != std::string::npos)
         rs = "N_{j}^{W}";
     else if(s.find("HT") != std::string::npos && s.find("HTRat") == std::string::npos &&
-        s.find("HTb") == std::string::npos && s.find("HTH") == std::string::npos && s.find("HT2M") == std::string::npos)
+        s.find("HTb") == std::string::npos && s.find("HTH") == std::string::npos  && s.find("HTX") == std::string::npos && s.find("HT2M") == std::string::npos)
         rs = "H_{T}";
     else if(s.find("LeadingLepPt") != std::string::npos)
         rs = "p_{T}^{l1}";
+    else if(s.find("HTX") != std::string::npos)
+        rs = "HT_{X}";
     else if(s.find("LeadingLepEta") != std::string::npos)
         rs = "#eta^{l1}";
     else if(s.find("SubLeadingLepPt") != std::string::npos)

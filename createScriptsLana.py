@@ -24,9 +24,9 @@ date = dd+"_"+mm+"_"+yyyy
 
 
 # pick one of the following
-# channels = ["Mu","El"] 
-# channels = ["Mu"] 
-channels = ["El"] 
+channels = ["Mu","El"] 
+#channels = ["Mu"] 
+#channels = ["El"] 
 #channels=["test"]
 
 
@@ -35,9 +35,9 @@ for chan in channels:
     print "\nSearching list of sample used for ", chan, " channel!"
     # getting the appropriate xml file
     if "Mu" in chan:
-        tree = ET.ElementTree(file='config/output_FullMuonTopTrees76.xml')
+        tree = ET.ElementTree(file='config/output_FullMuonTopTrees76_v3.xml')
     elif "El" in chan:
-        tree = ET.ElementTree(file='config/output_FullElectronTopTrees76.xml')
+        tree = ET.ElementTree(file='config/output_FullElectronTopTrees76_v3.xml')
     elif "test" in chan:
         tree = ET.ElementTree(file='config/test.xml')
     else:
@@ -86,11 +86,11 @@ for chan in channels:
             # setting the number of file per job depending whether it is data sample or not
             # this ca be tweaked
             if "Data" in str(d.attrib['name']):
-                FilePerJob=40
+                FilePerJob=50
             elif "tttt" in str(d.attrib['name']):
                 FilePerJob=1
             else:
-                FilePerJob=4
+                FilePerJob=5
 
             # create a test job for each dataset
             # create a file for this job 
