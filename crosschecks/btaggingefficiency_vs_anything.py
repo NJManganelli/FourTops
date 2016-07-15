@@ -59,20 +59,28 @@ njets_c_tag.SetLineColor(rt.kBlue)
 
 
 
+njetsvspt_b = rt.TH1D("njetsvspt_b","",6,6,12,20,0,500)
+njetsvspt_c = njetsvspt_b.Clone("njetsvspt_c")
+njetsvspt_l = njetsvspt_b.Clone("njetsvspt_l")
+njetsvspt_b_tag = njetsvspt_b.Clone("njetsvspt_b_tag")
+njetsvspt_c_tag = njetsvspt_b.Clone("njetsvspt_c_tag")
+njetsvspt_l_tag = njetsvspt_b.Clone("njetsvspt_l_tag")
 
 
-filenames=["/user/lbeck/CMSSW_7_6_3/src/V3/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2016/CraneenJets_TTJets_powheg_norm_*.root"]
-           
-           #"/user/lbeck/CMSSW_7_6_3/src/V3/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2016/CraneenJets_ttttNLO_Run2_TopTree_Study_*.root"]
+
+
+filenames=[["/user/lbeck/CMSSW_7_6_3/src/V3/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2016/CraneenJets_TTJets_powheg_norm_*.root","ttbar"],["/user/lbeck/CMSSW_7_6_3/src/V3/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2016/CraneenJets_ttttNLO_Run2_TopTree_Study_*.root","tttt"]]
 
 lv2 = rt.TLorentzVector(0,0,0,0)
-mediumcut=0.79
+mediumcut=0.800
 lvarray=[]
 idarray=[]
 tagarray=[]
+
 for filename in filenames :
     ch = rt.TChain("Craneen__Mu")
-    ch.Add(filename)
+    print filename[0] , filename[1]
+    ch.Add(filename[0])
     #ch.Print()
     #event loop
     newevent=0
@@ -84,27 +92,40 @@ for filename in filenames :
             newevent=1
             #            print tagarray
             # worker part of loop:
+            ntags=0
             for ii in range(0,len(lvarray)) :
-                if lvarray[ii].Pt() < 50 :
+                if tagarray[ii] == 1:
+                    ntags+=1
+                
+                if ntags < 2 :
+                    continue
+            
+                if lvarray[ii].Pt() < 40 :
                     continue
                 if lvarray[ii].Pt() > 60 :
                     continue
                 if abs(lvarray[ii].Eta()) > 0.5 :
                     continue
-                
+
                 njets=len(lvarray)
                 if idarray[ii]==5 :
                     njets_b.Fill(njets)
+                    njetsvspt_b.Fill(njets,lvarray[ii].Pt())
                     if tagarray[ii] == 1 :
                         njets_b_tag.Fill(njets)
+                        njetsvspt_b_tag.Fill(njets,lvarray[ii].Pt())
                 elif idarray[ii]==4 :
                     njets_c.Fill(njets)
+                    njetsvspt_c.Fill(njets,lvarray[ii].Pt())
                     if tagarray[ii] == 1 :
                         njets_c_tag.Fill(njets)
+                        njetsvspt_c_tag.Fill(njets,lvarray[ii].Pt())
                 else :
                     njets_l.Fill(njets)
+                    njetsvspt_l.Fill(njets,lvarray[ii].Pt())
                     if tagarray[ii] == 1 :
                         njets_l_tag.Fill(njets)
+                        njetsvspt_l_tag.Fill(njets,lvarray[ii].Pt())
 
                 for jj in range(0,len(lvarray)) :
                     if ii== jj :
@@ -112,6 +133,9 @@ for filename in filenames :
                     
                     #                    print ii,jj,lvarray[ii].DeltaR(lvarray[jj]),lvarray[ii].Phi(),lvarray[jj].Phi(),lvarray[ii].Eta(),lvarray[jj].Eta(),tagarray[ii],tagarray[jj],idarray[ii],idarray[jj]
                     workval=lvarray[ii].DeltaR(lvarray[jj])
+                    if workval < 0.4:
+                        continue
+                    
                     if idarray[ii]==5 :
                         deltaR_b.Fill(workval)
                         if tagarray[ii] == 1 :
@@ -143,89 +167,91 @@ for filename in filenames :
 #        print ev.jetpT
 
 
-canvas = rt.TCanvas("c2","c2",50,50,W,H)
-canvas.SetFillColor(0)
-canvas.SetBorderMode(0)
-canvas.SetFrameFillStyle(0)
-canvas.SetFrameBorderMode(0)
-canvas.SetLeftMargin( L/W )
-canvas.SetRightMargin( R/W )
-canvas.SetTopMargin( T/H )
-canvas.SetBottomMargin( B/H )
-canvas.SetTickx(0)
-canvas.SetTicky(0)
+    canvas = rt.TCanvas("c2","c2",50,50,W,H)
+    canvas.SetFillColor(0)
+    canvas.SetBorderMode(0)
+    canvas.SetFrameFillStyle(0)
+    canvas.SetFrameBorderMode(0)
+    canvas.SetLeftMargin( L/W )
+    canvas.SetRightMargin( R/W )
+    canvas.SetTopMargin( T/H )
+    canvas.SetBottomMargin( B/H )
+    canvas.SetTickx(0)
+    canvas.SetTicky(0)
 
-#deltaR_b.Draw()
-#deltaR_b_tag.Draw("same")
-deltaR_b_eff = rt.TEfficiency(deltaR_b_tag,deltaR_b)
-deltaR_b_eff.SetLineColor(deltaR_b.GetLineColor())
-deltaR_b_eff.SetMarkerColor(deltaR_b.GetLineColor())
-deltaR_frame.SetMinimum(0.0)
-deltaR_frame.SetMaximum(1.05)
-deltaR_frame.SetXTitle("DeltaR(tag jet,other jet)")
-deltaR_frame.SetYTitle("efficiency")
-deltaR_frame.Draw("axis")
-deltaR_b_eff.Draw("same")
+    #deltaR_b.Draw()
+    #deltaR_b_tag.Draw("same")
+    deltaR_b_eff = rt.TEfficiency(deltaR_b_tag,deltaR_b)
+    deltaR_b_eff.SetLineColor(deltaR_b.GetLineColor())
+    deltaR_b_eff.SetMarkerColor(deltaR_b.GetLineColor())
+    deltaR_frame.SetMinimum(0.0)
+    deltaR_frame.SetMaximum(1.05)
+    deltaR_frame.SetXTitle("DeltaR(tag jet,other jet)")
+    deltaR_frame.SetYTitle("efficiency")
+    deltaR_frame.Draw("axis")
+    deltaR_b_eff.Draw("same")
 
-deltaR_c_eff = rt.TEfficiency(deltaR_c_tag,deltaR_c)
-deltaR_c_eff.SetLineColor(deltaR_c.GetLineColor())
-deltaR_c_eff.SetMarkerColor(deltaR_c.GetLineColor())
-deltaR_c_eff.Draw("same")
-deltaR_l_eff = rt.TEfficiency(deltaR_l_tag,deltaR_l)
-deltaR_l_eff.SetLineColor(deltaR_l.GetLineColor())
-deltaR_l_eff.SetMarkerColor(deltaR_l.GetLineColor())
-deltaR_l_eff.Draw("same")
+    deltaR_c_eff = rt.TEfficiency(deltaR_c_tag,deltaR_c)
+    deltaR_c_eff.SetLineColor(deltaR_c.GetLineColor())
+    deltaR_c_eff.SetMarkerColor(deltaR_c.GetLineColor())
+    deltaR_c_eff.Draw("same")
+    deltaR_l_eff = rt.TEfficiency(deltaR_l_tag,deltaR_l)
+    deltaR_l_eff.SetLineColor(deltaR_l.GetLineColor())
+    deltaR_l_eff.SetMarkerColor(deltaR_l.GetLineColor())
+    deltaR_l_eff.Draw("same")
 
-leg = rt.TLegend(0.2,0.8,0.9,0.95)
-leg.SetBorderSize(0)
-leg.SetHeader("#mu + 6 jets")
-leg.AddEntry(deltaR_b_eff,"b quark jets","lp")
-leg.AddEntry(deltaR_c_eff,"c quark jets","lp")
-leg.AddEntry(deltaR_l_eff,"l quark jets","lp")
-leg.Draw("same")
+    leg = rt.TLegend(0.2,0.8,0.9,0.95)
+    leg.SetBorderSize(0)
+    leg.SetHeader("#mu + 6 jets, "+filename[1])
+    leg.AddEntry(deltaR_b_eff,"b quark jets","lp")
+    leg.AddEntry(deltaR_c_eff,"c quark jets","lp")
+    leg.AddEntry(deltaR_l_eff,"l quark jets","lp")
+    leg.Draw("same")
 
-canvas.Modified()
+    canvas.Modified()
+    canvas.Print("jet_dR_"+filename[1]+".root")
 
-canvas2 = rt.TCanvas("c2","c2",50,50,W,H)
-canvas2.SetFillColor(0)
-canvas2.SetBorderMode(0)
-canvas2.SetFrameFillStyle(0)
-canvas2.SetFrameBorderMode(0)
-canvas2.SetLeftMargin( L/W )
-canvas2.SetRightMargin( R/W )
-canvas2.SetTopMargin( T/H )
-canvas2.SetBottomMargin( B/H )
-canvas2.SetTickx(0)
-canvas2.SetTicky(0)
+    canvas2 = rt.TCanvas("c2","c2",50,50,W,H)
+    canvas2.SetFillColor(0)
+    canvas2.SetBorderMode(0)
+    canvas2.SetFrameFillStyle(0)
+    canvas2.SetFrameBorderMode(0)
+    canvas2.SetLeftMargin( L/W )
+    canvas2.SetRightMargin( R/W )
+    canvas2.SetTopMargin( T/H )
+    canvas2.SetBottomMargin( B/H )
+    canvas2.SetTickx(0)
+    canvas2.SetTicky(0)
 
-njets_b_eff = rt.TEfficiency(njets_b_tag,njets_b)
-njets_b_eff.SetLineColor(njets_b.GetLineColor())
-njets_b_eff.SetMarkerColor(njets_b.GetLineColor())
-njets_frame.SetMinimum(0.0)
-njets_frame.SetMaximum(1.05)
-njets_frame.SetXTitle("jet multiplicity")
-njets_frame.SetYTitle("efficiency")
-njets_frame.Draw("axis")
-njets_b_eff.Draw("same")
+    njets_b_eff = rt.TEfficiency(njets_b_tag,njets_b)
+    njets_b_eff.SetLineColor(njets_b.GetLineColor())
+    njets_b_eff.SetMarkerColor(njets_b.GetLineColor())
+    njets_frame.SetMinimum(0.0)
+    njets_frame.SetMaximum(1.05)
+    njets_frame.SetXTitle("jet multiplicity")
+    njets_frame.SetYTitle("efficiency")
+    njets_frame.Draw("axis")
+    njets_b_eff.Draw("same")
 
-njets_c_eff = rt.TEfficiency(njets_c_tag,njets_c)
-njets_c_eff.SetLineColor(njets_c.GetLineColor())
-njets_c_eff.SetMarkerColor(njets_c.GetLineColor())
-njets_c_eff.Draw("same")
-njets_l_eff = rt.TEfficiency(njets_l_tag,njets_l)
-njets_l_eff.SetLineColor(njets_l.GetLineColor())
-njets_l_eff.SetMarkerColor(njets_l.GetLineColor())
-njets_l_eff.Draw("same")
+    njets_c_eff = rt.TEfficiency(njets_c_tag,njets_c)
+    njets_c_eff.SetLineColor(njets_c.GetLineColor())
+    njets_c_eff.SetMarkerColor(njets_c.GetLineColor())
+    njets_c_eff.Draw("same")
+    njets_l_eff = rt.TEfficiency(njets_l_tag,njets_l)
+    njets_l_eff.SetLineColor(njets_l.GetLineColor())
+    njets_l_eff.SetMarkerColor(njets_l.GetLineColor())
+    njets_l_eff.Draw("same")
 
-leg2 = rt.TLegend(0.2,0.8,0.9,0.95)
-leg2.SetBorderSize(0)
-leg2.SetHeader("#mu + 6 jets")
-leg2.AddEntry(deltaR_b_eff,"b quark jets","lp")
-leg2.AddEntry(deltaR_c_eff,"c quark jets","lp")
-leg2.AddEntry(deltaR_l_eff,"l quark jets","lp")
-leg2.Draw("same")
+    leg2 = rt.TLegend(0.2,0.8,0.9,0.95)
+    leg2.SetBorderSize(0)
+    leg2.SetHeader("#mu + 6 jets, "+filename[1])
+    leg2.AddEntry(deltaR_b_eff,"b quark jets","lp")
+    leg2.AddEntry(deltaR_c_eff,"c quark jets","lp")
+    leg2.AddEntry(deltaR_l_eff,"l quark jets","lp")
+    leg2.Draw("same")
 
-canvas2.Modified()
+    canvas2.Modified()
+    canvas2.Print("jet_multiplicity_"+filename[1]+".root")
 
 
 raw_input("Press Enter to Continue: ")
