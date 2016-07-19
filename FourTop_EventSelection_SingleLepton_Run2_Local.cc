@@ -47,7 +47,7 @@
 #include "TopTreeAnalysisBase/Reconstruction/interface/JetCorrectionUncertainty.h"
 #include "TopTreeAnalysisBase/Reconstruction/interface/MakeBinning.h"
 #include "TopTreeAnalysisBase/MCInformation/interface/LumiReWeighting.h"
-#include "TopTreeAnalysisBase/MCInformation/interface/JetPartonMatching.h"
+#include "TopTreeAnalysisBase/MCInformation/interface/JethadronMatching.h"
 #include "TopTreeAnalysisBase/Reconstruction/interface/MEzCalculator.h"
 #include "TopTreeAnalysisBase/Tools/interface/LeptonTools.h"
 #include "TopTreeAnalysisBase/Tools/interface/SourceDate.h"
@@ -472,7 +472,7 @@ int main (int argc, char *argv[])
     MuonSFWeight* muonSFWeightIso_TT;
     MuonSFWeight* muonSFWeightTrigC_TT;
     MuonSFWeight* muonSFWeightTrigD1_TT;
-    MuonSFWeight* muonSFWeightTrigD2_TT;
+    MuonSFWeight* muonSFWeightTrigD2_TT;    
 
 
     ElectronSFWeight* electronSFWeight; 
@@ -658,6 +658,18 @@ int main (int argc, char *argv[])
     //                                      Loop on datasets                                       //
     //                                                                                             //
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    int whatnumberb = 0;
+    int whatnumberb2 = 0;
+    int whatnumberbReco = 0;
+    int whatnumberb_20 = 0;
+    int whatnumberb2_20 = 0;
+    int whatnumberb2Reco = 0;
+
+    int whatnumberll = 0;
+    int whatnumberll_20 = 0;
+    int whatnumberllReco = 0;
+
     cout << " - Loop over datasets ... " << datasets.size () << " datasets !" << endl;
     for (unsigned int d = 0; d < datasets.size(); d++)
     {
@@ -784,13 +796,15 @@ int main (int argc, char *argv[])
             ":leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJet1:csvJet2:csvJet3:csvJet4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4:anglebjet1bjet2:angleBestTopAllJet:angleBestTopAllJetCorrect"
             ":bestTopPt:geoMeanJet5and6Pt:Sphericity:Oblateness:Aplanarity:h10:h20:h30:h40:h50:h60:ht:ht3:et0:sqrts:njetW:njetW105:njetW115:njetW135:njetW145:njetW160:et56:centrality:nLtagsExcl:nMtagsExcl:HTbLoose:HTbTight"
             ":btagWeightCSVLFUp:btagWeightCSVLFDown:btagWeightCSVHFUp:btagWeightCSVHFDown:btagWeightCSVHFStats1Up:btagWeightCSVHFStats1Down:btagWeightCSVHFStats2Up:btagWeightCSVHFStats2Down:btagWeightCSVLFStats1Up:"
-            "btagWeightCSVLFStats1Down:btagWeightCSVLFStats2Up:btagWeightCSVLFStats2Down:btagWeightCSVCFErr1Up:btagWeightCSVCFErr1Down:btagWeightCSVCFErr2Up:btagWeightCSVCFErr2Down:SFalphaTune");
+            "btagWeightCSVLFStats1Down:btagWeightCSVLFStats2Up:btagWeightCSVLFStats2Down:btagWeightCSVCFErr1Up:btagWeightCSVCFErr1Down:btagWeightCSVCFErr2Up:btagWeightCSVCFErr2Down:SFalphaTune:fTrigetap8Pt35:fTrigetap8Pt40:"
+            "fTrigetap8Pt50:fTrigetap8Pt60:fTrigetap8Pt100:fTrigeta1p4Pt35:fTrigeta1p4Pt40:fTrigeta1p4Pt50:fTrigeta1p4Pt60:fTrigeta1p4Pt100:fTrigeta1p6Pt35:fTrigeta1p6Pt40:fTrigeta1p6Pt50:fTrigeta1p6Pt60:"
+            "fTrigeta1p6Pt100:fTrigeta2Pt35:fTrigeta2Pt40:fTrigeta2Pt50:fTrigeta2Pt60:fTrigeta2Pt100:fTrigeta2p58Pt35:fTrigeta2p58Pt40:fTrigeta2p58Pt50:fTrigeta2p58Pt60:fTrigeta2p58Pt100");
 
-
-
+    cout<<"created tups"<<endl;
         string Ntupjetname = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenJets_" + dataSetName + postfix + ".root";
         TFile * tupjetfile = new TFile(Ntupjetname.c_str(),"RECREATE");
-        TNtuple * tupjet   = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "jetpT:csvDisc:jeteta:jetphi:jetLeptDR:ScaleFactor:NormFactor:Luminosity:SFlepton:SFbtag:SFPU:GenWeight");
+        TNtuple * tupjet   = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "lep_E:lep_Px:lep_Py:lep_Pz:eventID:nJets:jetpT:jetPx:jetPy:jetPz:jetE:jetFlav:csvDisc:jeteta:jetphi:jetLeptDR:ScaleFactor:NormFactor:Luminosity:SFlepton:SFbtag:SFbtag_light:SFbtag_lightUp:SFbtag_lightDown"
+            ":SFbtag_heavy:SFbtag_heavyUp:SFbtag_heavyDown:SFPU:GenWeight");
         
         string NtupZname   = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenZ_" + dataSetName + postfix + ".root";
         TFile * tupZfile   = new TFile(NtupZname.c_str(),"RECREATE");
@@ -836,6 +850,7 @@ int main (int argc, char *argv[])
         vector<TRootJet*>      selectedTBJets; //CSVT btags
         vector<TRootJet*>      selectedLightJets;
         int iFile2 = -1;
+        cout<<"setting branch addresses"<<endl;
         datasets[d]->runTree()->SetBranchStatus("runInfos*",1);
         datasets[d]->runTree()->SetBranchAddress("runInfos",&runInfos);
         if (dataSetName.find("Data")!=string::npos || dataSetName.find("data")!=string::npos || dataSetName.find("DATA")!=string::npos) TrainMVA=false;
@@ -900,6 +915,7 @@ int main (int argc, char *argv[])
             //sort(genjets.begin(),genjets.end(),HighestPt()); // HighestPt() is included from the Selection class
             }
             // cout<<"macro genjets: "<<genjets.size()<<endl;
+
             float rho = event->fixedGridRhoFastjetAll();        if (debug)cout <<"Rho: " << rho <<endl;
 
 
@@ -1177,12 +1193,12 @@ int main (int argc, char *argv[])
                         float jeteta = selectedJets[jetbtag]->Eta();
                         float jetdisc = selectedJets[jetbtag]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
                         BTagEntry::JetFlavor jflav;
-                        int jetpartonflav = std::abs(selectedJets[jetbtag]->partonFlavour());
-                        if(debug) cout<<"parton flavour: "<<jetpartonflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
-                        if(jetpartonflav == 5){
+                        int jethadronflav = std::abs(selectedJets[jetbtag]->hadronFlavour());
+                        if(debug) cout<<"hadron flavour: "<<jethadronflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
+                        if(jethadronflav == 5){
                             jflav = BTagEntry::FLAV_B;
                         }
-                        else if(jetpartonflav == 4){
+                        else if(jethadronflav == 4){
                             jflav = BTagEntry::FLAV_C;
                         }
                         else{
@@ -1243,27 +1259,16 @@ int main (int argc, char *argv[])
             // {
             //     cout<<"btagweight: "<<btagWeight<<endl;
             // }
-            float bTagEff_LFUp;
-            float bTagEff_LFDown;
-            float bTagEff_HFUp;
-            float bTagEff_HFDown;
-            float bTagEff_HFStats1Up;
-            float bTagEff_HFStats1Down;
-            float bTagEff_HFStats2Up;
-            float bTagEff_HFStats2Down;
-            float bTagEff_LFStats1Up;
-            float bTagEff_LFStats1Down;
-            float bTagEff_LFStats2Up;
-            float bTagEff_LFStats2Down;
-            float bTagEff_CFErr1Up;
-            float bTagEff_CFErr1Down;
-            float bTagEff_CFErr2Up;
-            float bTagEff_CFErr2Down;
+
             ////csv discriminator reweighting
             // float TotalCSVbtagweight=1;
             if(bTagCSVReweight && !isData){
             //get btag weight info
                 for(int jetbtag = 0; jetbtag<selectedJets.size(); jetbtag++){
+                    float bTagEff_LFUp, bTagEff_LFDown, bTagEff_HFUp, bTagEff_HFDown, bTagEff_HFStats1Up, bTagEff_HFStats1Down, bTagEff_HFStats2Up,
+                    bTagEff_HFStats2Down, bTagEff_LFStats1Up, bTagEff_LFStats1Down, bTagEff_LFStats2Up, bTagEff_LFStats2Down, bTagEff_CFErr1Up, 
+                    bTagEff_CFErr1Down, bTagEff_CFErr2Up, bTagEff_CFErr2Down;
+
                     float jetpt = selectedJets[jetbtag]->Pt();
                     float jeteta = selectedJets[jetbtag]->Eta();
                     float jetdisc = selectedJets[jetbtag]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
@@ -1273,13 +1278,13 @@ int main (int argc, char *argv[])
                     if(jetdisc<0.0) jetdisc = -0.05;
                     if(jetdisc>1.0) jetdisc = 1.0;
                     BTagEntry::JetFlavor jflav;
-                    int jetpartonflav = std::abs(selectedJets[jetbtag]->partonFlavour());
-                    if(debug) cout<<"parton flavour: "<<jetpartonflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
-                    if(jetpartonflav == 5){
+                    int jethadronflav = std::abs(selectedJets[jetbtag]-hadronFlavour());
+                    if(debug) cout<<"hadron flavour: "<<jethadronflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
+                    if(jethadronflav == 5){
                         jflav = BTagEntry::FLAV_B;
                         isBFlav =true;
                     }
-                    else if(jetpartonflav == 4){
+                    else if(jethadronflav == 4){
                         jflav = BTagEntry::FLAV_C;
                         isCFlav=true;
                     }
@@ -1476,6 +1481,133 @@ int main (int argc, char *argv[])
             MSPlot["NbOfVertices"]->Fill(vertex.size(), datasets[d], true, Luminosity*scaleFactor);
             if (!isGoodPV) continue; // Check that there is a good Primary Vertex
 
+            //make efficiencies
+            float fTrigetap8Pt35 = 0, fTrigetap8Pt40 = 0, fTrigetap8Pt50 = 0, fTrigetap8Pt60 = 0, fTrigetap8Pt100 = 0, fTrigeta1p4Pt35 = 0, fTrigeta1p4Pt40 = 0, 
+            fTrigeta1p4Pt50 = 0, fTrigeta1p4Pt60 = 0, fTrigeta1p4Pt100 = 0, fTrigeta1p6Pt35 = 0, fTrigeta1p6Pt40 = 0, fTrigeta1p6Pt50 = 0, fTrigeta1p6Pt60 = 0,
+             fTrigeta1p6Pt100 = 0, fTrigeta2Pt35 = 0, fTrigeta2Pt40 = 0, fTrigeta2Pt50 = 0, fTrigeta2Pt60 = 0, fTrigeta2Pt100 = 0, fTrigeta2p5Pt35 = 0, fTrigeta2p5Pt40 = 0,
+              fTrigeta2p5Pt50 = 0, fTrigeta2p5Pt60 = 0, fTrigeta2p5Pt100 = 0;
+
+
+
+            if(Electron){
+                if(abs(selectedElectrons[0]->Eta())<0.8){
+                    if(selectedElectrons[0]->Pt()<35){
+                        if(trigged) fTrigetap8Pt35=1;
+                        else fTrigetap8Pt35=2;
+                    }
+
+                    else if(selectedElectrons[0]->Pt()<40){
+                        if(trigged) fTrigetap8Pt40=1;
+                        else fTrigetap8Pt40=2;
+
+                    }
+                    else if(selectedElectrons[0]->Pt()<50){
+                        if(trigged) fTrigetap8Pt50=1;
+                        else fTrigetap8Pt50=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<60){
+                        if(trigged) fTrigetap8Pt60=1;
+                        else fTrigetap8Pt60=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<100){
+                        if(trigged) fTrigetap8Pt100=1;
+                        else fTrigetap8Pt100=2;
+                    }                                                                            
+                }
+                else if(abs(selectedElectrons[0]->Eta())<1.4){
+                    if(selectedElectrons[0]->Pt()<35){
+                        if(trigged) fTrigeta1p4Pt35=1;
+                        else fTrigeta1p4Pt35=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<40){
+                        if(trigged) fTrigeta1p4Pt40=1;
+                        else fTrigeta1p4Pt40=2;
+
+                    }
+                    else if(selectedElectrons[0]->Pt()<50){
+                        if(trigged) fTrigeta1p4Pt50=1;
+                        else fTrigeta1p4Pt50=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<60){
+                        if(trigged) fTrigeta1p4Pt60=1;
+                        else fTrigeta1p4Pt60=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<100){
+                        if(trigged) fTrigeta1p4Pt100=1;
+                        else fTrigeta1p4Pt100=2;
+                    }                                                                          
+                } 
+                else if(abs(selectedElectrons[0]->Eta())<1.6){
+                    if(selectedElectrons[0]->Pt()<35){
+                        if(trigged) fTrigeta1p6Pt35=1;
+                        else fTrigeta1p6Pt35=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<40){
+                        if(trigged) fTrigeta1p6Pt40=1;
+                        else fTrigeta1p6Pt40=2;
+
+                    }
+                    else if(selectedElectrons[0]->Pt()<50){
+                        if(trigged) fTrigeta1p6Pt50=1;
+                        else fTrigeta1p6Pt50=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<60){
+                        if(trigged) fTrigeta1p6Pt60=1;
+                        else fTrigeta1p6Pt60=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<100){
+                        if(trigged) fTrigeta1p6Pt100=1;
+                        else fTrigeta1p6Pt100=2;
+                    }                                                                          
+                }
+                else if(abs(selectedElectrons[0]->Eta())<2){
+                    if(selectedElectrons[0]->Pt()<35){
+                        if(trigged) fTrigeta2Pt35=1;
+                        else fTrigeta2Pt35=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<40){
+                        if(trigged) fTrigeta2Pt40=1;
+                        else fTrigeta2Pt40=2;
+
+                    }
+                    else if(selectedElectrons[0]->Pt()<50){
+                        if(trigged) fTrigeta2Pt50=1;
+                        else fTrigeta2Pt50=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<60){
+                        if(trigged) fTrigeta2Pt60=1;
+                        else fTrigeta2Pt60=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<100){
+                        if(trigged) fTrigeta2Pt100=1;
+                        else fTrigeta2Pt100=2;
+                    }
+                } 
+                else if(abs(selectedElectrons[0]->Eta())<2.5){
+                    if(selectedElectrons[0]->Pt()<35){
+                        if(trigged) fTrigeta2p5Pt35=1;
+                        else fTrigeta2p5Pt35=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<40){
+                        if(trigged) fTrigeta2p5Pt40=1;
+                        else fTrigeta2p5Pt40=2;
+
+                    } 
+                    else if(selectedElectrons[0]->Pt()<50){
+                        if(trigged) fTrigeta2p5Pt50=1;
+                        else fTrigeta2p5Pt50=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<60){
+                        if(trigged) fTrigeta2p5Pt60=1;
+                        else fTrigeta2p5Pt60=2;
+                    }
+                    else if(selectedElectrons[0]->Pt()<100){
+                        if(trigged) fTrigeta2p5Pt100=1;
+                        else fTrigeta2p5Pt100=2;
+                    }
+                } 
+            }
+
             /////////////////////////////////
             //        Trigger              //
             /////////////////////////////////            
@@ -1506,7 +1638,57 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //                                                                                 Baseline Event selection                                                                      //
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            float numOfbb = 0;
+            float numofllGen = 0;
+            float numOfbb_20 = 0;
+            float numofllGen_20 = 0;            
+            float numOfbbReco= 0;
+            float numofllReco = 0;
 
+            for (int gj = 0; gj<genjets.size(); gj++){
+                //cout<<"gj: "<<gj<<"constit: "<<genjets[gj]->nConstituents()<<"  BHad:"<<genjets[gj]->BHadron().Et()<<"  Bhad part: "<<genjets[gj]->type()<<endl;
+                if (genjets[gj]->BHadron().Et()>0){
+                    if(genjets[gj]->Pt()>30 && abs(genjets[gj]->Eta()<2.5))  numOfbb++;
+                }
+                if (genjets[gj]->Pt()>30 && abs(genjets[gj]->Eta()<2.5)) numofllGen++;
+                if (genjets[gj]->BHadron().Et()>0){
+                    if(genjets[gj]->Pt()>20 && abs(genjets[gj]->Eta()<2.5))  numOfbb_20++;
+                }
+                if (genjets[gj]->Pt()>20 && abs(genjets[gj]->Eta()<2.5)) numofllGen_20++;
+            }
+
+            for( int selj = 0; selj < selectedJets.size(); selj++){
+                if (abs(selectedJets[selj]->hadronFlavour()) == 5 ) numOfbbReco++ ;
+                numofllReco++;
+            }
+            if(numofllGen>=4){
+                whatnumberll++;
+            }
+            if(numofllGen_20>=4){
+                whatnumberll_20++;
+            }
+            if(numofllReco>=4){
+                whatnumberllReco++;
+            }
+
+            if(numOfbb>2){
+                whatnumberb2++;
+            }      
+            if(numOfbb>3){
+                whatnumberb++;
+            }
+            if(numOfbb_20>2){
+                whatnumberb2_20++;
+            }      
+            if(numOfbb_20>3){
+                whatnumberb_20++;
+            }
+            if(numOfbbReco>2){
+                whatnumberb2Reco++;
+            }
+            if(numOfbbReco>3){
+                whatnumberbReco++;
+            }
             if (Muon)
             {   
                 if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6  && nMtags >=2)) )continue; // Muon Channel Selection
@@ -1528,53 +1710,58 @@ int main (int argc, char *argv[])
             }
             passed++;
 
-
             /////////////////////////////////////////////////
             //           heavy flav  reweighting           //
             /////////////////////////////////////////////////
-            float numOfbb = 0;
+            // float numOfbb = 0;
             float numOfcc = 0;
             float numOfll = 0;
+            float numberofbtops = 0;
+            float numberofctops = 0;
             float ttbar_flav = -1;
             vector<TRootMCParticle*> mcParticles_flav;
             // TRootGenEvent* genEvt_flav = 0;
-            if(dataSetName.find("TTJets")!=string::npos|| dataSetName.find("TTScale")!=string::npos){
-                // genEvt_flav = treeLoader.LoadGenEvent(ievt,false);
-                treeLoader.LoadMCEvent(ievt, 0, mcParticles_flav,false);
-                for(unsigned int p=0; p<mcParticles_flav.size(); p++) {
-                    //cout<<"status: "<<mcParticles_flav[p]->status()<<"  id: "<<mcParticles_flav[p]->type()<<" mother: "<<mcParticles_flav[p]->motherType()<<endl;
-                    if(mcParticles_flav[p]->status()<30 && mcParticles_flav[p]->status()>20 && abs(mcParticles_flav[p]->motherType())!=6){
+            // if(dataSetName.find("TTJets")!=string::npos|| dataSetName.find("TTScale")!=string::npos){
+            //     // genEvt_flav = treeLoader.LoadGenEvent(ievt,false);
+            //     treeLoader.LoadMCEvent(ievt, 0, mcParticles_flav,false);
+            //     for(unsigned int p=0; p<mcParticles_flav.size(); p++) {
+            //         // cout<<"status: "<<mcParticles_flav[p]->status()<<"  id: "<<mcParticles_flav[p]->type()<<" mother: "<<mcParticles_flav[p]->motherType()<<endl;
+            //         // if(mcParticles_flav[p]->status()<30 && mcParticles_flav[p]->status()>20 && abs(mcParticles_flav[p]->motherType())!=6){
 
-                        if (abs(mcParticles_flav[p]->type())==5)
-                        {
-                            // ttbar_flav=2;
-                            numOfbb++;  
-                        }
+            //         //     if (abs(mcParticles_flav[p]->type())==5)
+            //         //     {
+            //         //         // ttbar_flav=2;
+            //         //         numOfbb++;  
+            //         //     }
                         
-                        else if (abs(mcParticles_flav[p]->type())==4 && abs(mcParticles_flav[p]->motherType())!=5 && abs(mcParticles_flav[p]->motherType())!=24)
-                        {
-                            // ttbar_flav=1;
-                            numOfcc++; 
-                        }
+            //         //     else if (abs(mcParticles_flav[p]->type())==4 && abs(mcParticles_flav[p]->motherType())!=5 && abs(mcParticles_flav[p]->motherType())!=24)
+            //         //     {
+            //         //         // ttbar_flav=1;
+            //         //         numOfcc++; 
+            //         //     }
                         
-                        else if (abs(mcParticles_flav[p]->type())<4){
-                            // ttbar_flav=1;
-                            numOfll++; 
-                        }
-                    }
+            //         //     else if (abs(mcParticles_flav[p]->type())<4){
+            //         //         // ttbar_flav=1;
+            //         //         numOfll++; 
+            //         //     }
+            //         // }
+            //         if (abs(mcParticles_flav[p]->type())==5){
+            //              if(abs(mcParticles_flav[p]->motherType())!=6 && mcParticles_flav[p]->status()==71){
+            //                 // numberofbtops++;
+            //                 numOfbb++;
+            //              }
+            //         }
+            //         else if (abs(mcParticles_flav[p]->type())==4){
+            //             if(mcParticles_flav[p]->status()==71){
+            //                 if(abs(mcParticles_flav[p]->motherType())!=5 && abs(mcParticles_flav[p]->motherType())!=24) numOfcc++;
+            //                  // numberofctops++;
+            //                 // else if (abs(mcParticles_flav[p]->motherType())==24) numberofctops++;
+            //             }
+            //         }
+            //     }
+            // } 
 
-                }
-            } 
 
-            if(numOfbb>=2){
-                ttbar_flav = 2;
-            }
-            else if(numOfcc>=2){
-                ttbar_flav = 1;
-            }
-            else{
-                ttbar_flav = 0;
-            }
 
             //temporary to calculate heavy flav 
 
@@ -1833,21 +2020,60 @@ int main (int argc, char *argv[])
             //    Jet variables + jet craneen         //
             ////////////////////////////////////////////
             tupjetfile->cd();
+            float numberofbs = 0;
+            float numberofcs = 0;
+            float numberofls = 0;
             for (Int_t seljet1 =0; seljet1 < selectedJets.size(); seljet1++ )
             {
                 float jeteta = selectedJets[seljet1]->Eta();
                 float jetphi = selectedJets[seljet1]->Phi();
                 float csvDisc = selectedJets[seljet1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();
                 float jetpT = selectedJets[seljet1]->Pt();
+                float jetE = selectedJets[seljet1]->E();
+                float jetPx = selectedJets[seljet1]->Px();
+                float jetPy = selectedJets[seljet1]->Py();
+                float jetPz = selectedJets[seljet1]->Pz();
+
                 float jetLepDR = 0;
+                float fleptonE=0,fleptonPx=0,fleptonPy=0,fleptonPz=0;
                 if (Muon){
                     jetLepDR = selectedJets[seljet1]->DeltaR(*selectedMuons[0]);
+                    fleptonE = selectedMuons[0]->E();
+                    fleptonPx = selectedMuons[0]->Px();
+                    fleptonPy = selectedMuons[0]->Py();
+                    fleptonPz = selectedMuons[0]->Pz();
                 }
                 else if (Electron){
                     jetLepDR = selectedJets[seljet1]->DeltaR(*selectedElectrons[0]);
+                    fleptonE = selectedElectrons[0]->E();
+                    fleptonPx = selectedElectrons[0]->Px();
+                    fleptonPy = selectedElectrons[0]->Py();
+                    fleptonPz = selectedElectrons[0]->Pz();
                 }
-                float jetvals[12] = {jetpT,csvDisc,jeteta,jetphi,jetLepDR,scaleFactor,normfactor,Luminosity, fleptonSF, btagWeight_light*btagWeight_heavy, lumiWeight, weight_0};//SFlepton:SFbtag:SFPU:GenWeight
+                float fJetFlav = selectedJets[seljet1]->hadronFlavour();
+                // cout<<"jetflav : "<<fJetflav<<endl;
+                if(fJetFlav==5) numberofbs++;
+                else if (fJetFlav==4) numberofcs++;
+                else numberofls++;
+                float fEventNumber = event->eventId();
+                float jetvals[29] = {fleptonE,fleptonPx,fleptonPy,fleptonPz,fEventNumber,nJets,jetpT,jetPx,jetPy,jetPz,jetE,fJetFlav,csvDisc,jeteta,jetphi,jetLepDR,scaleFactor,normfactor,Luminosity, fleptonSF, btagWeight,btagWeight_light,btagWeight_lightUp,btagWeight_lightDown,btagWeight_heavy,btagWeight_heavyUp,btagWeight_heavyDown,lumiWeight, weight_0};//SFlepton:SFbtag:SFPU:GenWeight
                 tupjet->Fill(jetvals);
+            }
+
+
+            // numOfbb = numberofbs - numberofbtops;
+            // numOfcc = numberofcs - numberofctops;
+            cout<<"numOfbb: "<<numOfbb<<"  numOfcc: "<< numOfcc<<endl;
+
+
+            if(numOfbb>3){
+                ttbar_flav = 2;
+            }
+            else if(numOfcc>2){
+                ttbar_flav = 1;
+            }
+            else{
+                ttbar_flav = 0;
             }
 
             // if(Muon){
@@ -1921,13 +2147,16 @@ int main (int argc, char *argv[])
 
 
 
-            float vals[115] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,
+            float vals[140] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,
                 btagWeightCSV,btagWeight_light,btagWeight_lightUp,btagWeight_lightDown,btagWeight_heavy,btagWeight_heavyUp,btagWeight_heavyDown,lumiWeight,lumiWeight_up,lumiWeight_down,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,
                 angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt, csvJetcsv1, csvJetcsv2, csvJetcsv3, csvJetcsv4, csvJetpt1, csvJetpt2, csvJetpt3, csvJetpt4,anglebjet1bjet2,
                  angleBestTopAllJet, angleBestTopAllJetCorrect, bestTopPt, geoMeanJet5and6Pt,fSphericity,fOblateness,fAplanarity,fh10,fh20,fh30,fh40,fh50,fh60,fht,fht3,fet0,fsqrts,fnjetW,fnjetW105,fnjetW115,fnjetW135,fnjetW145,fnjetW160,fet56,fcentrality, nLtagsEXCL, 
                  nMtagsEXCL, HTbLoose, HTbTight,btagWeightCSVLFUp ,btagWeightCSVLFDown ,btagWeightCSVHFUp ,btagWeightCSVHFDown ,btagWeightCSVHFStats1Up,btagWeightCSVHFStats1Down,
                 btagWeightCSVHFStats2Up,btagWeightCSVHFStats2Down,btagWeightCSVLFStats1Up,btagWeightCSVLFStats1Down,btagWeightCSVLFStats2Up,
-                btagWeightCSVLFStats2Down,btagWeightCSVCFErr1Up,btagWeightCSVCFErr1Down,btagWeightCSVCFErr2Up,btagWeightCSVCFErr2Down, alphaTuneSF};
+                btagWeightCSVLFStats2Down,btagWeightCSVCFErr1Up,btagWeightCSVCFErr1Down,btagWeightCSVCFErr2Up,btagWeightCSVCFErr2Down, alphaTuneSF,fTrigetap8Pt35, fTrigetap8Pt40, fTrigetap8Pt50, fTrigetap8Pt60, fTrigetap8Pt100, fTrigeta1p4Pt35, fTrigeta1p4Pt40, 
+            fTrigeta1p4Pt50, fTrigeta1p4Pt60, fTrigeta1p4Pt100, fTrigeta1p6Pt35, fTrigeta1p6Pt40, fTrigeta1p6Pt50, fTrigeta1p6Pt60,
+             fTrigeta1p6Pt100, fTrigeta2Pt35, fTrigeta2Pt40, fTrigeta2Pt50, fTrigeta2Pt60, fTrigeta2Pt100, fTrigeta2p5Pt35, fTrigeta2p5Pt40,
+              fTrigeta2p5Pt50, fTrigeta2p5Pt60, fTrigeta2p5Pt100};
             tupfile->cd();
             tup->Fill(vals);
             // tupCutfile->cd();
@@ -2028,7 +2257,22 @@ int main (int argc, char *argv[])
     cout << "********************************************" << endl;
     cout << "           End of the program !!            " << endl;
     cout << "********************************************" << endl;
-    
+    cout<<"pt>20  gen >2  :   "<<whatnumberb2_20<<endl;
+    // cout<<"pt>20  gen >3  :   "<<whatnumberb_20<<endl;
+    cout<<"pt>20  gen ttll   :  "<<whatnumberll_20<<endl;
+    cout<<"pt>30  gen >2  :   "<<whatnumberb2<<endl;
+    // cout<<"pt>30  gen >3  :   "<<whatnumberb<<endl;
+    cout<<"pt>30  gen ttll   :  "<<whatnumberll<<endl;
+    cout<<"pt>30  reco >2  :   "<<whatnumberb2Reco<<endl;
+    // cout<<"pt>30  reco >3  :   "<<whatnumberbReco<<endl;
+    cout<<"pt>30  reco ttll   :  "<<whatnumberllReco<<endl;
+    cout<<"Ratio gen > 2 pt>20: "<<(float)100*whatnumberb2_20/whatnumberll_20<<endl;
+    // cout<<"Ratio gen > 3 pt>20: "<<(float)100*whatnumberb_20/whatnumberll_20<<endl;
+    cout<<"Ratio gen > 2 pt>30: "<<(float)100*whatnumberb2/whatnumberll<<endl;
+    // cout<<"Ratio gen > 3 pt>30: "<<(float)100*whatnumberb/whatnumberll<<endl;
+    cout<<"Ratio reco > 2 pt>30: "<<(float)100*whatnumberb2Reco/whatnumberllReco<<endl;
+    // cout<<"Ratio reco > 3 pt>30: "<<(float)100*whatnumberbReco/whatnumberllReco<<endl;
+
     return 0;
 }
 float PythiaTune(int jets){
