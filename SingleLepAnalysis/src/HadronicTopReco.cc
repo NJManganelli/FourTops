@@ -2,9 +2,10 @@
 //          Make cutflow table              //
 //////////////////////////////////////////////
 
+
 #include "../interface/HadronicTopReco.h"
 
-HadronicTopReco::HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool TrainMVA, vector < Dataset* > datasets, string MVAmethodIn, bool isdebug, float Lumi):
+HadronicTopReco::HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool TrainMVA, vector < Dataset* > datasets, string MVAmethodIn, bool isdebug, float Lumi, string topMVA):
 	MSPlot(),
 	debug(false),
 	leptonChoice(""),
@@ -28,7 +29,7 @@ HadronicTopReco::HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool
 	selectedJets3rdPass(), //remaining jets after removing highest & second highest ranked tri jet
 	MVASelJets1(), //the selected jets from the highest ranked tri jet
 	MVASelJets2(), //the selected jets from the second highest ranked tri jet
-	jetCombiner(new JetCombiner(TrainMVA, Lumi, datasets, MVAmethodIn, false, "","" )), //_13TeV in last arg for 13tev training
+	jetCombiner(new JetCombiner(TrainMVA, Lumi, datasets, MVAmethodIn, false, "","_13TeV")), //_13TeV in last arg for 13tev training
 	bestTopMass1(0),
 	bestTopMass2(0),
 	bestTopMass2ndPass(0), 
@@ -47,7 +48,9 @@ HadronicTopReco::HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool
 	sumpz_X(0),
 	sume_X(0),
 	sumjet_X(TLorentzVector(0,0,0,0)),
-	angleT1AllJets(0)
+	angleT1AllJets(0),
+    angleT1AllJetsCorrect(0)
+
 	{
 	if (isMuon){
 		leptonChoice = "Muon";
@@ -173,7 +176,9 @@ void HadronicTopReco::FillDiagnosticPlots(TFile *fout, unsigned int d, vector<TR
     float mindeltaR_temp =100.;
     float tempJetSum = 0;
     float angleT1TempJetSum = 0;
- 	wj1 = 0, wj2 = 0, bj1 = 0, wj1_2ndpass = 0, wj2_2ndpass = 0, bj1_2ndpass = 0, angleT1AllJets=0;  //wjet1, wjet2, bjet
+    float angleT1TempJetSumCorrect = 0;
+
+ 	wj1 = 0, wj2 = 0, bj1 = 0, wj1_2ndpass = 0, wj2_2ndpass = 0, bj1_2ndpass = 0, angleT1AllJets=0, angleT1AllJetsCorrect=0;  //wjet1, wjet2, bjet
 
     //define the jets from W as the jet pair with smallest deltaR
     for (unsigned int m=0; m<MVASelJets1.size(); m++) {
@@ -209,7 +214,7 @@ void HadronicTopReco::FillDiagnosticPlots(TFile *fout, unsigned int d, vector<TR
     float AngleThWh1 = fabs(Th1.DeltaPhi(Wh1)); //angle between top and dijet
     float AngleThBh1 = fabs(Th1.DeltaPhi(Bh1)); //angle between top and remaining jet
 
-    float btag = MVASelJets1[bj1]->btag_combinedSecondaryVertexBJetTags();  //CSV discriminator value of "other jet"
+    float btag = MVASelJets1[bj1]->btag_combinedInclusiveSecondaryVertexV2BJetTags();  //CSV discriminator value of "other jet"
 
     double PtRat = ( ( *MVASelJets1[0] + *MVASelJets1[1] + *MVASelJets1[2] ).Pt() ) / ( MVASelJets1[0]->Pt() + MVASelJets1[1]->Pt() + MVASelJets1[2]->Pt());  //ratio of vectorial pT over scalar pT (should be larger for tops)
 
@@ -253,11 +258,17 @@ void HadronicTopReco::FillDiagnosticPlots(TFile *fout, unsigned int d, vector<TR
     for(unsigned int MVAsel2ndpas=0; MVAsel2ndpas<selectedJets2ndPass.size();MVAsel2ndpas++){ //calculating the sum(|pTop.pOtherJets|)/ sum(|pOtherJets|)
     	TLorentzVector tempjet = *selectedJets2ndPass[MVAsel2ndpas];
     	float angleBestTopTempJet = fabs( (Th1.DeltaPhi(tempjet))/(Th1.M()));
+        float angleBestTopTempJetCorrect = fabs( tempjet.M() * TMath::Cos(Th1.DeltaPhi(tempjet)));
+
     	float magOfTempJet = fabs(tempjet.M());
     	tempJetSum += magOfTempJet;
     	angleT1TempJetSum += angleBestTopTempJet;
+        angleT1TempJetSumCorrect += angleBestTopTempJetCorrect;
+
     }
 	angleT1AllJets = angleT1TempJetSum/tempJetSum;
+    angleT1AllJetsCorrect = angleT1TempJetSumCorrect/tempJetSum;
+
     //DeltaR
     // float AngleThWh2ndpass = fabs(Th2ndpass.DeltaPhi(Wh2ndpass)); //angle between top and dijet
     // float AngleThBh2ndpass = fabs(Th2ndpass.DeltaPhi(Bh2ndpass)); //angle between top and remaining jet
@@ -279,6 +290,9 @@ void HadronicTopReco::FillDiagnosticPlots(TFile *fout, unsigned int d, vector<TR
 }
 float HadronicTopReco::ReturnAnglet1Jet(){
 	return angleT1AllJets;
+}
+float HadronicTopReco::ReturnAnglet1JetCorrect(){
+    return angleT1AllJetsCorrect;
 }
 
 float HadronicTopReco::ReturnSumJetMassX(){

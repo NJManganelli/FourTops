@@ -8,6 +8,7 @@ CutsTable::CutsTable(bool isMuon, bool isElectron):
     CutsselecTable(),
     leptonChoice(""),
     selecTable(),
+    cfInitial(0),
     cfTrigger(0),
     cfPV(0),
     cfLep1(0),
@@ -80,6 +81,7 @@ void CutsTable::CreateTable(vector < Dataset* > datasets, float Luminosity){
 void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bool isGoodPV, bool trigged, float scaleFactor, int nMu, int nLooseMu, int nEl, int nLooseEl, int nJets, int nLtags, int nMtags, int nTtags, TNtuple *cuttup ){
 
     selecTable->Fill(d,0,scaleFactor);
+    cfInitial=1;
     cfTrigger=0;
     cfPV=0;
     cfLep1=0;
@@ -112,7 +114,7 @@ void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bo
                             cfLep2 = 1;
                             if(nJets>=1)
                             {
-				cfJets1=1;
+                				cfJets1=1;
                             	selecTable->Fill(d,6,scaleFactor);
                                 if(nJets>=5)
                                 {
@@ -163,7 +165,7 @@ void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bo
                             selecTable->Fill(d,5,scaleFactor);
                             if(nJets>=1)
                             {
-				cfJets1=1;
+                				cfJets1=1;
                                 selecTable->Fill(d,6,scaleFactor);
                                 if(nJets>=5)
                                 {
@@ -190,7 +192,7 @@ void CutsTable::FillTable(unsigned int d, float normfactor, float Luminosity, bo
             }
         }         
     }
-    cuttup->Fill(scaleFactor,normfactor,Luminosity,cfPV,cfTrigger,cfLep1,cfLep2,cfJets1,cfJets,cfTags,cfHT);
+    cuttup->Fill(scaleFactor,normfactor,Luminosity,cfInitial,cfPV,cfTrigger,cfLep1,cfLep2,cfJets1,cfJets,cfTags,cfHT);
 }
 void CutsTable::FillTableMuons(unsigned int d, float scaleFactor, vector < TRootMuon* > init_muons){
 

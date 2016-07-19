@@ -80,6 +80,7 @@ class CutsTable{
 		vector<string> CutsselecTable;
 		string leptonChoice;
 		SelectionTable *selecTable;
+		int cfInitial;
 		int cfTrigger;
 		int cfPV;
 		int cfLep1;

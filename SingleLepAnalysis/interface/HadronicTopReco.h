@@ -25,7 +25,7 @@
 #include <iostream>
 #include <map>
 #include <cstdlib>
-
+#include "TMath.h"
 //user code
 #include "TopTreeProducer/interface/TRootRun.h"
 #include "TopTreeProducer/interface/TRootEvent.h"
@@ -67,7 +67,7 @@ using namespace reweight;
  
 class HadronicTopReco{
 	public:
-		HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool TrainMVA,  vector < Dataset* > datasets, string MVAmethodIn, bool isdebug, float Lumi);
+		HadronicTopReco(TFile *fout, bool isMuon, bool isElectron, bool TrainMVA,  vector < Dataset* > datasets, string MVAmethodIn, bool isdebug, float Lumi, string topMVA);
 		~HadronicTopReco();
 		void RecoCheck(bool debug, vector<TRootMuon*> selectedMuons, vector<TRootElectron*> selectedElectrons, vector<TRootPFJet*> selectedJets);
 		void Compute1st(unsigned int d, vector<TRootPFJet*> selectedJets, vector < Dataset* > datasets);
@@ -88,6 +88,7 @@ class HadronicTopReco{
 		float ReturnHTX();
 		float ReturnBestTopPt();
 		float ReturnAnglet1Jet();
+		float ReturnAnglet1JetCorrect();
 
 	private:
 		map<string,MultiSamplePlot*> MSPlot;
@@ -128,7 +129,7 @@ class HadronicTopReco{
 		float sume_X; 
 		TRootJet sumjet_X;
 		float angleT1AllJets;
-
+		float angleT1AllJetsCorrect;
 
 		// MSPlot["MVA1TriJetMass"];
 		// MSPlot["MVA1DiJetMass"];    
