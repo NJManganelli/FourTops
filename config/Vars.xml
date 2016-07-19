@@ -184,21 +184,21 @@
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nMtags" ltSplit=14 gtSplit=15 >JPTS</splitting>
 
-		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined4thJune2016_v3</var>
-		<!--var lBound= 3 uBound=13 nBins=10 units="">nJets</var>
-		<var lBound= -1 uBound=0.3 nBins=13 units="">topness</var>
+		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined22ndJune2016_13TeVHadTop</var>
+		
+		<!--var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined16thJune2016_TrainingWithoutAlphaS</var>
+                <var lBound= 500 uBound=2000 nBins=15 units="GeV">HT</var>
+		<var lBound= -0.9 uBound=0.4 nBins=13 units="">topness</var>
+        <var lBound= 3.5 uBound=12.5 nBins=9 units="">nJets</var>
+
         <var lBound= 0 uBound=0.9 nBins=9 units="">EventSph</var>
-        <var lBound= 500 uBound=2000 nBins=15 units="GeV">HT</var>
-		<var lBound= 0 uBound=500 nBins=20 units="GeV">LeadingLepPt</var>
+		<var lBound= 0 uBound=350 nBins=14 units="GeV">LeadingLepPt</var>
 		<var lBound= -2.5 uBound=2.5 nBins=20 units="#eta">LeadingLepEta</var>
         <var lBound= 0 uBound=400 nBins=20 units="GeV">diLepMass</var>
-        <var lBound= 0 uBound=700 nBins=35 units="GeV">1stJetPt</var>
-		<var lBound= 0 uBound=700 nBins=35 units="GeV">2ndJetPt</var>
-		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined25thMay2016_NewBtag</var>
-		
+        <var lBound= 40 uBound=720 nBins=17 units="GeV">1stJetPt</var>
+		<var lBound= 40 uBound=720 nBins=17 units="GeV">2ndJetPt</var>
 		<var lBound= 0 uBound=1500 nBins=15 units="GeV">HT2M</var>
-        <var lBound= 0 uBound=20 nBins=20 units="">fnjetW</var>
-		
+        <var lBound= 0 uBound=20 nBins=20 units="">fnjetW</var>		
 		<var lBound= 0 uBound=500 nBins=20 units="GeV">SubLeadingLepPt</var>
 		<var lBound= 0 uBound=5 nBins=10 units="">dRLep</var>
 		<var lBound= 0 uBound=1 nBins=10 units="">HTH</var>
@@ -209,8 +209,8 @@
 		<var lBound= 0 uBound=10 nBins=10 units="">nMtags</var>
 		<var lBound= 0 uBound=10 nBins=10 units="">nTtags</var>
 		<var lBound= 0 uBound=300 nBins=15 units="GeV">3rdJetPt</var>
-		<var lBound= 0 uBound=300 nBins=15 units="GeV">4thJetPt</var-->
-		<!--var lBound= -1.0 uBound=1.0 nBins=40>BDT375_DilepCombined29stApril2016_17Var</var>
+		<var lBound= 0 uBound=300 nBins=15 units="GeV">4thJetPt</var>
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDT375_DilepCombined29stApril2016_17Var</var>
 		<var lBound= -1.0 uBound=1.0 nBins=40>BDT350_DilepCombined29stApril2016_17Var</var>
                 <var lBound= -1.0 uBound=1.0 nBins=40>BDT4_DilepCombined29stApril2016_17Var</var>
 		<var lBound= -1.0 uBound=1.0 nBins=40>BDT4375_DilepCombined29stApril2016_17Var</var>
@@ -243,21 +243,21 @@
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nMtags" ltSplit=14 gtSplit=15 >JPTS</splitting>
 
-		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined4thJune2016_v3</var>
-		<!--var lBound= 3 uBound=13 nBins=10 units="">nJets</var>
-		<var lBound= -1 uBound=0.3 nBins=13 units="">topness</var>
+		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined22ndJune2016_13TeVHadTop</var>
+		
+		<!--var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined16thJune2016_TrainingWithoutAlphaS</var>
+                <var lBound= 500 uBound=2000 nBins=15 units="GeV">HT</var>
+		<var lBound= -0.9 uBound=0.4 nBins=13 units="">topness</var>
+        <var lBound= 3.5 uBound=12.5 nBins=9 units="">nJets</var>
+
         <var lBound= 0 uBound=0.9 nBins=9 units="">EventSph</var>
-        <var lBound= 500 uBound=2000 nBins=15 units="GeV">HT</var>
-		<var lBound= 0 uBound=500 nBins=20 units="GeV">LeadingLepPt</var>
+		<var lBound= 0 uBound=350 nBins=14 units="GeV">LeadingLepPt</var>
 		<var lBound= -2.5 uBound=2.5 nBins=20 units="#eta">LeadingLepEta</var>
         <var lBound= 0 uBound=400 nBins=20 units="GeV">diLepMass</var>
-        <var lBound= 0 uBound=700 nBins=35 units="GeV">1stJetPt</var>
-		<var lBound= 0 uBound=700 nBins=35 units="GeV">2ndJetPt</var>
-		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined25thMay2016_NewBtag</var>
-		
+        <var lBound= 40 uBound=720 nBins=17 units="GeV">1stJetPt</var>
+		<var lBound= 40 uBound=720 nBins=17 units="GeV">2ndJetPt</var>
 		<var lBound= 0 uBound=1500 nBins=15 units="GeV">HT2M</var>
         <var lBound= 0 uBound=20 nBins=20 units="">fnjetW</var>
-		
 		<var lBound= 0 uBound=500 nBins=20 units="GeV">SubLeadingLepPt</var>
 		<var lBound= 0 uBound=5 nBins=10 units="">dRLep</var>
 		<var lBound= 0 uBound=1 nBins=10 units="">HTH</var>
@@ -268,8 +268,8 @@
 		<var lBound= 0 uBound=10 nBins=10 units="">nMtags</var>
 		<var lBound= 0 uBound=10 nBins=10 units="">nTtags</var>
 		<var lBound= 0 uBound=300 nBins=15 units="GeV">3rdJetPt</var>
-		<var lBound= 0 uBound=300 nBins=15 units="GeV">4thJetPt</var-->
-		<!--var lBound= -1.0 uBound=1.0 nBins=40>BDT375_DilepCombined29stApril2016_17Var</var>
+		<var lBound= 0 uBound=300 nBins=15 units="GeV">4thJetPt</var>
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDT375_DilepCombined29stApril2016_17Var</var>
 		<var lBound= -1.0 uBound=1.0 nBins=40>BDT350_DilepCombined29stApril2016_17Var</var>
                 <var lBound= -1.0 uBound=1.0 nBins=40>BDT4_DilepCombined29stApril2016_17Var</var>
 		<var lBound= -1.0 uBound=1.0 nBins=40>BDT4375_DilepCombined29stApril2016_17Var</var>
@@ -301,21 +301,21 @@
 		<splitting splitVar="nJets" bSplit=4 tSplit=8 wSplit=2 >JS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 
-		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined4thJune2016_v3</var>
-		<!--var lBound= 3 uBound=13 nBins=10 units="">nJets</var>
-		<var lBound= -1 uBound=0.3 nBins=13 units="">topness</var>
+		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined22ndJune2016_13TeVHadTop</var>
+		
+		<!--var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined16thJune2016_TrainingWithoutAlphaS</var>
+                <var lBound= 500 uBound=2000 nBins=15 units="GeV">HT</var>
+		<var lBound= -0.9 uBound=0.4 nBins=13 units="">topness</var>
+        <var lBound= 3.5 uBound=12.5 nBins=9 units="">nJets</var>
+
         <var lBound= 0 uBound=0.9 nBins=9 units="">EventSph</var>
-        <var lBound= 500 uBound=2000 nBins=15 units="GeV">HT</var>
-		<var lBound= 0 uBound=500 nBins=20 units="GeV">LeadingLepPt</var>
+		<var lBound= 0 uBound=350 nBins=14 units="GeV">LeadingLepPt</var>
 		<var lBound= -2.5 uBound=2.5 nBins=20 units="#eta">LeadingLepEta</var>
         <var lBound= 0 uBound=400 nBins=20 units="GeV">diLepMass</var>
-        <var lBound= 0 uBound=700 nBins=35 units="GeV">1stJetPt</var>
-		<var lBound= 0 uBound=700 nBins=35 units="GeV">2ndJetPt</var>
-		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined25thMay2016_NewBtag</var>
-		
+        <var lBound= 40 uBound=720 nBins=17 units="GeV">1stJetPt</var>
+		<var lBound= 40 uBound=720 nBins=17 units="GeV">2ndJetPt</var>
 		<var lBound= 0 uBound=1500 nBins=15 units="GeV">HT2M</var>
         <var lBound= 0 uBound=20 nBins=20 units="">fnjetW</var>
-		
 		<var lBound= 0 uBound=500 nBins=20 units="GeV">SubLeadingLepPt</var>
 		<var lBound= 0 uBound=5 nBins=10 units="">dRLep</var>
 		<var lBound= 0 uBound=1 nBins=10 units="">HTH</var>
@@ -326,8 +326,8 @@
 		<var lBound= 0 uBound=10 nBins=10 units="">nMtags</var>
 		<var lBound= 0 uBound=10 nBins=10 units="">nTtags</var>
 		<var lBound= 0 uBound=300 nBins=15 units="GeV">3rdJetPt</var>
-		<var lBound= 0 uBound=300 nBins=15 units="GeV">4thJetPt</var-->
-		<!--var lBound= -1.0 uBound=1.0 nBins=40>BDT375_DilepCombined29stApril2016_17Var</var>
+		<var lBound= 0 uBound=300 nBins=15 units="GeV">4thJetPt</var>
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDT375_DilepCombined29stApril2016_17Var</var>
 		<var lBound= -1.0 uBound=1.0 nBins=40>BDT350_DilepCombined29stApril2016_17Var</var>
                 <var lBound= -1.0 uBound=1.0 nBins=40>BDT4_DilepCombined29stApril2016_17Var</var>
 		<var lBound= -1.0 uBound=1.0 nBins=40>BDT4375_DilepCombined29stApril2016_17Var</var>
@@ -360,14 +360,14 @@
 		<splitting splitVar1="nJets" splitVar2= "nLtags" bSplit1=6 tSplit1=10 wSplit1=2 bSplit2=2 tSplit2=4 wSplit2=2 >JTS</splitting>
 		<splitting splitVar1="nJets" splitVar2= "nMtags" ltSplit=14 gtSplit=15 >JPTS</splitting>
 
-
-		<var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined4thJune2016_v3</var>
+		<var lBound= -0.6 uBound=0.4 nBins=10 units="">topness</var>
+		<!--var lBound= -0.8 uBound=0.6 nBins=14 units="">BDT_DilepCombined4thJune2016_v3</var>
 		<var lBound= 4 uBound=13 nBins=9 units="">nJets</var>
-		<var lBound= -1 uBound=0.3 nBins=13 units="">topness</var>
+
 		<var lBound= 0 uBound=0.9 nBins=9 units="">EventSph</var>
 		<var lBound= 0 uBound=1500 nBins=15 units="GeV">HT2M</var>
         <var lBound= 0 uBound=20 nBins=20 units="">fnjetW</var>
-		<var lBound= 500 uBound=2000 nBins=15 units="GeV">HT</var>
+		<var lBound= 0 uBound=2000 nBins=20 units="GeV">HT</var>
 		<var lBound= 0 uBound=500 nBins=20 units="GeV">LeadingLepPt</var>
 		<var lBound= -2.5 uBound=2.5 nBins=20 units="#eta">LeadingLepEta</var>
 		<var lBound= 0 uBound=500 nBins=20 units="GeV">SubLeadingLepPt</var>
@@ -378,11 +378,11 @@
 		<var lBound= 0 uBound=5 nBins=10 units="">dRbb</var>
 		<var lBound= 2 uBound=8 nBins=6 units="">nLtags</var>
 		<var lBound= 2 uBound=6 nBins=4 units="">nMtags</var>
-		<var lBound= 0 uBound=10 nBins=10 units="">nTtags</var>
-		<var lBound= 30 uBound=310 nBins=14 units="GeV">3rdJetPt</var>
+		<var lBound= 0 uBound=10 nBins=10 units="">nTtags</var-->
+		<!--var lBound= 30 uBound=310 nBins=14 units="GeV">3rdJetPt</var>
 		<var lBound= 30 uBound=210 nBins=9 units="GeV">4thJetPt</var>
         <var lBound= 0 uBound=27 nBins=27 units="">PU</var>
-		<!--var lBound= -1.0 uBound=1.0 nBins=40>BDT375_DilepCombined29stApril2016_17Var</var>
+		<var lBound= -1.0 uBound=1.0 nBins=40>BDT375_DilepCombined29stApril2016_17Var</var>
 		<var lBound= -1.0 uBound=1.0 nBins=40>BDT350_DilepCombined29stApril2016_17Var</var>
                 <var lBound= -1.0 uBound=1.0 nBins=40>BDT4_DilepCombined29stApril2016_17Var</var>
 		<var lBound= -1.0 uBound=1.0 nBins=40>BDT4375_DilepCombined29stApril2016_17Var</var>
@@ -391,15 +391,15 @@
 		<var lBound= 0 uBound=1 nBins=20>DiLepSph</var>
 		<var lBound= 0 uBound=1 nBins=20>DiLepCen</var>
 		<var lBound= 0 uBound=1 nBins=20>TopDiLepSph</var>
-		<var lBound= 0 uBound=1 nBins=20>TopDiLepCen</var-->
-		<!--var lBound= 0 uBound=700 nBins=35 units="GeV">1stJetPt</var>
+		<var lBound= 0 uBound=1 nBins=20>TopDiLepCen</var>
+		<var lBound= 0 uBound=700 nBins=35 units="GeV">1stJetPt</var>
 		<var lBound= 0 uBound=700 nBins=35 units="GeV">2ndJetPt</var>
 		<var lBound= 0 uBound=700 nBins=35 units="GeV">5thJetPt</var>
 		<var lBound= 0 uBound=700 nBins=35 units="GeV">6thJetPt</var>
 		<var lBound= 0 uBound=300 nBins=15 units="GeV">7thJetPt</var>
-		<var lBound= 0 uBound=300 nBins=15 units="GeV">8thJetPt</var>
+		<var lBound= 0 uBound=300 nBins=15 units="GeV">8thJetPt</var-->
                 
-		<var lBound= 0 uBound=400 nBins=20 units="GeV">MET</var>
+		<!--var lBound= 0 uBound=400 nBins=20 units="GeV">MET</var>
 		<var lBound= 0 uBound=400 nBins=20 units="GeV">diLepMass</var-->
 
 	</channel>
