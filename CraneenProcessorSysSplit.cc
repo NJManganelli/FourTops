@@ -1041,7 +1041,7 @@ void DatasetPlotter(int nBins,
         chanText = "Dilepton: #mu#mu";
     else if(channel == "ttttmuel")
         chanText = "Dilepton: e#mu";
-    else if(channel == "ttttmumu")
+    else if(channel == "ttttelel")
         chanText = "Dilepton: ee";
     else if(channel == "comb")
         chanText = "Dilepton: Combined";
@@ -1073,15 +1073,25 @@ void DatasetPlotter(int nBins,
         /// heavy flav re-weight -> scaling ttbb up and ttjj down so that ttbb/ttjj matches CMS measurement.
 
         int newlumi = datasets[ndatasets - 1]->EquivalentLumi();
-        ttbar_ll->SetEquivalentLuminosity(newlumi / ll_rw);
-        ttbar_cc->SetEquivalentLuminosity(newlumi / ll_rw);
-        ttbar_bb->SetEquivalentLuminosity(newlumi / bb_rw);
-        ttbar_ll_up->SetEquivalentLuminosity(newlumi / ll_rw_up);
-        ttbar_cc_up->SetEquivalentLuminosity(newlumi / ll_rw_up);
-        ttbar_bb_up->SetEquivalentLuminosity(newlumi / bb_rw_up);
-        ttbar_ll_down->SetEquivalentLuminosity(newlumi / ll_rw_down);
-        ttbar_cc_down->SetEquivalentLuminosity(newlumi / ll_rw_down);
-        ttbar_bb_down->SetEquivalentLuminosity(newlumi / bb_rw_down);
+        ttbar_ll->SetEquivalentLuminosity(newlumi);
+        ttbar_cc->SetEquivalentLuminosity(newlumi);
+        ttbar_bb->SetEquivalentLuminosity(newlumi);
+        ttbar_ll_up->SetEquivalentLuminosity(newlumi);
+        ttbar_cc_up->SetEquivalentLuminosity(newlumi);
+        ttbar_bb_up->SetEquivalentLuminosity(newlumi);
+        ttbar_ll_down->SetEquivalentLuminosity(newlumi);
+        ttbar_cc_down->SetEquivalentLuminosity(newlumi);
+        ttbar_bb_down->SetEquivalentLuminosity(newlumi);
+
+//        ttbar_ll->SetEquivalentLuminosity(newlumi / ll_rw);
+//        ttbar_cc->SetEquivalentLuminosity(newlumi / ll_rw);
+//        ttbar_bb->SetEquivalentLuminosity(newlumi / bb_rw);
+//        ttbar_ll_up->SetEquivalentLuminosity(newlumi / ll_rw_up);
+//        ttbar_cc_up->SetEquivalentLuminosity(newlumi / ll_rw_up);
+//        ttbar_bb_up->SetEquivalentLuminosity(newlumi / bb_rw_up);
+//        ttbar_ll_down->SetEquivalentLuminosity(newlumi / ll_rw_down);
+//        ttbar_cc_down->SetEquivalentLuminosity(newlumi / ll_rw_down);
+//        ttbar_bb_down->SetEquivalentLuminosity(newlumi / bb_rw_down);
 
         ttbar_ll->SetColor(kRed);
         ttbar_cc->SetColor(kRed - 3);
@@ -1267,7 +1277,7 @@ void DatasetPlotter(int nBins,
                 histo1D[dataSetName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
 
                 ////////DATA BLINDED ////
-                if(sVarofinterest.find("BDT") == string::npos)
+                //if(sVarofinterest.find("BDT") == string::npos)
                     MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
                 // MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
 
@@ -1285,6 +1295,12 @@ void DatasetPlotter(int nBins,
                 if(dataSetName.find("tttt") != string::npos) {
                     NormFactor = 1.0 / 0.4095;
                 }
+               else if(dataSetName.find("TTW") != string::npos) {
+                    NormFactor = 1.0 / 0.51527;
+               }
+               else if(dataSetName.find("TTZ") != string::npos) {
+                    NormFactor = 1.0 / 0.464597;
+               }
                 // else if(dataSetName.find("WJets") != string::npos) {
                 //     NormFactor = 1.0/0.522796;
                 // } else if(dataSetName.find("DYJets") != string::npos) {
@@ -1917,7 +1933,7 @@ void SplitDatasetPlotter(int nBins,
 
         // nTuple[dataSetName.c_str()]->SetBranchAddress("SFbehrends", &SFbehrends);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
-        // nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
+        nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
@@ -2014,6 +2030,10 @@ void SplitDatasetPlotter(int nBins,
 
         for(int j = 0; j < nEntries; j++) {
             nTuple[dataSetName.c_str()]->GetEntry(j);
+            //if(leptoAbbr.find("MuEl") != string::npos) SFlepton*=0.968/0.971;
+            //else if(leptoAbbr.find("MuMu") != string::npos) SFlepton*=0.932/0.931;
+            //else if(leptoAbbr.find("ElEl") != string::npos) SFlepton*=0.963/0.958;
+            
             // artificial Lumi
 
             // if(lScale > 0 )
@@ -2030,11 +2050,20 @@ void SplitDatasetPlotter(int nBins,
                 // (GenWeight*SFtrigger*SFlepton*SFbtag*SFPU*SFTopPt*SFbehrends) << endl;
                 NormFactor = 1.0 / 0.409;
             }
+               else if(dataSetName.find("TTW") != string::npos) {
+                    NormFactor = 1.0 / 0.51527;
+               }
+               else if(dataSetName.find("TTZ") != string::npos) {
+                    NormFactor = 1.0 / 0.464597;
+               }
+            
             // else if(dataSetName.find("WJets") != string::npos) {
             //     NormFactor = 1.0/0.522796;
             // } else if(dataSetName.find("DYJets") != string::npos) {
             //     NormFactor = 1.0/0.566;
             // }
+
+            if(ttbar_flav == 2) ttbbReweight = 1.71;
 
             if(splitVar >=
                 ftSplit) // Check if this entry belongs in the last bin.  Done here to optimize number of checks
@@ -2046,7 +2075,7 @@ void SplitDatasetPlotter(int nBins,
                 if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                     dataSetName.find("DATA") != string::npos || dataSetName.find("NP_overlay_Data") != string::npos) {
                     ////////DATA BLINDED ////
-                    if(sVarofinterest.find("BDT") == string::npos)
+                    //if(sVarofinterest.find("BDT") == string::npos)
                         MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
                     // MSPlot[plotname]->Fill(varofInterest, datasets[d], true, LumiFactor);
                     histo1D[histoName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
@@ -2056,6 +2085,7 @@ void SplitDatasetPlotter(int nBins,
                     dataSetName.find("JER") == string::npos && dataSetName.find("ScaleH") == string::npos) {
                     // cout << "Main TTbar Sample Event!  stSplit = " << stSplit << endl;
                     //                    cin.get();
+                    
                     histo1D[("Genweight_tt" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
                             SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             eqlumi * ttbbReweight * LumiFactor * GenWeight);
@@ -2203,7 +2233,7 @@ void SplitDatasetPlotter(int nBins,
                             dataSetName.find("DATA") != string::npos ||
                             dataSetName.find("NP_overlay_Data") != string::npos) {
                             ////////DATA BLINDED ////
-                            if(sVarofinterest.find("BDT") == string::npos)
+                            //if(sVarofinterest.find("BDT") == string::npos)
                                 MSPlot[plotname]->Fill(varofInterest, datasets[d], true, 1);
                             histo1D[histoName.c_str()]->Fill(varofInterest, eqlumi * LumiFactor);
                         } else if(dataSetName == mainTTbarSample && dataSetName.find("JES") == string::npos &&
@@ -2449,9 +2479,10 @@ void SplitDatasetPlotter(int nBins,
         }
     } // end of dataset for loop
 
-    GetScaleEnvelopeSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
-        sSplitVar, fbSplit, ftSplit, fwSplit, xmlNom, CraneenPath, shapefileName, mainTTbarSample);
+    
     GetScaleEnvelopeSplit_tttt(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
+        sSplitVar, fbSplit, ftSplit, fwSplit, xmlNom, CraneenPath, shapefileName, mainTTbarSample);
+    GetScaleEnvelopeSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
         sSplitVar, fbSplit, ftSplit, fwSplit, xmlNom, CraneenPath, shapefileName, mainTTbarSample);
     GetMatchingSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
         CraneenPath, mainTTbarSample, otherTTbarsample, sSplitVar, fbSplit, ftSplit, fwSplit);
@@ -3196,135 +3227,117 @@ void DataCardProducer(string VoI,
 
     card << "ttMEScale                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else {
+                 card << "-                  ";
+            }
         }
-    }
-
-    card << "btag                shape           ";
+    card << "\n";
+    card << "ttttMEScale                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else {
+                 card << "-                  ";
+            }
         }
-    }
-
+    card << "\n";
+    card << "btag_light                shape           ";
+     for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
+            }
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
+        }
+    card << "\n";
+    card << "btag_heavy                shape           ";
+     for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
+            }
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
+        }
+    card << "\n";
     card << "PU                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
         }
-    }
-
+    card << "\n";
     card << "JES                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
         }
-    }
-
+    card << "\n";
     card << "JER                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
         }
-    }
-
+    card << "\n";
     card << "ttGenerator                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else {
+                 card << "-                  ";
+            }
         }
-    }
+    card << "\n";
     card << "ScaleH                shape           ";
     for(int d = 0; d < howmanyMC; d++) {
-        dataSetName = MCdatasets[d];
-        if(dataSetName.find(mainTTbarsample) != string::npos) {
-            for(int k = 0; k < nChannels; k++) {
-                for(int dash1 = 0; dash1 < d; dash1++) {
-                    card << "-                  ";
-                }
-                card << "1                      ";
-                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
-                    card << "-                  ";
-                }
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
             }
-            card << "\n";
-        } else {
-            continue;
+            else {
+                 card << "-                  ";
+            }
         }
-    }
 
     // card << "heavyFlav               shape           ";
     // for (int d = 0; d<howmanyMC; d++){
