@@ -2600,7 +2600,7 @@ void SplitDatasetPlotter(int nBins,
     for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
         numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
 
-            histo1D[("ttbarPlusTTX"+ numStr + sSplitVar ).c_str()]->Write(
+            histo1D[("ttbarPlusTTX"+ numStr  ).c_str()]->Write(
                 (channel + numStr + sSplitVar + "__ttbarPlusTTX__nominal").c_str());
     }  
     GetScaleEnvelopeSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
