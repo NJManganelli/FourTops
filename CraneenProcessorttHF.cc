@@ -523,6 +523,8 @@ void GetScaleEnvelope_tttt(int nBins,
     histo1D["weightMinus_tttt"]->Write((MEScalesysname + "Down").c_str());
     histo1D["weightPlus_tttt"]->Write((MEScalesysname + "Up").c_str());
     cout << "wrote sys MEScale shapes in shapefile" << endl;
+
+    cout<<"\n !! note I've changed the ll_rw value!! \n"
 }
 
 void GetMatching(int nBins,
@@ -1117,18 +1119,21 @@ void DatasetPlotter(int nBins,
           btagWeightCSVCFErr1Up = 1, btagWeightCSVCFErr1Down = 1, btagWeightCSVCFErr2Up = 1,
           btagWeightCSVCFErr2Down = 1, SFPU = 1, SFPU_up = 1, SFPU_down = 1, SFTopPt = 1, SFbehrends = 1, nJets = 1,
           SFalphaTune = 1;
-    Dataset* ttbar_ll;
+    Dataset* ttbar_ll = new Dataset("TTJets_ll","tt + ll" , true, 633, 2, 2, 1, 831);;
     Dataset* ttbar_ll_up;
     Dataset* ttbar_ll_down;
-    Dataset* ttbar_cc;
+    Dataset* ttbar_cc = new Dataset("TTJets_cc","tt + cc" , true, 633, 2, 2, 1, 831);;
     Dataset* ttbar_cc_up;
     Dataset* ttbar_cc_down;
-    Dataset* ttbar_bb;
+    Dataset* ttbar_bb = new Dataset("TTJets_bb","tt + bb" , true, 628, 2, 2, 1, 831);
     Dataset* ttbar_bb_up;
     Dataset* ttbar_bb_down;
+
+
+
     float PtLepton;
-    bool split_ttbar = false;
-    bool reweight_ttbar = false;
+    bool split_ttbar = true;
+    bool reweight_ttbar = true;
     string mainTTbarSample, otherTTbarsample;
     string chanText;
     cout << "channel  " << channel << endl;
@@ -1151,13 +1156,19 @@ void DatasetPlotter(int nBins,
         chanText = "Dilepton: ee";
     else if(channel == "comb")
         chanText = "Dilepton: Combined";
-    double ll_rw = 0.989;
+    double ll_rw = 0.962;
     double bb_rw = 1.714;
     double ll_rw_up = 0.9814;
     double bb_rw_up = 1.7176;
     double ll_rw_down = 0.9966;
     double bb_rw_down = 1.7024;
 
+
+    if(split_ttbar){
+        datasets.push_back(ttbar_bb);
+        datasets.push_back(ttbar_cc);
+        datasets.push_back(ttbar_ll);   
+    }
     MSPlot[plotname] = new MultiSamplePlot(
         datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events", chanText.c_str(), units);
 
@@ -1174,6 +1185,8 @@ void DatasetPlotter(int nBins,
     histo1D["weight8_tt"] = new TH1F("weight8", "weight8", nBins, plotLow, plotHigh);
     histo1D["PU_Up"] = new TH1F("PU_Up", "PU_Up", nBins, plotLow, plotHigh);
     histo1D["PU_Down"] = new TH1F("PU_Down", "PU_Down", nBins, plotLow, plotHigh);
+    histo1D["heavyFlav_Up"] = new TH1F("heavyFlav_Up", "heavyFlav_Up", nBins, plotLow, plotHigh);
+    histo1D["heavyFlav_Down"] = new TH1F("heavyFlav_Down", "heavyFlav_Down", nBins, plotLow, plotHigh);
     histo1D["btagWeightCSVLF_Up"] = new TH1F("btagWeightCSVLF_Up", "btagWeightCSVLF_Up", nBins, plotLow, plotHigh);
     histo1D["btagWeightCSVLF_Down"] =
         new TH1F("btagWeightCSVLF_Down", "btagWeightCSVLF_Down", nBins, plotLow, plotHigh);
@@ -1216,6 +1229,7 @@ void DatasetPlotter(int nBins,
     histo1D["weight8_tttt"] = new TH1F("weight8_tttt", "weight8_tttt", nBins, plotLow, plotHigh);
     histo1D["PU_Up_tttt"] = new TH1F("PU_Up_tttt", "PU_Up_tttt", nBins, plotLow, plotHigh);
     histo1D["PU_Down_tttt"] = new TH1F("PU_Down_tttt", "PU_Down_tttt", nBins, plotLow, plotHigh);
+
     histo1D["btagWeightCSVLF_Up_tttt"] =
         new TH1F("btagWeightCSVLF_Up_tttt", "btagWeightCSVLF_Up_tttt", nBins, plotLow, plotHigh);
     histo1D["btagWeightCSVLF_Down_tttt"] =
@@ -1260,32 +1274,7 @@ void DatasetPlotter(int nBins,
             cout << "skip ttbar split datasets!" << endl;
             continue;
         }
-        //        if(leptoAbbr.find("Combined") != string::npos) {
-        //            if(dataSetName.find("Data") != string::npos) {
-        //                filepath = CraneenPath + "Data_Run2_TopTree_Study.root"; // cout<<"filepath:
-        //                "<<filepath<<endl;
-        //            } else if(dataSetName.find("TTJetsMG_TopPt") != string::npos) {
-        //                filepath =
-        //                    CraneenPath + "TTJetsMG_TopPt_Run2_TopTree_Study.root"; // cout<<"filepath:
-        //                    "<<filepath<<endl;
-        //            } else if(dataSetName.find("TTJetsMG") != string::npos) {
-        //                filepath = CraneenPath + "TTJetsMG_Run2_TopTree_Study.root"; // cout<<"filepath:
-        //                "<<filepath<<endl;
-        //            } else if(dataSetName.find("DYJets") != string::npos) {
-        //                filepath = CraneenPath + "DYJets_Run2_TopTree_Study.root"; // cout<<"filepath:
-        //                "<<filepath<<endl;
-        //            } else if(dataSetName.find("T_tW") != string::npos) {
-        //                filepath = CraneenPath + "T_tW_Run2_TopTree_Study.root"; // cout<<"filepath:
-        //                "<<filepath<<endl;
-        //            } else if(dataSetName.find("Tbar_tW") != string::npos) {
-        //                filepath = CraneenPath + "Tbar_tW_Run2_TopTree_Study.root"; // cout<<"filepath:
-        //                "<<filepath<<endl;
-        //            } else if(dataSetName.find("NP_overlay_ttttNLO") != string::npos) {
-        //                filepath =
-        //                    CraneenPath + "NP_overlay_ttttNLO_Run2_TopTree_Study.root"; // cout<<"filepath:
-        //                    "<<filepath<<endl;
-        //            }
-        //        } else
+
         if(dataSetName.find("_bb") != string::npos) {
             string truncatedName = dataSetName;
             truncatedName.resize((truncatedName.size()) - 3);
@@ -1357,6 +1346,11 @@ void DatasetPlotter(int nBins,
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
 
+        if(dataSetName.find(mainTTbarSample)!=string::npos){
+            ttbar_ll->SetEquivalentLuminosity(datasets[d]->EquivalentLumi());
+            ttbar_bb->SetEquivalentLuminosity(datasets[d]->EquivalentLumi());
+            ttbar_cc->SetEquivalentLuminosity(datasets[d]->EquivalentLumi());
+        }
         histo1D[dataSetName.c_str()] = new TH1F(dataSetName.c_str(), dataSetName.c_str(), nBins, plotLow, plotHigh);
 
         ////////////////////////////////////////////////////////
@@ -1416,6 +1410,10 @@ void DatasetPlotter(int nBins,
                     NormFactor = 1.0 / 0.4095;
                 } else if(dataSetName.find("TTJets_aMCatNLO") != string::npos) {
                     NormFactor = 1.0 / 0.3304;
+                } else if(dataSetName.find("TTW") != string::npos) {
+                    NormFactor = 1.0 / 0.51527;
+                } else if(dataSetName.find("TTZ") != string::npos) {
+                    NormFactor = 1.0 / 0.464597;
                 }
                 // else if(dataSetName.find("WJets") != string::npos) {
                 //     NormFactor = 1.0/0.522796;
@@ -1551,9 +1549,13 @@ void DatasetPlotter(int nBins,
                             ttbbReweight_down * LumiFactor);
                     // cout<<"njets: "<<nJets<<endl;
                     if(split_ttbar) {
-                        // if (ttbar_flav>1.5) cout<<"ttbar_flav:  "<<ttbar_flav<<endl;
+                         // cout<<"ttbar_flav:  "<<ttbar_flav<<" SF: "<<NormFactor * GenWeight * SFtrigger *
+                         //            SFlepton * SFbtagCSV * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                         //            ttbbReweight * LumiFactor <<"  voi: "<< varofInterest<< endl;
                         if(ttbar_flav < 0.5) { // light
+                            // cout<<"ttjets"<<datasets[d]->EquivalentLumi()<<endl;
 
+                            // cout<<"ttll lumi"<<ttbar_ll->EquivalentLumi()<<endl;
                             MSPlot[plotname]->Fill(varofInterest, ttbar_ll, true, NormFactor * GenWeight * SFtrigger *
                                     SFlepton * SFbtagCSV * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                                     ttbbReweight * LumiFactor);
@@ -1970,6 +1972,11 @@ void CutFlowPlotter(TFile* cffile,
                 NormFactor = 1.0 / 0.4095;
             } else if(dataSetName.find("TTJets_aMCatNLO") != string::npos) {
                 NormFactor = 1.0 / 0.3304;
+            } else if(dataSetName.find("TTW") != string::npos) {
+                NormFactor = 1.0 / 0.51527;
+                cout << "normfactor" << NormFactor << endl;
+            } else if(dataSetName.find("TTZ") != string::npos) {
+                NormFactor = 1.0 / 0.464597;
             }
             if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
                 dataSetName.find("DATA") != string::npos) {
@@ -2261,6 +2268,11 @@ void SplitDatasetPlotter(int nBins,
                 NormFactor = 1.0 / 0.409;
             } else if(dataSetName.find("TTJets_aMCatNLO") != string::npos) {
                 NormFactor = 1.0 / 0.3304;
+            } else if(dataSetName.find("TTW") != string::npos) {
+                NormFactor = 1.0 / 0.51527;
+                cout << "normfactor" << NormFactor << endl;
+            } else if(dataSetName.find("TTZ") != string::npos) {
+                NormFactor = 1.0 / 0.464597;
             }
             // else if(dataSetName.find("WJets") != string::npos) {
             //     NormFactor = 1.0/0.522796;
