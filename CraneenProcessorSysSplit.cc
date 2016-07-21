@@ -3355,7 +3355,7 @@ void Split2DatasetPlotter(int nBins,
                         // canv1->SaveAs(("weight"+weightstring+"_tt"+numStr+".png").c_str());
                     }
                     string MEScalesysname =
-                        channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" + mainTTbarSample + "__";
+                        channel + numStr1 + sSplitVar1 + numStr2 + sSplitVar2 + "__" +"ttbarTTX"+ "__";
 
                     histo1D[("PU_Up" + numStr1 + sSplitVar1 + numStr2 + sSplitVar2).c_str()]->Write(
                         (MEScalesysname + "PUUp").c_str());
