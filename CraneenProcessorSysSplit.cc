@@ -1125,7 +1125,7 @@ void DatasetPlotter(int nBins,
     Dataset* ttbar_bb_down;
     float PtLepton;
     bool split_ttbar = false;
-    bool reweight_ttbar = false;
+    bool reweight_ttbar = true;
     string mainTTbarSample, otherTTbarsample;
     string chanText;
     cout << "channel  " << channel << endl;
@@ -1148,12 +1148,12 @@ void DatasetPlotter(int nBins,
         chanText = "Dilepton: ee";
     else if(channel == "comb")
         chanText = "Dilepton: Combined";
-    double ll_rw = 0.976;
-    double bb_rw = 3.;
-    double ll_rw_up = 0.976;
-    double bb_rw_up = 3.;
-    double ll_rw_down = 0.976;
-    double bb_rw_down = 3.;
+    double ll_rw = 0.989;
+    double bb_rw = 1.714;
+    double ll_rw_up = 1.311;
+    double bb_rw_up = 2.270;
+    double ll_rw_down = 0.667;
+    double bb_rw_down = 1.158;
 
     if(split_ttbar) {
         int ndatasets = datasets.size();
@@ -1339,6 +1339,12 @@ void DatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFalphaTune", &SFalphaTune);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
+        
+        //Inflating btagging systematics by a factor of 2
+        float SFbtag_lightUpInflated = SFbtag_light + 2*(SFbtag_lightUp - SFbtag_light);
+        float SFbtag_lightDownInflated = SFbtag_light - 2*(SFbtag_light - SFbtag_lightDown);
+        float SFbtag_heavyUpInflated = SFbtag_heavy + 2*(SFbtag_heavyUp - SFbtag_heavy);
+        float SFbtag_heavyDownInflated = SFbtag_heavy - 2*(SFbtag_heavy - SFbtag_heavyDown);
 
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
@@ -1419,19 +1425,15 @@ void DatasetPlotter(int nBins,
                 ////////////////////////////////////////////////////////
 
                 float ttbbReweight = 1, ttbbReweight_up = 1, ttbbReweight_down = 1;
-                if(reweight_ttbar) {
-                    if(ttbar_flav < 0.5) { // light
-                        ttbbReweight *= ll_rw;
-                        ttbbReweight_up *= ll_rw_up;
-                        ttbbReweight_down *= ll_rw_down;
-                    } else if(ttbar_flav > 0.5 && ttbar_flav < 1.5) { // cc
-                        ttbbReweight *= ll_rw;
-                        ttbbReweight_up *= ll_rw_up;
-                        ttbbReweight_down *= ll_rw_down;
-                    } else {
+                if(reweight_ttbar && dataSetName.find("TTJets") != string::npos) {
+                    if(ttbar_flav == 2) {   // bb
                         ttbbReweight *= bb_rw;
                         ttbbReweight_up *= bb_rw_up;
                         ttbbReweight_down *= bb_rw_down;
+                    } else {                //other
+                        ttbbReweight *= ll_rw;
+                        ttbbReweight_up *= ll_rw_down; //anti-correlated with ttbb weight
+                        ttbbReweight_down *= ll_rw_up;
                     }
                 }
 
@@ -1487,17 +1489,17 @@ void DatasetPlotter(int nBins,
                     histo1D["PU_Down"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
                             SFbtag_heavy * SFalphaTune * SFPU_down * SFTopPt * SFbehrends * Luminosity * GenWeight *
                             eqlumi * ttbbReweight * LumiFactor);
-                    histo1D["btag_lightUp"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_lightUp *
+                    histo1D["btag_lightUp"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_lightUpInflated *
                             SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi *
                             ttbbReweight * LumiFactor);
                     histo1D["btag_lightDown"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
-                            SFbtag_lightDown * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            SFbtag_lightDownInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             GenWeight * eqlumi * ttbbReweight * LumiFactor);
                     histo1D["btag_heavyUp"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
-                            SFbtag_heavyUp * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight *
+                            SFbtag_heavyUpInflated * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight *
                             eqlumi * ttbbReweight * LumiFactor);
                     histo1D["btag_heavyDown"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
-                            SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight *
+                            SFbtag_heavyDownInflated * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight *
                             eqlumi * ttbbReweight * LumiFactor);
                     histo1D["heavyFlav_Up"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
                             SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi *
@@ -1568,16 +1570,16 @@ void DatasetPlotter(int nBins,
                             SFbtag_heavy * SFalphaTune * SFPU_down * SFTopPt * SFbehrends * Luminosity * GenWeight *
                             eqlumi * ttbbReweight * LumiFactor);
                     histo1D["btag_lightUp_tttt"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
-                            SFbtag_lightUp * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            SFbtag_lightUpInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             GenWeight * eqlumi * ttbbReweight * LumiFactor);
                     histo1D["btag_lightDown_tttt"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
-                            SFbtag_lightDown * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            SFbtag_lightDownInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             GenWeight * eqlumi * ttbbReweight * LumiFactor);
                     histo1D["btag_heavyUp_tttt"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
-                            SFbtag_heavyUp * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight *
+                            SFbtag_heavyUpInflated * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight *
                             eqlumi * ttbbReweight * LumiFactor);
                     histo1D["btag_heavyDown_tttt"]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
-                            SFbtag_light * SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            SFbtag_light * SFbtag_heavyDownInflated * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             GenWeight * eqlumi * ttbbReweight * LumiFactor);
 
                 } else if(dataSetName.find(otherTTbarsample) == string::npos && dataSetName.find("TTJets_aMCatNLO")==string::npos &&
@@ -1683,10 +1685,11 @@ void DatasetPlotter(int nBins,
         // cout<<"saved histos"<<endl;
     } // end of dataset loop
 
-    GetScaleEnvelope(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
-        CraneenPath, shapefileName, mainTTbarSample);
+    
     GetScaleEnvelope_tttt(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
         xmlNom, CraneenPath, shapefileName, mainTTbarSample);
+    GetScaleEnvelope(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
+        CraneenPath, shapefileName, mainTTbarSample);
     // if(channel.find("comb") == string::npos)
     GetMatching(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
         CraneenPath, mainTTbarSample, otherTTbarsample);
@@ -1952,10 +1955,18 @@ void SplitDatasetPlotter(int nBins,
         chanText = "Dilepton: #mu#mu";
     else if(channel == "ttttmuel")
         chanText = "Dilepton: e#mu";
-    else if(channel == "ttttmumu")
+    else if(channel == "ttttelel")
         chanText = "Dilepton: ee";
     else if(channel == "comb")
         chanText = "Dilepton: Combined";
+        
+    double ll_rw = 0.989;
+    double bb_rw = 1.714;
+    double ll_rw_up = 1.311;
+    double bb_rw_up = 2.270;
+    double ll_rw_down = 0.667;
+    double bb_rw_down = 1.158;
+
     ///////////////////////////////////////////////////////////// Load Datasets
     /////////////////////////////////////////////////////////////////////////cout<<"loading...."<<endl;
     TTreeLoader treeLoader;
@@ -2045,6 +2056,13 @@ void SplitDatasetPlotter(int nBins,
         nTuple[dataSetName.c_str()]->SetBranchAddress("SFtopPt", &SFTopPt);
         nTuple[dataSetName.c_str()]->SetBranchAddress("ttbar_flav", &ttbar_flav);
         // nTuple[dataSetName.c_str()]->SetBranchAddress("LeptonPt", &PtLepton);
+        
+        //Inflating btagging systematics by a factor of 2
+        float SFbtag_lightUpInflated = SFbtag_light + 2*(SFbtag_lightUp - SFbtag_light);
+        float SFbtag_lightDownInflated = SFbtag_light - 2*(SFbtag_light - SFbtag_lightDown);
+        float SFbtag_heavyUpInflated = SFbtag_heavy + 2*(SFbtag_heavyUp - SFbtag_heavy);
+        float SFbtag_heavyDownInflated = SFbtag_heavy - 2*(SFbtag_heavy - SFbtag_heavyDown);
+
         float eqlumi = 1. / datasets[d]->EquivalentLumi();
         cout << "eqlumi: " << eqlumi << endl;
 
@@ -2151,6 +2169,17 @@ void SplitDatasetPlotter(int nBins,
             //     Luminosity = 1000*lScale;
             // }
             float ttbbReweight = 1, ttbbReweight_up = 1, ttbbReweight_down = 1;
+                if(reweight_ttbar && dataSetName.find("TTJets") != string::npos) {
+                    if(ttbar_flav == 2) {   // bb
+                        ttbbReweight *= bb_rw;
+                        ttbbReweight_up *= bb_rw_up;
+                        ttbbReweight_down *= bb_rw_down;
+                    } else {                //other
+                        ttbbReweight *= ll_rw;
+                        ttbbReweight_up *= ll_rw_down; //anti-correlated with ttbb weight
+                        ttbbReweight_down *= ll_rw_up;
+                    }
+                }
             NormFactor = 1;
             SFtrigger = 1;
             // SFTopPt = 1;
@@ -2233,16 +2262,16 @@ void SplitDatasetPlotter(int nBins,
                             SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU_down * SFTopPt * SFbehrends * Luminosity *
                             eqlumi * ttbbReweight * LumiFactor * GenWeight);
                     histo1D[("btag_lightUp" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
-                            SFbtag_lightUp * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            SFbtag_lightUpInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             eqlumi * ttbbReweight * LumiFactor * GenWeight);
                     histo1D[("btag_lightDown" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                            SFlepton * SFbtag_lightDown * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                            SFlepton * SFbtag_lightDownInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
                             Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                     histo1D[("btag_heavyUp" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
-                            SFbtag_light * SFbtag_heavyUp * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            SFbtag_light * SFbtag_heavyUpInflated * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             eqlumi * ttbbReweight * LumiFactor * GenWeight);
                     histo1D[("btag_heavyDown" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                            SFlepton * SFbtag_light * SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                            SFlepton * SFbtag_light * SFbtag_heavyDownInflated * SFalphaTune * SFPU * SFTopPt * SFbehrends *
                             Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
 
                     histo1D[("heavyFlav_Up" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
@@ -2295,16 +2324,16 @@ void SplitDatasetPlotter(int nBins,
                             SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU_down * SFTopPt * SFbehrends * Luminosity *
                             eqlumi * ttbbReweight * LumiFactor * GenWeight);
                     histo1D[("btag_lightUp_tttt" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                            SFlepton * SFbtag_lightUp * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                            SFlepton * SFbtag_lightUpInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
                             Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                     histo1D[("btag_lightDown_tttt" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                            SFlepton * SFbtag_lightDown * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                            SFlepton * SFbtag_lightDownInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
                             Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                     histo1D[("btag_heavyUp_tttt" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                            SFlepton * SFbtag_light * SFbtag_heavyUp * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                            SFlepton * SFbtag_light * SFbtag_heavyUpInflated * SFalphaTune * SFPU * SFTopPt * SFbehrends *
                             Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                     histo1D[("btag_heavyDown_tttt" + stSplit).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                            SFlepton * SFbtag_light * SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                            SFlepton * SFbtag_light * SFbtag_heavyDownInflated * SFalphaTune * SFPU * SFTopPt * SFbehrends *
                             Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
 
                     MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
@@ -2385,16 +2414,16 @@ void SplitDatasetPlotter(int nBins,
                                     SFlepton * SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU_down * SFTopPt *
                                     Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("btag_lightUp" + numStr).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                                    SFlepton * SFbtag_lightUp * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt *
+                                    SFlepton * SFbtag_lightUpInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt *
                                     SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("btag_lightDown" + numStr).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                                    SFlepton * SFbtag_lightDown * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt *
+                                    SFlepton * SFbtag_lightDownInflated * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt *
                                     SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("btag_heavyUp" + numStr).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                                    SFlepton * SFbtag_light * SFbtag_heavyUp * SFalphaTune * SFPU * SFTopPt *
+                                    SFlepton * SFbtag_light * SFbtag_heavyUpInflated * SFalphaTune * SFPU * SFTopPt *
                                     SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("btag_heavyDown" + numStr).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
-                                    SFlepton * SFbtag_light * SFbtag_heavyDown * SFalphaTune * SFPU * SFTopPt *
+                                    SFlepton * SFbtag_light * SFbtag_heavyDownInflated * SFalphaTune * SFPU * SFTopPt *
                                     SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("heavyFlav_Up" + numStr).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
                                     SFlepton * SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
@@ -2446,16 +2475,16 @@ void SplitDatasetPlotter(int nBins,
                                     SFlepton * SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU_down * SFTopPt *
                                     SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("btag_lightUp_tttt" + numStr).c_str()]->Fill(varofInterest, NormFactor *
-                                    SFtrigger * SFlepton * SFbtag_lightUp * SFbtag_heavy * SFalphaTune * SFPU *
+                                    SFtrigger * SFlepton * SFbtag_lightUpInflated * SFbtag_heavy * SFalphaTune * SFPU *
                                     SFTopPt * SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("btag_lightDown_tttt" + numStr).c_str()]->Fill(varofInterest, NormFactor *
-                                    SFtrigger * SFlepton * SFbtag_lightDown * SFbtag_heavy * SFalphaTune * SFPU *
+                                    SFtrigger * SFlepton * SFbtag_lightDownInflated * SFbtag_heavy * SFalphaTune * SFPU *
                                     SFTopPt * SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("btag_heavyUp_tttt" + numStr).c_str()]->Fill(varofInterest, NormFactor *
-                                    SFtrigger * SFlepton * SFbtag_light * SFbtag_heavyUp * SFalphaTune * SFPU *
+                                    SFtrigger * SFlepton * SFbtag_light * SFbtag_heavyUpInflated * SFalphaTune * SFPU *
                                     SFTopPt * SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
                             histo1D[("btag_heavyDown_tttt" + numStr).c_str()]->Fill(varofInterest, NormFactor *
-                                    SFtrigger * SFlepton * SFbtag_light * SFbtag_heavyDown * SFalphaTune * SFPU *
+                                    SFtrigger * SFlepton * SFbtag_light * SFbtag_heavyDownInflated * SFalphaTune * SFPU *
                                     SFTopPt * SFbehrends * Luminosity * eqlumi * ttbbReweight * LumiFactor * GenWeight);
 
                             MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
@@ -2593,9 +2622,10 @@ void SplitDatasetPlotter(int nBins,
     } // end of dataset for loop
 
     
-    GetScaleEnvelopeSplit_tttt(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
-        sSplitVar, fbSplit, ftSplit, fwSplit, xmlNom, CraneenPath, shapefileName, mainTTbarSample);
+    
     GetScaleEnvelopeSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
+        sSplitVar, fbSplit, ftSplit, fwSplit, xmlNom, CraneenPath, shapefileName, mainTTbarSample);
+    GetScaleEnvelopeSplit_tttt(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
         sSplitVar, fbSplit, ftSplit, fwSplit, xmlNom, CraneenPath, shapefileName, mainTTbarSample);
     GetMatchingSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest, xmlNom,
         CraneenPath, mainTTbarSample, otherTTbarsample, sSplitVar, fbSplit, ftSplit, fwSplit);
