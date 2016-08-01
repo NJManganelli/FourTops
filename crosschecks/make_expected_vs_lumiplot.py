@@ -12,7 +12,7 @@ CMS_lumi.lumi_7TeV = "2.6-2600 fb^{-1}"
 CMS_lumi.lumi_8TeV = "2.6-2600 fb^{-1}"
 CMS_lumi.lumi_13TeV = "1-1000 fb^{-1}"
 CMS_lumi.writeExtraText = 1
-CMS_lumi.extraText = "Work in progress"
+CMS_lumi.extraText = "Simulation Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 
 
@@ -54,11 +54,14 @@ graph_a = rt.TGraphErrors('graph_data_combo.dat')
 graph_a.SetFillColor(rt.kGray)
 graph_a.SetFillStyle(1001)
 graph_a.SetLineColor(rt.kGray)
-
+graph_b=graph_a.Clone()
+graph_b.SetLineColor(rt.kBlack)
+graph_b.SetLineWidth(2)
 
 graph_a.Draw('A3')
+graph_b.Draw('cx')
 
-theline2 = rt.TLine(2.6,0,2.6,graph_a.GetHistogram().GetMaximum())
+theline2 = rt.TLine(2.6,0,2.6,0.8*graph_a.GetHistogram().GetMaximum())
 theline2.SetLineStyle(2)
 theline2.Draw("same")
 
