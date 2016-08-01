@@ -47,7 +47,7 @@
 #include "TopTreeAnalysisBase/Reconstruction/interface/JetCorrectionUncertainty.h"
 #include "TopTreeAnalysisBase/Reconstruction/interface/MakeBinning.h"
 #include "TopTreeAnalysisBase/MCInformation/interface/LumiReWeighting.h"
-#include "TopTreeAnalysisBase/MCInformation/interface/JethadronMatching.h"
+// #include "TopTreeAnalysisBase/MCInformation/interface/JetpartonMatching.h"
 #include "TopTreeAnalysisBase/Reconstruction/interface/MEzCalculator.h"
 #include "TopTreeAnalysisBase/Tools/interface/LeptonTools.h"
 #include "TopTreeAnalysisBase/Tools/interface/SourceDate.h"
@@ -352,9 +352,9 @@ int main (int argc, char *argv[])
             }
         }    
         else {
-            btwt = new BTagWeightTools(bTagReader,"histos/HistosPtEta_JECon_76X_v1.root",false,30,510,2.4); 
-            btwtUp = new BTagWeightTools(bTagReaderUp,"histos/HistosPtEta_JECon_76X_v1.root",false,30,510,2.4); 
-            btwtDown = new BTagWeightTools(bTagReaderDown,"histos/HistosPtEta_JECon_76X_v1.root",false,30,510,2.4); 
+            btwt = new BTagWeightTools(bTagReader,"histos/Histos73X_V3_TTJets.root",false,30,510,2.4); 
+            btwtUp = new BTagWeightTools(bTagReaderUp,"histos/Histos73X_V3_TTJets.root",false,30,510,2.4); 
+            btwtDown = new BTagWeightTools(bTagReaderDown,"histos/Histos73X_V3_TTJets.root",false,30,510,2.4); 
         }
     }
 
@@ -791,7 +791,7 @@ int main (int argc, char *argv[])
         
         string Ntupname    = "Craneens" + channelpostfix + "/Craneens" + date_str + "/Craneen_" + dataSetName + postfix + ".root";     
         TFile * tupfile    = new TFile(Ntupname.c_str(),"RECREATE");
-        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:BDT_trijet2:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFtopPt"
+        TNtuple * tup      = new TNtuple(Ntuptitle.c_str(), Ntuptitle.c_str(), "RunID:LumiBlockID:EventID:BDT:nJets:NOrigJets:nLtags:nMtags:nTtags:HT:LeptonPt:LeptonEta:LeadingBJetPt:HT2M:HTb:HTH:HTRat:HTX:SumJetMassX:BDT_trijet2:nbb:ncc:nll:ttbar_flav:ScaleFactor:SFtopPt"
             ":SFlepton:SFbtagCSV:SFbtag_light:SFbtag_lightUp:SFbtag_lightDown:SFbtag_heavy:SFbtag_heavyUp:SFbtag_heavyDown:SFPU:SFPU_up:SFPU_down:PU:NormFactor:Luminosity:GenWeight:weight1:weight2:weight3:weight4:weight5:weight6:weight7:weight8:met:angletop1top2:angletoplep:1stjetpt:2ndjetpt"
             ":leptonIso:leptonphi:chargedHIso:neutralHIso:photonIso:PUIso:5thjetpt:6thjetpt:jet5and6pt:csvJet1:csvJet2:csvJet3:csvJet4:csvJetpt1:csvJetpt2:csvJetpt3:csvJetpt4:anglebjet1bjet2:angleBestTopAllJet:angleBestTopAllJetCorrect"
             ":bestTopPt:geoMeanJet5and6Pt:Sphericity:Oblateness:Aplanarity:h10:h20:h30:h40:h50:h60:ht:ht3:et0:sqrts:njetW:njetW105:njetW115:njetW135:njetW145:njetW160:et56:centrality:nLtagsExcl:nMtagsExcl:HTbLoose:HTbTight"
@@ -800,7 +800,7 @@ int main (int argc, char *argv[])
             "fTrigetap8Pt50:fTrigetap8Pt60:fTrigetap8Pt100:fTrigeta1p4Pt35:fTrigeta1p4Pt40:fTrigeta1p4Pt50:fTrigeta1p4Pt60:fTrigeta1p4Pt100:fTrigeta1p6Pt35:fTrigeta1p6Pt40:fTrigeta1p6Pt50:fTrigeta1p6Pt60:"
             "fTrigeta1p6Pt100:fTrigeta2Pt35:fTrigeta2Pt40:fTrigeta2Pt50:fTrigeta2Pt60:fTrigeta2Pt100:fTrigeta2p58Pt35:fTrigeta2p58Pt40:fTrigeta2p58Pt50:fTrigeta2p58Pt60:fTrigeta2p58Pt100");
 
-    cout<<"created tups"<<endl;
+        cout<<"created tups"<<endl;
         string Ntupjetname = "Craneens" + channelpostfix + "/Craneens" + date_str + "/CraneenJets_" + dataSetName + postfix + ".root";
         TFile * tupjetfile = new TFile(Ntupjetname.c_str(),"RECREATE");
         TNtuple * tupjet   = new TNtuple(Ntuptitle.c_str(),Ntuptitle.c_str(), "lep_E:lep_Px:lep_Py:lep_Pz:eventID:nJets:jetpT:jetPx:jetPy:jetPz:jetE:jetFlav:csvDisc:jeteta:jetphi:jetLeptDR:ScaleFactor:NormFactor:Luminosity:SFlepton:SFbtag:SFbtag_light:SFbtag_lightUp:SFbtag_lightDown"
@@ -815,7 +815,7 @@ int main (int argc, char *argv[])
         TFile * tupCutfile   = new TFile(NtupCutsname.c_str(),"RECREATE");
 
         string cutTuptitle = "Craneen_" + channelpostfix + "_CutFlow";
-        TNtuple * cuttup = new TNtuple(cutTuptitle.c_str(),cutTuptitle.c_str(),"ScaleFactor:NormFactor:Luminosity:initial:isGoodPV:trigger:Lep1:Lep2:nJet1:nJets6:nTags:HT");
+        TNtuple * cuttup = new TNtuple(cutTuptitle.c_str(),cutTuptitle.c_str(),"ttbar_flav:ScaleFactor:NormFactor:Luminosity:initial:isGoodPV:trigger:Lep1:Lep2:nJet1:nJets6:nTags:HT");
 
 
         ////////////////////////////////////////////////////////////
@@ -1253,7 +1253,11 @@ int main (int argc, char *argv[])
                     btagWeight_heavyDown =  btwtDown->getMCEventWeight(selectedHeavyJets, false);                    
                 }
                 
-                if(debug) cout<<"btag weight "<<btagWeight_light<<"  btag weight Up "<<btagWeight_lightUp<<"   btag weight Down "<<btagWeight_lightDown<<endl;
+                cout<<"btag weight "<<btagWeight_light<<"  btag weight Up "<<btagWeight_lightUp<<"   btag weight Down "<<btagWeight_lightDown<<endl;
+            }
+
+            for(int sellight=0;sellight<selectedLightJets.size();sellight++){
+                cout<<"pt: "<<selectedLightJets[sellight]->Pt()<<"   eta: "<<selectedLightJets[sellight]->Eta()<<" csv disc "<<selectedLightJets[sellight]->btag_combinedInclusiveSecondaryVertexV2BJetTags()<<endl;
             }
             // if(ievt<1000)
             // {
@@ -1278,7 +1282,7 @@ int main (int argc, char *argv[])
                     if(jetdisc<0.0) jetdisc = -0.05;
                     if(jetdisc>1.0) jetdisc = 1.0;
                     BTagEntry::JetFlavor jflav;
-                    int jethadronflav = std::abs(selectedJets[jetbtag]-hadronFlavour());
+                    int jethadronflav = std::abs(selectedJets[jetbtag]->hadronFlavour());
                     if(debug) cout<<"hadron flavour: "<<jethadronflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
                     if(jethadronflav == 5){
                         jflav = BTagEntry::FLAV_B;
@@ -1292,8 +1296,8 @@ int main (int argc, char *argv[])
                         jflav = BTagEntry::FLAV_UDSG;
                         isLFlav = true;
                     }
-                    if( dataSetName.find("JESUp") )        bTagEff = reader_JESUp->eval(jflav, jeteta, jetpt, jetdisc);
-                    else if( dataSetName.find("JESDown") ) bTagEff = reader_JESDown->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( dataSetName.find("JESUp")!=string::npos )        bTagEff = reader_JESUp->eval(jflav, jeteta, jetpt, jetdisc);
+                    else if( dataSetName.find("JESDown")!=string::npos ) bTagEff = reader_JESDown->eval(jflav, jeteta, jetpt, jetdisc);
                     else bTagEff = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
 
                     if( isBFlav ) bTagEff_LFUp = reader_LFUp->eval(jflav, jeteta, jetpt, jetdisc);
@@ -1458,14 +1462,85 @@ int main (int argc, char *argv[])
                 negWeights++;
             }
 
+            /////////////////////////////////////////////////
+            //           heavy flav  reweighting           //
+            /////////////////////////////////////////////////
 
+            float numOfbb = 0;
+            float numofllGen = 0;
+            float numOfbb_20 = 0;
+            float numofllGen_20 = 0;            
+            float numOfbbReco= 0;
+            float numofllReco = 0;
+            float numOfcc = 0;
+            float numOfll = 0;
+
+            for (int gj = 0; gj<genjets.size(); gj++){
+                //cout<<"gj: "<<gj<<"constit: "<<genjets[gj]->nConstituents()<<"  BHad:"<<genjets[gj]->BHadron().Et()<<"  Bhad part: "<<genjets[gj]->type()<<endl;
+                if (genjets[gj]->BHadron().Et()>0){
+                    if(genjets[gj]->Pt()>30 && abs(genjets[gj]->Eta()<2.5))  numOfbb++;
+                }
+                if (genjets[gj]->Pt()>30 && abs(genjets[gj]->Eta()<2.5)) numofllGen++;
+                if (genjets[gj]->BHadron().Et()>0){
+                    if(genjets[gj]->Pt()>20 && abs(genjets[gj]->Eta()<2.5))  numOfbb_20++;
+                }
+                if (genjets[gj]->Pt()>20 && abs(genjets[gj]->Eta()<2.5)) numofllGen_20++;
+            }
+
+            for( int selj = 0; selj < selectedJets.size(); selj++){
+                if (abs(selectedJets[selj]->hadronFlavour()) == 5 ) numOfbbReco++ ;
+                numofllReco++;
+            }
+            if(numofllGen>=4){
+                whatnumberll++;
+            }
+            if(numofllGen_20>=4){
+                whatnumberll_20++;
+            }
+            if(numofllReco>=4){
+                whatnumberllReco++;
+            }
+
+            if(numOfbb>2){
+                whatnumberb2++;
+            }      
+            if(numOfbb>3){
+                whatnumberb++;
+            }
+            if(numOfbb_20>2){
+                whatnumberb2_20++;
+            }      
+            if(numOfbb_20>3){
+                whatnumberb_20++;
+            }
+            if(numOfbbReco>2){
+                whatnumberb2Reco++;
+            }
+            if(numOfbbReco>3){
+                whatnumberbReco++;
+            }
+
+
+
+            float ttbar_flav = -1;
+
+
+            if(numOfbb_20>2){
+                ttbar_flav = 2;
+            }
+            // else if(numOfcc>2){
+            //     ttbar_flav = 1;
+            // }
+            else{
+                ttbar_flav = 0;
+            }
 
             /////////////////////////////////////
             //    Fill cuts table + z peak     //
             /////////////////////////////////////
             zPeakMaker->fillPlot(datasets, d, Luminosity, scaleFactor);
             tupCutfile->cd();
-            cutsTable->FillTable(d, normfactor, Luminosity, isGoodPV, trigged, scaleFactor, nMu, nLooseMu, nEl, nLooseEl, nJets, nLtags, nMtags, nTtags, cuttup);   if(debug) cout<<"cuts table filled"<<endl;
+            cutsTable->FillTable(d, normfactor, Luminosity, isGoodPV, trigged, ttbar_flav, scaleFactor, nMu, nLooseMu, nEl, nLooseEl, nJets, nLtags, nMtags, nTtags, cuttup);   if(debug) cout<<"cuts table filled"<<endl;
  
 
             // float vals[111] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -1614,7 +1689,7 @@ int main (int argc, char *argv[])
             preTrig++;
             if (debug)cout<<"triggered? Y/N?  "<< trigged  <<endl;
             //if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos || dataSetName.find("DATA") != string::npos){
-            if (!trigged)          continue;  //If an HLT condition is not present, skip this event in the loop.       
+            // if (!trigged)          continue;  //If an HLT condition is not present, skip this event in the loop.       
             //}
             postTrig++; 
             /////////////////////////////////////////////////
@@ -1638,57 +1713,7 @@ int main (int argc, char *argv[])
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //                                                                                 Baseline Event selection                                                                      //
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            float numOfbb = 0;
-            float numofllGen = 0;
-            float numOfbb_20 = 0;
-            float numofllGen_20 = 0;            
-            float numOfbbReco= 0;
-            float numofllReco = 0;
 
-            for (int gj = 0; gj<genjets.size(); gj++){
-                //cout<<"gj: "<<gj<<"constit: "<<genjets[gj]->nConstituents()<<"  BHad:"<<genjets[gj]->BHadron().Et()<<"  Bhad part: "<<genjets[gj]->type()<<endl;
-                if (genjets[gj]->BHadron().Et()>0){
-                    if(genjets[gj]->Pt()>30 && abs(genjets[gj]->Eta()<2.5))  numOfbb++;
-                }
-                if (genjets[gj]->Pt()>30 && abs(genjets[gj]->Eta()<2.5)) numofllGen++;
-                if (genjets[gj]->BHadron().Et()>0){
-                    if(genjets[gj]->Pt()>20 && abs(genjets[gj]->Eta()<2.5))  numOfbb_20++;
-                }
-                if (genjets[gj]->Pt()>20 && abs(genjets[gj]->Eta()<2.5)) numofllGen_20++;
-            }
-
-            for( int selj = 0; selj < selectedJets.size(); selj++){
-                if (abs(selectedJets[selj]->hadronFlavour()) == 5 ) numOfbbReco++ ;
-                numofllReco++;
-            }
-            if(numofllGen>=4){
-                whatnumberll++;
-            }
-            if(numofllGen_20>=4){
-                whatnumberll_20++;
-            }
-            if(numofllReco>=4){
-                whatnumberllReco++;
-            }
-
-            if(numOfbb>2){
-                whatnumberb2++;
-            }      
-            if(numOfbb>3){
-                whatnumberb++;
-            }
-            if(numOfbb_20>2){
-                whatnumberb2_20++;
-            }      
-            if(numOfbb_20>3){
-                whatnumberb_20++;
-            }
-            if(numOfbbReco>2){
-                whatnumberb2Reco++;
-            }
-            if(numOfbbReco>3){
-                whatnumberbReco++;
-            }
             if (Muon)
             {   
                 if  (  (!( nMu == 1 && nEl == 0 && nLooseMu == 1 && nJets>=6  && nMtags >=2)) )continue; // Muon Channel Selection
@@ -1710,57 +1735,6 @@ int main (int argc, char *argv[])
             }
             passed++;
 
-            /////////////////////////////////////////////////
-            //           heavy flav  reweighting           //
-            /////////////////////////////////////////////////
-            // float numOfbb = 0;
-            float numOfcc = 0;
-            float numOfll = 0;
-            float numberofbtops = 0;
-            float numberofctops = 0;
-            float ttbar_flav = -1;
-            vector<TRootMCParticle*> mcParticles_flav;
-            // TRootGenEvent* genEvt_flav = 0;
-            // if(dataSetName.find("TTJets")!=string::npos|| dataSetName.find("TTScale")!=string::npos){
-            //     // genEvt_flav = treeLoader.LoadGenEvent(ievt,false);
-            //     treeLoader.LoadMCEvent(ievt, 0, mcParticles_flav,false);
-            //     for(unsigned int p=0; p<mcParticles_flav.size(); p++) {
-            //         // cout<<"status: "<<mcParticles_flav[p]->status()<<"  id: "<<mcParticles_flav[p]->type()<<" mother: "<<mcParticles_flav[p]->motherType()<<endl;
-            //         // if(mcParticles_flav[p]->status()<30 && mcParticles_flav[p]->status()>20 && abs(mcParticles_flav[p]->motherType())!=6){
-
-            //         //     if (abs(mcParticles_flav[p]->type())==5)
-            //         //     {
-            //         //         // ttbar_flav=2;
-            //         //         numOfbb++;  
-            //         //     }
-                        
-            //         //     else if (abs(mcParticles_flav[p]->type())==4 && abs(mcParticles_flav[p]->motherType())!=5 && abs(mcParticles_flav[p]->motherType())!=24)
-            //         //     {
-            //         //         // ttbar_flav=1;
-            //         //         numOfcc++; 
-            //         //     }
-                        
-            //         //     else if (abs(mcParticles_flav[p]->type())<4){
-            //         //         // ttbar_flav=1;
-            //         //         numOfll++; 
-            //         //     }
-            //         // }
-            //         if (abs(mcParticles_flav[p]->type())==5){
-            //              if(abs(mcParticles_flav[p]->motherType())!=6 && mcParticles_flav[p]->status()==71){
-            //                 // numberofbtops++;
-            //                 numOfbb++;
-            //              }
-            //         }
-            //         else if (abs(mcParticles_flav[p]->type())==4){
-            //             if(mcParticles_flav[p]->status()==71){
-            //                 if(abs(mcParticles_flav[p]->motherType())!=5 && abs(mcParticles_flav[p]->motherType())!=24) numOfcc++;
-            //                  // numberofctops++;
-            //                 // else if (abs(mcParticles_flav[p]->motherType())==24) numberofctops++;
-            //             }
-            //         }
-            //     }
-            // } 
-
 
 
             //temporary to calculate heavy flav 
@@ -1778,6 +1752,7 @@ int main (int argc, char *argv[])
 
             float fTopPtsf = 1, fAntitopPtsf = 1, fTopPtReWeightsf = 1;
             int nTops = 0;
+            vector<TRootMCParticle*> mcParticles_flav;
 
             if((bTopPt==true) && (dataSetName.find("TTJets")!=string::npos || dataSetName.find("TTScale")!=string::npos))
             {
@@ -1801,12 +1776,12 @@ int main (int argc, char *argv[])
                     }
                 }
                 if( nTops<2){
-                    cout<<"less than two tops"<<endl;
-                    cout<<"topsf: "<<fTopPtsf<<"    antitopsf: "<<fAntitopPtsf<<endl;
+                    // cout<<"less than two tops"<<endl;
+                    // cout<<"topsf: "<<fTopPtsf<<"    antitopsf: "<<fAntitopPtsf<<endl;
                 }
                 else if( nTops>2){
-                    cout<<"more than two tops"<<endl;
-                    cout<<"topsf: "<<fTopPtsf<<"    antitopsf: "<<fAntitopPtsf<<endl;
+                    // cout<<"more than two tops"<<endl;
+                    // cout<<"topsf: "<<fTopPtsf<<"    antitopsf: "<<fAntitopPtsf<<endl;
                 }
                 fTopPtReWeightsf = sqrt(fTopPtsf*fAntitopPtsf);
                 scaleFactor *= fTopPtReWeightsf;
@@ -2063,18 +2038,8 @@ int main (int argc, char *argv[])
 
             // numOfbb = numberofbs - numberofbtops;
             // numOfcc = numberofcs - numberofctops;
-            cout<<"numOfbb: "<<numOfbb<<"  numOfcc: "<< numOfcc<<endl;
+            // cout<<"numOfbb: "<<numOfbb<<"  numOfcc: "<< numOfcc<<endl;
 
-
-            if(numOfbb>3){
-                ttbar_flav = 2;
-            }
-            else if(numOfcc>2){
-                ttbar_flav = 1;
-            }
-            else{
-                ttbar_flav = 0;
-            }
 
             // if(Muon){
             //     // muonpt  = selectedMuons[0]->Pt();
@@ -2147,7 +2112,7 @@ int main (int argc, char *argv[])
 
 
 
-            float vals[140] = {BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,
+            float vals[143] = {(float)event->runId(),(float)event->lumiBlockId(),(float)event->eventId(),BDTScore,nJets,nOrigJets,nLtags,nMtags,nTtags,HT,selectedLeptonPt,leptoneta,bjetpt,HT2M,HTb,HTH,HTRat,HTX,SumJetMassX,diTopness,numOfbb,numOfcc,numOfll,ttbar_flav,scaleFactor,fTopPtReWeightsf,fleptonSF,
                 btagWeightCSV,btagWeight_light,btagWeight_lightUp,btagWeight_lightDown,btagWeight_heavy,btagWeight_heavyUp,btagWeight_heavyDown,lumiWeight,lumiWeight_up,lumiWeight_down,nvertices,normfactor,Luminosity,weight_0,weight_1,weight_2,weight_3,weight_4,weight_5,weight_6,weight_7,weight_8,met,angletop1top2,
                 angletoplep,firstjetpt,secondjetpt,leptonIso,leptonphi,chargedHIso,neutralHIso,photonIso,PUIso,jet5Pt,jet6Pt,jet5and6Pt, csvJetcsv1, csvJetcsv2, csvJetcsv3, csvJetcsv4, csvJetpt1, csvJetpt2, csvJetpt3, csvJetpt4,anglebjet1bjet2,
                  angleBestTopAllJet, angleBestTopAllJetCorrect, bestTopPt, geoMeanJet5and6Pt,fSphericity,fOblateness,fAplanarity,fh10,fh20,fh30,fh40,fh50,fh60,fht,fht3,fet0,fsqrts,fnjetW,fnjetW105,fnjetW115,fnjetW135,fnjetW145,fnjetW160,fet56,fcentrality, nLtagsEXCL, 
