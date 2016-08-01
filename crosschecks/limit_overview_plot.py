@@ -71,17 +71,20 @@ observed=[8.9688+0.5,10.7812+0.5,21.1875+0.5]
 
 
 # dedicated histogram to contain the background
-backgrounddummyhist = rt.TH2F("backgrounddummyhist","",2,0,70,4,-0.1,4)
+backgrounddummyhist = rt.TH2F("backgrounddummyhist","",2,0,70,4,-0.1,4.5)
 backgrounddummyhist.SetXTitle("95 % CL limit on #mu = #sigma_{obs} / #sigma_{SM}")
+backgrounddummyhist.GetXaxis().SetTitleSize(0.9*backgrounddummyhist.GetXaxis().GetTitleSize())
+backgrounddummyhist.GetXaxis().SetTitleOffset(backgrounddummyhist.GetXaxis().GetTitleOffset()/0.9)
 backgrounddummyhist.GetYaxis().SetBinLabel(1,"")
 backgrounddummyhist.GetYaxis().SetBinLabel(2,"")
 backgrounddummyhist.GetYaxis().SetBinLabel(3,"")
 backgrounddummyhist.GetYaxis().SetBinLabel(4,"")
-backgrounddummyhist.GetYaxis().SetNdivisions(2)
+backgrounddummyhist.GetYaxis().SetNdivisions(1)
+backgrounddummyhist.GetYaxis().SetTickLength(0.0)
 
 SMband = rt.TGraphAsymmErrors(2)
 SMband.SetLineColor(rt.kRed)
-SMband.SetLineWidth(0)
+SMband.SetLineWidth(2)
 SMband.SetFillColor(rt.kRed)
 SMband.SetFillStyle(500)
 SMband.SetPoint(0,1.,values[0]-0.5)
@@ -96,26 +99,27 @@ expectedcentralvals.SetLineColor(rt.kGray+1)
 expectedcentralvals.SetMarkerSize(0)
 expectedcentralvals.SetMarkerStyle(0)
 
+sigmatttt=1.0 # set to 1 for signal strength plot
 
 oneSigma = rt.TGraphAsymmErrors(3)
-oneSigma.SetFillColor(rt.kGreen)
-oneSigma.SetLineColor(rt.kGreen)
+oneSigma.SetFillColor(rt.kGray+1)
+oneSigma.SetLineColor(rt.kGray+1)
 oneSigma.SetFillStyle(1001)
 twoSigma = rt.TGraphAsymmErrors(3)
-twoSigma.SetFillColor(rt.kYellow)
-twoSigma.SetLineColor(rt.kYellow)
+twoSigma.SetFillColor(rt.kGray)
+twoSigma.SetLineColor(rt.kGray)
 twoSigma.SetFillStyle(1001)
 
 for ii in range(len(limit)) :
 #    print ii," ",limit[ii]
-    centralvals.SetPoint(ii,observed[ii],values[ii])
+    centralvals.SetPoint(ii,sigmatttt*observed[ii],values[ii])
     centralvals.SetPointError(ii,0.0,0.0,0.5,0.5)
-    expectedcentralvals.SetPoint(ii,limit[ii],values[ii])
+    expectedcentralvals.SetPoint(ii,sigmatttt*limit[ii],values[ii])
     expectedcentralvals.SetPointError(ii,0.0,0.0,0.5,0.5)
-    oneSigma.SetPoint(ii,limit[ii],values[ii])
-    oneSigma.SetPointError(ii,limit[ii]-onesigdown[ii],onesigup[ii]-limit[ii],0.5,0.5)
-    twoSigma.SetPoint(ii,limit[ii],values[ii])
-    twoSigma.SetPointError(ii,limit[ii]-twosigdown[ii],twosigup[ii]-limit[ii],0.5,0.5)
+    oneSigma.SetPoint(ii,sigmatttt*limit[ii],values[ii])
+    oneSigma.SetPointError(ii,sigmatttt*(limit[ii]-onesigdown[ii]),sigmatttt*(onesigup[ii]-limit[ii]),0.5,0.5)
+    twoSigma.SetPoint(ii,sigmatttt*limit[ii],values[ii])
+    twoSigma.SetPointError(ii,sigmatttt*(limit[ii]-twosigdown[ii]),sigmatttt*(twosigup[ii]-limit[ii]),0.5,0.5)
 
 
 x1_l = 0.92
@@ -130,8 +134,19 @@ backgrounddummyhist.Draw()
 twoSigma.Draw("2same")
 oneSigma.Draw("2same")
 SMband.Draw("lsame")
+centralvals.SetLineWidth(2*centralvals.GetLineWidth())
+centralvals.SetMarkerSize(1.2*centralvals.GetMarkerSize())
 centralvals.Draw("p")
 expectedcentralvals.Draw("p")
+
+leg = rt.TLegend(0.6,0.7,0.9,0.9,"limits on #sigma_{tttt}")
+leg.SetFillStyle(0)
+leg.SetBorderSize(0)
+leg.AddEntry(centralvals,"observed","lp")
+leg.AddEntry(oneSigma,"expected #pm 1 #sigma","f")
+leg.AddEntry(twoSigma,"expected #pm 2 #sigma","f")
+
+leg.Draw("same")
 latex = rt.TLatex()
 latex.SetTextSize(0.9*latex.GetTextSize())
 latex.SetTextAlign(12)
