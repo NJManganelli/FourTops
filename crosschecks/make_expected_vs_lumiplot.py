@@ -64,33 +64,43 @@ graph_b.Draw('cx')
 theline2 = rt.TLine(2.6,0,2.6,0.8*graph_a.GetHistogram().GetMaximum())
 theline2.SetLineStyle(2)
 theline2.Draw("same")
+theline3 = rt.TLine(30,0,30,0.8*graph_a.GetHistogram().GetMaximum())
+theline3.SetLineStyle(3)
+#theline3.Draw("same")
 
 graph_a.Draw('c')
 theline = rt.TF1("theline","1",0,1000)
 theline.Draw("same")
+theline2.Draw("same")
+#theline3.Draw("same")
 graph_a.GetXaxis().SetTitle("(expected) integrated luminosity (fb^{-1})")
-graph_a.GetYaxis().SetTitle("Asymptotic CLS expected upper limit")
+graph_a.GetXaxis().SetTitleSize(graph_a.GetXaxis().GetTitleSize()*0.85)
+graph_a.GetYaxis().SetTitle("95 % CL limit on #sigma_{t#bar{t}t#bar{t}} (#sigma_{obs} / #sigma_{SM})")
+graph_a.GetYaxis().SetTitleSize(graph_a.GetYaxis().GetTitleSize()*0.95)
 graph_a.GetYaxis().SetTitleOffset(0.9)
+graph_a.GetXaxis().SetTitleOffset(1.1)
+
 
 
 x1_l = 0.92
 y1_l = 0.90
 
-dx_l = 0.30
-dy_l = 0.18
+dx_l = 0.40
+dy_l = 0.25
 x0_l = x1_l-dx_l
 y0_l = y1_l-dy_l
 
 
 legend =  rt.TLegend(x0_l,y0_l,x1_l, y1_l )
-legend.SetFillStyle( 0)
+legend.SetFillColor(rt.kWhite)
 legend.SetBorderSize(0)
 #legend.AddEntry(graph_b,"2015 data","p")
 #legend.AddEntry(graph_a,"lepton+jets","lf")
 #legend.AddEntry(graph_a,"dilepton","lf")
-legend.AddEntry(graph_a,"combined","lf")
+legend.AddEntry(graph_a,"combined limit (expected)","lf")
 legend.AddEntry(theline,"SM t#bar{t}t#bar{t}","l")
 legend.AddEntry(theline2,"2015 integrated lumi","l")
+#legend.AddEntry(theline3,"2016 integrated lumi (expected)","l")
 
 legend.Draw()
 
