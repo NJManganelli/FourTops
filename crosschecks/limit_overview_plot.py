@@ -55,23 +55,23 @@ canvas.SetTickx(0)
 canvas.SetTicky(0)
 
 values=[0.5,1.5,2.5]
-names={"di-lepton","single-lepton","combined"}
+names={"dilepton","singlelepton","combined"}
 
 ####
 #### THE ARRAYS BELOW IS WHERE YOU ENTER THE ONE- AND TWO- SIGMA LIMITS
 ####
 ####
-twosigdown=[4.4318,5.3275,9.7247]
-onesigdown=[6.1509,7.3513,13.8889]
-limit=[8.9688,10.7812,21.1875]
-onesigup=[13.3660,16.0671,33.2645]
-twosigup=[19.2872,23.3155,50.5505]
-observed=[8.9688+0.5,10.7812+0.5,21.1875+0.5]
+twosigdown=[4.9983,5.8729,9.4567]
+onesigdown=[7.0762,8.2953,13.9261]
+limit=[10.8438,12.6875,22.3125]
+onesigup=[17.5002,20.4757,38.1436]
+twosigup=[28.2595,32.7815,63.9038]
+observed=[10.2256,16.0633,14.8942]
 
 
 
 # dedicated histogram to contain the background
-backgrounddummyhist = rt.TH2F("backgrounddummyhist","",2,0,70,4,-0.1,4.5)
+backgrounddummyhist = rt.TH2F("backgrounddummyhist","",2,0,90,4,-0.1,4.5)
 backgrounddummyhist.SetXTitle("95 % CL limit on #mu = #sigma_{obs} / #sigma_{SM}")
 backgrounddummyhist.GetXaxis().SetTitleSize(0.9*backgrounddummyhist.GetXaxis().GetTitleSize())
 backgrounddummyhist.GetXaxis().SetTitleOffset(backgrounddummyhist.GetXaxis().GetTitleOffset()/0.9)
