@@ -16,6 +16,7 @@ import csv
 
 #set the tdr style
 tdrstyle.setTDRStyle()
+rt.gStyle.SetLegendFont(42)
 
 #change the CMS_lumi variables (see CMS_lumi.py)
 CMS_lumi.lumi_7TeV = "2.6-2600 fb^{-1}"
@@ -72,9 +73,9 @@ observed=[10.2256,16.0633,14.8942]
 
 # dedicated histogram to contain the background
 backgrounddummyhist = rt.TH2F("backgrounddummyhist","",2,0,90,4,-0.1,4.5)
-backgrounddummyhist.SetXTitle("95 % CL limit on #mu = #sigma_{obs} / #sigma_{SM}")
-backgrounddummyhist.GetXaxis().SetTitleSize(0.9*backgrounddummyhist.GetXaxis().GetTitleSize())
-backgrounddummyhist.GetXaxis().SetTitleOffset(backgrounddummyhist.GetXaxis().GetTitleOffset()/0.9)
+backgrounddummyhist.SetXTitle("95 % CL limit on #mu = #sigma_{obs} / #sigma_{SM} ")
+backgrounddummyhist.GetXaxis().SetTitleSize(0.8*backgrounddummyhist.GetXaxis().GetTitleSize())
+backgrounddummyhist.GetXaxis().SetTitleOffset(backgrounddummyhist.GetXaxis().GetTitleOffset()/0.8)
 backgrounddummyhist.GetYaxis().SetBinLabel(1,"")
 backgrounddummyhist.GetYaxis().SetBinLabel(2,"")
 backgrounddummyhist.GetYaxis().SetBinLabel(3,"")
@@ -150,13 +151,13 @@ leg.Draw("same")
 latex = rt.TLatex()
 latex.SetTextSize(0.9*latex.GetTextSize())
 latex.SetTextAlign(12)
-latex.DrawLatex(1.05*twosigup[2],values[0],"combined")
-latex.DrawLatex(1.05*twosigup[2],values[1],"single lepton")
-latex.DrawLatex(1.05*twosigup[2],values[2],"dilepton")
+latex.DrawLatex(1.05*twosigup[2],values[0],"Combined")
+latex.DrawLatex(1.05*twosigup[2],values[1],"Single Lepton")
+latex.DrawLatex(1.05*twosigup[2],values[2],"Dilepton")
 latex.SetTextColor(rt.kRed)
 latex.SetTextAlign(21)
-latex.SetTextSize(0.5*latex.GetTextSize())
-latex.DrawLatex(1.02,3.05,"SM")
+latex.SetTextSize(0.75*latex.GetTextSize())
+latex.DrawLatex(2.0,3.05,"SM")
 canvas.Update()
 
 CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
@@ -172,4 +173,3 @@ canvas.Print("limit_overview_plot.root")
 
 
 raw_input("Press Enter to Continue: ")
-
