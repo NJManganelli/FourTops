@@ -491,8 +491,6 @@ int main (int argc, char *argv[])
         else if(Electron){
             electronSFWeight = new ElectronSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/CutBasedID_TightWP_76X_18Feb.txt_SF2D.root","EGamma_SF2D",true,false);    
             electronSFWeightReco = new ElectronSFWeight("../TopTreeAnalysisBase/Calibrations/LeptonSF/eleRECO.txt.egamma_SF2D.root","EGamma_SF2D",true,false);    
-
-        
         }
     }
     /////////////////////////////////////////////////
@@ -1253,11 +1251,11 @@ int main (int argc, char *argv[])
                     btagWeight_heavyDown =  btwtDown->getMCEventWeight(selectedHeavyJets, false);                    
                 }
                 
-                cout<<"btag weight "<<btagWeight_light<<"  btag weight Up "<<btagWeight_lightUp<<"   btag weight Down "<<btagWeight_lightDown<<endl;
+                // cout<<"btag weight "<<btagWeight_light<<"  btag weight Up "<<btagWeight_lightUp<<"   btag weight Down "<<btagWeight_lightDown<<endl;
             }
 
             for(int sellight=0;sellight<selectedLightJets.size();sellight++){
-                cout<<"pt: "<<selectedLightJets[sellight]->Pt()<<"   eta: "<<selectedLightJets[sellight]->Eta()<<" csv disc "<<selectedLightJets[sellight]->btag_combinedInclusiveSecondaryVertexV2BJetTags()<<endl;
+                // cout<<"pt: "<<selectedLightJets[sellight]->Pt()<<"   eta: "<<selectedLightJets[sellight]->Eta()<<" csv disc "<<selectedLightJets[sellight]->btag_combinedInclusiveSecondaryVertexV2BJetTags()<<endl;
             }
             // if(ievt<1000)
             // {
@@ -1316,6 +1314,24 @@ int main (int argc, char *argv[])
                     if( isCFlav ) bTagEff_CFErr1Down = reader_CFErr1Down->eval(jflav, jeteta, jetpt, jetdisc);
                     if( isCFlav ) bTagEff_CFErr2Up = reader_CFErr2Up->eval(jflav, jeteta, jetpt, jetdisc);
                     if( isCFlav ) bTagEff_CFErr2Down = reader_CFErr2Down->eval(jflav, jeteta, jetpt, jetdisc);
+                    //If jet is not the appropriate flavor for that systematic, use the nominal reader so that all weights will be on the same
+                    //jet multiplicity footing.
+                    if( !isBFlav ) bTagEff_LFUp = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isBFlav ) bTagEff_LFDown = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isLFlav ) bTagEff_HFUp = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isLFlav ) bTagEff_HFDown = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isBFlav ) bTagEff_HFStats1Up = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isBFlav ) bTagEff_HFStats1Down = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isBFlav ) bTagEff_HFStats2Up = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isBFlav ) bTagEff_HFStats2Down = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isLFlav ) bTagEff_LFStats1Up = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isLFlav ) bTagEff_LFStats1Down = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isLFlav ) bTagEff_LFStats2Up = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isLFlav ) bTagEff_LFStats2Down = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isCFlav ) bTagEff_CFErr1Up = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isCFlav ) bTagEff_CFErr1Down = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isCFlav ) bTagEff_CFErr2Up = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( !isCFlav ) bTagEff_CFErr2Down = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
                     // bTagEff = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);   
                     // cout<<bTagEff<<endl;
                     btagWeightCSVLFUp *= bTagEff_LFUp;
