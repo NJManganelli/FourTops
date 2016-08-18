@@ -13,59 +13,83 @@ void CombineCraneens()
 	gROOT->SetBatch(kTRUE);
 	
 	cout << "Getting Files" << endl;
-	TFile *Data = TFile::Open("Craneens_Comb/Data_Run2_TopTree_Study.root", "UPDATE");  //Getting Files
-	TFile *TTDileptMG = TFile::Open("Craneens_Comb/TTDileptMG_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptPowheg_JERUp = TFile::Open("Craneens_Comb/TTDileptPowheg_JERUp_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptPowheg_JERDown = TFile::Open("Craneens_Comb/TTDileptPowheg_JERDown_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptPowheg_JESUp = TFile::Open("Craneens_Comb/TTDileptPowheg_JESUp_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptPowheg_JESDown = TFile::Open("Craneens_Comb/TTDileptPowheg_JESDown_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptPowheg_ScaleHUp = TFile::Open("Craneens_Comb/TTDileptPowheg_ScaleHUp_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptPowheg_ScaleHDown = TFile::Open("Craneens_Comb/TTDileptPowheg_ScaleHDown_Run2_TopTree_Study.root", "UPDATE");
-	TFile *T_tW = TFile::Open("Craneens_Comb/T_tW_Run2_TopTree_Study.root", "UPDATE");
-	TFile *Tbar_tW = TFile::Open("Craneens_Comb/Tbar_tW_Run2_TopTree_Study.root", "UPDATE");
-	TFile *DYJets = TFile::Open("Craneens_Comb/DYJets_Run2_TopTree_Study.root", "UPDATE");
-	TFile *NP_overlay_ttttNLO = TFile::Open("Craneens_Comb/NP_overlay_ttttNLO_Run2_TopTree_Study.root", "UPDATE");
-	TFile *TTDileptPowheg = TFile::Open("Craneens_Comb/TTDileptPowheg_Run2_TopTree_Study.root", "UPDATE");
+	string Data = "Craneens_Comb/Data_Run2_TopTree_Study.root";  //Getting Files
+	string TTDileptMG = "Craneens_Comb/TTJetsMG_Run2_TopTree_Study.root";
+	string TTDileptPowheg_JERUp = "Craneens_Comb/TTJetsPowheg_JERUp_Run2_TopTree_Study.root";
+	string TTDileptPowheg_JERDown = "Craneens_Comb/TTJetsPowheg_JERDown_Run2_TopTree_Study.root";
+	string TTDileptPowheg_JESUp = "Craneens_Comb/TTJetsPowheg_JESUp_Run2_TopTree_Study.root";
+	string TTDileptPowheg_JESDown = "Craneens_Comb/TTJetsPowheg_JESDown_Run2_TopTree_Study.root";
+	string TTDileptPowheg_ScaleHUp = "Craneens_Comb/TTJetsPowheg_ScaleHUp_Run2_TopTree_Study.root";
+	string TTDileptPowheg_ScaleHDown = "Craneens_Comb/TTJetsPowheg_ScaleHDown_Run2_TopTree_Study.root";
+	string ST_tW = "Craneens_Comb/ST_tW_Run2_TopTree_Study.root";
 
-	vector < TFile* > files;
+	string DYJets = "Craneens_Comb/DYJets_Run2_TopTree_Study.root";
+	string NP_overlay_ttttNLO = "Craneens_Comb/NP_overlay_ttttNLO_Run2_TopTree_Study.root";
+	string NP_overlay_ttttNLO_JESUp = "Craneens_Comb/ttttNLO_JESUp_Run2_TopTree_Study.root";
+	string NP_overlay_ttttNLO_JESDown = "Craneens_Comb/ttttNLO_JESDown_Run2_TopTree_Study.root";
+	string NP_overlay_ttttNLO_JERUp = "Craneens_Comb/ttttNLO_JERUp_Run2_TopTree_Study.root";
+	string NP_overlay_ttttNLO_JERDown = "Craneens_Comb/ttttNLO_JERDown_Run2_TopTree_Study.root";
+	string TTDileptPowheg = "Craneens_Comb/TTJetsPowheg_Run2_TopTree_Study.root";
+	string TTH = "Craneens_Comb/TTH_Run2_TopTree_Study.root";
+	string TTZ = "Craneens_Comb/TTZ_Run2_TopTree_Study.root";
+	string TTW = "Craneens_Comb/TTW_Run2_TopTree_Study.root";
+	string TTJets_SingleLept = "Craneens_Comb/TTJets_SingleLept_Run2_TopTree_Study.root";
+
+	vector < string > files;
 
 	files.push_back(Data);
+	files.push_back(NP_overlay_ttttNLO);
+	files.push_back(NP_overlay_ttttNLO_JERUp);
+	files.push_back(NP_overlay_ttttNLO_JERDown);
+	files.push_back(NP_overlay_ttttNLO_JESUp);
+	files.push_back(NP_overlay_ttttNLO_JESDown);
 	files.push_back(TTDileptMG);
+	files.push_back(TTDileptPowheg);
 	files.push_back(TTDileptPowheg_JERUp);
 	files.push_back(TTDileptPowheg_JERDown);
 	files.push_back(TTDileptPowheg_JESUp);
 	files.push_back(TTDileptPowheg_JESDown);
 	files.push_back(TTDileptPowheg_ScaleHUp);
 	files.push_back(TTDileptPowheg_ScaleHDown);
-	files.push_back(T_tW);
-	files.push_back(Tbar_tW);
+	files.push_back(ST_tW);
 	files.push_back(DYJets);
-	files.push_back(NP_overlay_ttttNLO);
-	files.push_back(TTDileptPowheg);
+	files.push_back(TTH);
+	files.push_back(TTZ);
+	files.push_back(TTW);
+	files.push_back(TTJets_SingleLept);
+
+
 
 	for(int i = 0; i < files.size(); i++){
-		files[i]->cd();
-                cout << i << " : 1 " << files[i]->GetPath() << endl;
-		TTree* MuEl = (TTree*)files[i]->Get("Craneen__MuEl")->Clone();
+		TFile f1(files[i].c_str(), "update");
+                cout << i << " : 1 " << f1.GetPath() << endl;
+		TNtuple* oldMuEl = (TNtuple*)f1.Get("Craneen__MuEl");
+		TNtuple* newMuEl = (TNtuple*)oldMuEl->CloneTree();
+		delete oldMuEl;
                 cout << i << " : 1.1" << endl;
-		TTree* MuMu = (TTree*)files[i]->Get("Craneen__MuMu")->Clone();
+		TNtuple* oldMuMu = (TNtuple*)f1.Get("Craneen__MuMu");
+		TNtuple* newMuMu = (TNtuple*)oldMuMu->CloneTree();
+		delete oldMuMu;
                 cout << i << " : 1.2" << endl;
-		TTree* ElEl = (TTree*)files[i]->Get("Craneen__ElEl")->Clone();
+		TNtuple* oldElEl = (TNtuple*)f1.Get("Craneen__ElEl");
+		TNtuple* newElEl = (TNtuple*)oldElEl->CloneTree();
+		delete oldElEl;
                 cout << i << " : 2" << endl;
-		TList *list = new TList;
-		list->Add(MuEl);
-		list->Add(MuMu);
-		list->Add(ElEl);
+		newMuEl->SetNameTitle("Craneen__Combined", "Craneen__Combined");
+		TList *thelist = new TList;
+		thelist->Add(newMuEl);
+		thelist->Add(newMuMu);
+		thelist->Add(newElEl);
                 cout << i << " : 3" << endl;
-		TTree *Comb = TTree::MergeTrees(list);
-		Comb->SetName("Craneen__Combined");
+		TNtuple *Comb = (TNtuple*)TTree::MergeTrees(thelist);
+		Comb->SetNameTitle("Craneen__Combined", "Craneen__Combined");
+		delete newMuEl;
+		delete newMuMu;
+		delete newElEl;
 		Comb->Write();
                 cout << i << " : 4" << endl;
-		delete MuEl;
-		delete MuMu;
-		delete ElEl;
 		delete Comb;
-		files[i]->Close();
+		f1.Close();
                 cout << i << " : 5" << endl;		
 	}
 

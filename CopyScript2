@@ -1,0 +1,84 @@
+hadd -f Craneens_ElEl/Current\ Merge/TTJetsMG_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJetsMG_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/TTJetsPowheg_JERUp_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJetsPowheg_JERUp_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/TTJetsPowheg_JERDown_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJetsPowheg_JERDown_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/TTJetsPowheg_JESUp_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJetsPowheg_JESUp_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/TTJetsPowheg_JESDown_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJetsPowheg_JESDown_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/TTJetsPowheg_ScaleHUp_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJetsPowheg_HScaleUp_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/TTJetsPowheg_ScaleHDown_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJetsPowheg_HScaleDown_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/TTJetsPowheg_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJetsPowheg_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/DYJets_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/DYJets*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/Data_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/Data*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/NP_overlay_ttttNLO_JERUp_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_JERUp_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/NP_overlay_ttttNLO_JERDown_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_JERDown_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/NP_overlay_ttttNLO_JESUp_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_JESUp_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/NP_overlay_ttttNLO_JESDown_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_JESDown_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/NP_overlay_ttttNLO_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_ElEl*_Study.root;
+hadd -f Craneens_ElEl/Current\ Merge/ST_tW_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/*_tW25*_Study.root
+hadd -f Craneens_ElEl/Current\ Merge/TTW_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTW_ElEl*_Study.root
+hadd -f Craneens_ElEl/Current\ Merge/TTZ_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTZ_ElEl*_Study.root
+hadd -f Craneens_ElEl/Current\ Merge/TTH_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTH_ElEl*_Study.root
+hadd -f Craneens_ElEl/Current\ Merge/TTJets_SingleLept_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJets_SingleLeptFromT_ElEl_*_Run2_TopTree_Study.root Craneens_ElEl/Craneens30_7_2016/TTJets_SingleLeptFromTbar_ElEl_*_Run2_TopTree_Study.root
+
+hadd -f Craneens_MuEl/Current\ Merge/TTJetsMG_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJetsMG_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/TTJetsPowheg_JERUp_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJetsPowheg_JERUp_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/TTJetsPowheg_JERDown_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJetsPowheg_JERDown_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/TTJetsPowheg_JESUp_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJetsPowheg_JESUp_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/TTJetsPowheg_JESDown_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJetsPowheg_JESDown_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/TTJetsPowheg_ScaleHUp_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJetsPowheg_HScaleUp_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/TTJetsPowheg_ScaleHDown_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJetsPowheg_HScaleDown_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/TTJetsPowheg_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJetsPowheg_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/DYJets_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/DYJets*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/Data_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/Data*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/NP_overlay_ttttNLO_JERUp_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/NP_overlay_ttttNLO_SUS25_JERUp_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/NP_overlay_ttttNLO_JERDown_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/NP_overlay_ttttNLO_SUS25_JERDown_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/NP_overlay_ttttNLO_JESUp_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/NP_overlay_ttttNLO_SUS25_JESUp_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/NP_overlay_ttttNLO_JESDown_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/NP_overlay_ttttNLO_SUS25_JESDown_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/NP_overlay_ttttNLO_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/NP_overlay_ttttNLO_SUS25_MuEl*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/ST_tW_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/*_tW25*_Study.root;
+hadd -f Craneens_MuEl/Current\ Merge/TTW_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTW_MuEl*_Study.root
+hadd -f Craneens_MuEl/Current\ Merge/TTZ_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTZ_MuEl*_Study.root
+hadd -f Craneens_MuEl/Current\ Merge/TTH_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTH_MuEl*_Study.root
+hadd -f Craneens_MuEl/Current\ Merge/TTJets_SingleLept_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJets_SingleLeptFromT_MuEl_*_Run2_TopTree_Study.root Craneens_MuEl/Craneens29_7_2016/TTJets_SingleLeptFromTbar_MuEl_*_Run2_TopTree_Study.root
+
+hadd -f Craneens_MuMu/Current\ Merge/TTJetsMG_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJetsMG_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/TTJetsPowheg_JERUp_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJetsPowheg_JERUp_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/TTJetsPowheg_JERDown_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJetsPowheg_JERDown_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/TTJetsPowheg_JESUp_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJetsPowheg_JESUp_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/TTJetsPowheg_JESDown_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJetsPowheg_JESDown_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/TTJetsPowheg_ScaleHUp_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJetsPowheg_HScaleUp_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/TTJetsPowheg_ScaleHDown_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJetsPowheg_HScaleDown_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/TTJetsPowheg_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJetsPowheg_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/DYJets_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/DYJets*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/Data_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/Data*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/NP_overlay_ttttNLO_JERUp_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_JERUp_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/NP_overlay_ttttNLO_JERDown_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_JERDown_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/NP_overlay_ttttNLO_JESUp_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_JESUp_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/NP_overlay_ttttNLO_JESDown_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_JESDown_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/NP_overlay_ttttNLO_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/NP_overlay_ttttNLO_SUS25_MuMu*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/ST_tW_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/*_tW25*_Study.root;
+hadd -f Craneens_MuMu/Current\ Merge/TTW_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTW_MuMu*_Study.root
+hadd -f Craneens_MuMu/Current\ Merge/TTZ_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTZ_MuMu*_Study.root
+hadd -f Craneens_MuMu/Current\ Merge/TTH_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTH_MuMu*_Study.root
+hadd -f Craneens_MuMu/Current\ Merge/TTJets_SingleLept_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJets_SingleLeptFromT_MuMu_*_Run2_TopTree_Study.root Craneens_MuMu/Craneens30_7_2016/TTJets_SingleLeptFromTbar_MuMu_*_Run2_TopTree_Study.root
+
+hadd -f Craneens_Comb/TTJetsMG_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJetsMG_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTJetsPowheg_JERUp_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJetsPowheg_JERUp_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTJetsPowheg_JERDown_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJetsPowheg_JERDown_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTJetsPowheg_JESUp_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJetsPowheg_JESUp_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTJetsPowheg_JESDown_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJetsPowheg_JESDown_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTJetsPowheg_ScaleHUp_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJetsPowheg_ScaleHUp_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTJetsPowheg_ScaleHDown_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJetsPowheg_ScaleHDown_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTJetsPowheg_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJetsPowheg_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/DYJets_Run2_TopTree_Study.root Craneens_*/Current\ Merge/DYJets_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/Data_Run2_TopTree_Study.root Craneens_*/Current\ Merge/Data_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/NP_overlay_ttttNLO_Run2_TopTree_Study.root Craneens_*/Current\ Merge/NP_overlay_ttttNLO_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/ttttNLO_JERUp_Run2_TopTree_Study.root Craneens_*/Current\ Merge/NP_overlay_ttttNLO_JERUp_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/ttttNLO_JERDown_Run2_TopTree_Study.root Craneens_*/Current\ Merge/NP_overlay_ttttNLO_JERDown_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/ttttNLO_JESUp_Run2_TopTree_Study.root Craneens_*/Current\ Merge/NP_overlay_ttttNLO_JESUp_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/ttttNLO_JESDown_Run2_TopTree_Study.root Craneens_*/Current\ Merge/NP_overlay_ttttNLO_JESDown_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/ST_tW_Run2_TopTree_Study.root Craneens_*/Current\ Merge/ST_tW_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTW_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTW_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTZ_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTZ_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTH_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTH_Run2_TopTree_Study.root;
+hadd -f Craneens_Comb/TTJets_SingleLept_Run2_TopTree_Study.root Craneens_*/Current\ Merge/TTJets_SingleLept_Run2_TopTree_Study.root;
+

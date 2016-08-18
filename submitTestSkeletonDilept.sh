@@ -2,7 +2,7 @@
 #PBS -q express
 
 # setting up your code and your env
-cd /user/heilman/CMSSW_7_6_3/src/
+cd /user/heilman/CMSSW_7_6_5/src/
 eval `scramv1 runtime -sh`
 cd TopBrussels/FourTops
 

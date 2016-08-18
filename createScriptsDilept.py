@@ -40,7 +40,7 @@ for chan in channels:
     elif "El" in chan:
         tree = ET.ElementTree(file='config/output_FullElectronTopTrees76.xml')
     elif "Dilep" in chan:
-        tree = ET.ElementTree(file='config/Run2DiLepton_TOPTREES.xml')
+        tree = ET.ElementTree(file='config/Run2DiLepton_TOPTREES_Full.xml')
     elif "test" in chan:
         tree = ET.ElementTree(file='config/test.xml')
     else:
@@ -92,11 +92,13 @@ for chan in channels:
             # setting the number of file per job depending whether it is data sample or not
             # this ca be tweaked
             if "Data" in str(d.attrib['name']):
-                FilePerJob=5
+                FilePerJob=100
             elif "tttt" in str(d.attrib['name']):
-                FilePerJob=1
+                FilePerJob=20
+	    elif "TTJetsPowheg" in str(d.attrib['name']):
+                FilePerJob=40
             else:
-                FilePerJob=4
+                FilePerJob=40
 
             # create a test job for each dataset
             # create a file for this job 
