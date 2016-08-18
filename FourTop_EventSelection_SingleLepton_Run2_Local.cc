@@ -1266,10 +1266,11 @@ int main (int argc, char *argv[])
             // float TotalCSVbtagweight=1;
             if(bTagCSVReweight && !isData){
             //get btag weight info
+                cout<<"----------------------------"<<endl;
                 for(int jetbtag = 0; jetbtag<selectedJets.size(); jetbtag++){
-                    float bTagEff_LFUp, bTagEff_LFDown, bTagEff_HFUp, bTagEff_HFDown, bTagEff_HFStats1Up, bTagEff_HFStats1Down, bTagEff_HFStats2Up,
-                    bTagEff_HFStats2Down, bTagEff_LFStats1Up, bTagEff_LFStats1Down, bTagEff_LFStats2Up, bTagEff_LFStats2Down, bTagEff_CFErr1Up, 
-                    bTagEff_CFErr1Down, bTagEff_CFErr2Up, bTagEff_CFErr2Down;
+                    float bTagEff_LFUp=1.0, bTagEff_LFDown=1.0, bTagEff_HFUp=1.0, bTagEff_HFDown=1.0, bTagEff_HFStats1Up=1.0, bTagEff_HFStats1Down=1.0, bTagEff_HFStats2Up=1.0,
+                    bTagEff_HFStats2Down=1.0, bTagEff_LFStats1Up=1.0, bTagEff_LFStats1Down=1.0, bTagEff_LFStats2Up=1.0, bTagEff_LFStats2Down=1.0, bTagEff_CFErr1Up=1.0, 
+                    bTagEff_CFErr1Down=1.0, bTagEff_CFErr2Up=1.0, bTagEff_CFErr2Down=1.0;
 
                     float jetpt = selectedJets[jetbtag]->Pt();
                     float jeteta = selectedJets[jetbtag]->Eta();
@@ -1314,6 +1315,9 @@ int main (int argc, char *argv[])
                     if( isCFlav ) bTagEff_CFErr1Down = reader_CFErr1Down->eval(jflav, jeteta, jetpt, jetdisc);
                     if( isCFlav ) bTagEff_CFErr2Up = reader_CFErr2Up->eval(jflav, jeteta, jetpt, jetdisc);
                     if( isCFlav ) bTagEff_CFErr2Down = reader_CFErr2Down->eval(jflav, jeteta, jetpt, jetdisc);
+
+                    // cout<<"before jetflav:  "<<jethadronflav<<"  HFUp : "<<bTagEff_HFUp<<"  HFDown : "<<bTagEff_HFDown<<"  nom: "<<reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc)<<endl;
+
                     //If jet is not the appropriate flavor for that systematic, use the nominal reader so that all weights will be on the same
                     //jet multiplicity footing.
                     if( !isBFlav ) bTagEff_LFUp = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
@@ -1332,6 +1336,9 @@ int main (int argc, char *argv[])
                     if( !isCFlav ) bTagEff_CFErr1Down = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
                     if( !isCFlav ) bTagEff_CFErr2Up = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
                     if( !isCFlav ) bTagEff_CFErr2Down = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
+                    cout<<"jetflav:  "<<jethadronflav<<"  HFUp : "<<bTagEff_HFUp<<"  HFDown : "<<bTagEff_HFDown<<"  nom: "<<reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc)
+                    <<"  jeteta: "<< jeteta<<"  jetpt: "<< jetpt<<"  jetdisc: "<< jetdisc<<endl;
+
                     // bTagEff = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);   
                     // cout<<bTagEff<<endl;
                     btagWeightCSVLFUp *= bTagEff_LFUp;
@@ -1355,7 +1362,7 @@ int main (int argc, char *argv[])
              
                     if(debug)cout<<"btag efficiency = "<<bTagEff<<endl;       
                 }      
-
+                cout<<"  hfup: "<<btagWeightCSVHFUp<<"  hfdown: "<<btagWeightCSVHFDown<<"  nom: "<<btagWeightCSV<<endl;
 
             }
             scaleFactor*=btagWeight_light*btagWeight_heavy; 

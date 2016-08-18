@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <datasets>
 
-<d name="Data"     title="Data"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1." PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_Data_Run2_TopTree_Study.root"/>
+<d name="Data"     title="Data"    add="1"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="1." PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_Data_Run2_TopTree_Study.root"/>
 
 <d name="NP_overlay_Data"     title="PseudoData"    add="0"   color="1"  ls="1"  lw="2" normf="1" xsection="1."  EqLumi="46.5" PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_El/Craneens23_7_2015_merge/Craneen_Data_Run2_TopTree_Study.root"/>
 
@@ -15,21 +15,19 @@
 
 <d name="NP_overlay_ttttNLO_JERDown" title="t#bar{t}t#bar{t}"  add="1"   color="40" ls="1"  lw="2" normf="0.5635"  EqLumi="104393109.445" xsection=".009201" PreselEff="0.0" filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_NP_overlay_ttttNLO_Run2_TopTree_Study.root"  CombineName="tttt__nominal"/>
 
-<d name="TTH"  title="TTH"  add="1"   color="8"  ls="1"  lw="2" normf="1"  EqLumi="12873761.0922" xsection="0.293"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
+<d name="ST_tW"  title="tW"  add="1"   color="7"  ls="1"  lw="2" normf="1"  EqLumi="56162.92" xsection="71.2"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
 
-<d name="TTW"  title="TTW"  add="1"   color="1"  ls="1"  lw="2" normf="1"  EqLumi="1225193.34312" xsection="0.2043"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
+<d name="DYJets"  title="DY"   add="1"   color="214"  ls="1"  lw="2" normf="0.63"  EqLumi="37380.9744" xsection="6025.2"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_DYJets_Run2_TopTree_Study.root" />
 
-<d name="TTZ"  title="TTZ"  add="1"   color="9"  ls="1"  lw="2" normf="1"  EqLumi="1345392.49147" xsection="0.293"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
+<d name="WJets"  title="W"   add="1"   color="413"  ls="1"  lw="2" normf="0.63"  EqLumi="766.528" xsection="61526"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_WJets_Run2_TopTree_Study.root"  />
 
-<d name="ST_tW"  title="tW"  add="0"   color="7"  ls="1"  lw="2" normf="1"  EqLumi="56162.92" xsection="71.2"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
+<d name="TTJets_MLM"  title="t#bar{t} MG_MLM"   add="1"   color="214"  ls="1"  lw="2" normf="1"  EqLumi="12281.3443782" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_TTJets_Run2_TopTree_Study.root"/>
 
-<d name="DYJets"  title="DY"   add="0"   color="214"  ls="1"  lw="2" normf="0.63"  EqLumi="37380.9744" xsection="6025.2"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_DYJets_Run2_TopTree_Study.root" />
+<d name="TTJets_aMCatNLO"  title="t#bar{t} aMCatNLO"   add="0"   color="1"  ls="1"  lw="2" normf="1"  EqLumi="46258.266" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
 
-<d name="WJets"  title="W"   add="0"   color="413"  ls="1"  lw="2" normf="0.63"  EqLumi="766.528" xsection="61526"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_WJets_Run2_TopTree_Study.root"  />
+<d name="NP_overlay_TTJets_MLM"  title="t#bar{t} MG_MLM"   add="0"   color="3"  ls="1"  lw="2" normf="1"  EqLumi="12281.3443782" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_TTJets_Run2_TopTree_Study.root"/>
 
-<d name="TTJets_MLM"  title="t\bar{t}"   add="1"   color="214"  ls="1"  lw="2" normf="1"  EqLumi="12281.3443782" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_TTJets_Run2_TopTree_Study.root"/>
-
-<d name="TTJets_aMCatNLO"  title="t#bar{t}"   add="1"   color="8"  ls="1"  lw="2" normf="1"  EqLumi="46258.266" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
+<d name="NP_overlay_TTJets_aMCatNLO"  title="t#bar{t} aMCatNLO"   add="0"   color="1"  ls="1"  lw="2" normf="1"  EqLumi="46258.266" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
 
 <d name="TTScaleHDown_powheg"  title="t\bar{t}+jets Powheg"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="11941.9976916" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
 
@@ -43,7 +41,17 @@
 
 <d name="TTJets_powheg_JERDown"  title="t\bar{t}+jets Powheg"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="225577.3299991" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
 
-<d name="TTJets_powheg"  title="t#bar{t}"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="225577.3299991" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
+<d name="TTH"  title="t#bar{t}+X"  add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="12873761.0922" xsection="0.293"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
+
+<d name="TTW"  title="t#bar{t}+X"  add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1225193.34312" xsection="0.2043"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
+
+<d name="TTZ"  title="t#bar{t}+X"  add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="1345392.49147" xsection="0.293"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens23_7_2015_merge/Craneen_SingleTop_tW_Run2_TopTree_Study.root"  CombineName="Ttw__nominal"/>
+
+<d name="TTJets_powheg"  title="t#bar{t}+X"   add="1"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="225577.3299991" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
+
+<d name="ttbb"  title="ttbb"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="225577.3299991" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
+
+<d name="ttll"  title="ttll"   add="0"   color="633"  ls="1"  lw="2" normf="1"  EqLumi="225577.3299991" xsection="831.76"   PreselEff="0.0"   filenames="/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens25_10_2015/Craneen_TTJets_Run2_TopTree_Study.root"/> <!-- has to be last for ttbar splitting-->
 
 </datasets>
 

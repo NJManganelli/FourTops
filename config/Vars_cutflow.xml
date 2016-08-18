@@ -5,12 +5,12 @@
         <lepton>Muon</lepton>
         <leptoAbbr>Mu</leptoAbbr>
         <chan>ttttmu</chan>
-        <fileName>config/Run2SingleLepton_samples76_Mu_v3.xml</fileName>
+        <fileName>config/Run2SingleLepton_samples76_Mu_v3_cutflow.xml</fileName>
         <fileNameSys>config/Run2SingleLepton_samples_Sys74.xml</fileNameSys>
         <!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/Craneen_</craneenPath-->
         <!--craneenPath>/user/lbeck/CMSSW_7_4_2/src/TopBrussels/FourTops/Craneens_Mu/Craneens14_7_2015_merge/CraneenJets_</craneenPath-->
 
-        <craneenPath>/user/lbeck/CMSSW_7_6_3/src/V3/TopBrussels/FourTops/Craneens_Mu/Craneens17_8_2016/merge/Craneen_</craneenPath> <!-- 17_9 no scale 
+        <craneenPath>/user/lbeck/CMSSW_7_6_3/src/V3/TopBrussels/FourTops/Craneens_Mu/Craneens29_7_2016/merge/Craneen_</craneenPath> <!-- 17_9 no scale 
         weights--> <!--22_10_2015_merge2 25ns    25_10 50ns v7 tag   17_12    21_3-->
 
         <lumiScale lumi=-1/>
@@ -35,20 +35,18 @@
         <!-- <var lBound= -1.0 uBound=1.0 nBins=20 units="">BDT_Mu3rdJune_adaBoost_alphaSTune_angleInCorrect</var> -->
         <!-- <var lBound= -1.0 uBound=1.0 nBins=20 units="">BDT_Mu3rdJune_adaBoost_alphaSTune_angleInCorrect2</var> <!-- actually all--> -->
          <!-- <var lBound= -1.0 uBound=1.0 nBins=20 units="">BDT_Mu3rdJune_adaBoost_alphaSTune_subAll</var> <!-- actually all --> -->
-         <!-- <var lBound= -0.4 uBound=1.0 nBins=14 units="">BDT_Mu3rdJune_adaBoost_alphaSTune_subAll_noMinEvents</var> <!-- actually all  -->
- -->
-         <var lBound= -1 uBound=1.0 nBins=20 units="">BDT_Mu3rdJune_adaBoost_alphaSTune_subAll_noMinEvents</var> <!-- actually all 
+         <!-- <var lBound= -1.0 uBound=1.0 nBins=20 units="">BDT_Mu3rdJune_adaBoost_alphaSTune_subAll_noMinEvents</var> <!-- actually all  --> -->
 
           <!-- <var lBound= 5.5 uBound=15.5 nBins=10 units="">nJets</var> -->
-        <!-- <var lBound= -0.7 uBound=0.4 nBins=22 units="">BDT_trijet2</var> -->
-        <!-- <var lBound= 0 uBound=2500 nBins=25 units="GeV" >HT</var> -->
-        <!-- <var lBound= 0 uBound=1 nBins=20 units="">angleBestTopAllJetCorrect</var> -->
-        <!-- <var lBound= 0 uBound=10 nBins=20 units="">njetW</var> -->
-        <!-- <var lBound= 0 uBound=800 nBins=20 units="GeV">bestTopPt</var> -->
-         <!-- <var lBound= 0 uBound=3000 nBins=15 units="GeV" >SumJetMassX</var> -->
-        <!-- <var lBound= 0 uBound=1600 nBins=16 units="GeV" >HTX</var> -->
-        <!-- <var lBound= 20 uBound=300 nBins=36 units="GeV">LeptonPt</var> -->
-         <!-- <var lBound= 1.5 uBound=7.5 nBins=6 units="">nMtags</var>  -->
+<!--         <var lBound= -0.9 uBound=0.4 nBins=26 units="">BDT_trijet2</var>
+        <var lBound= 0 uBound=2500 nBins=25 units="GeV" >HT</var>
+        <var lBound= 0 uBound=1 nBins=20 units="">angleBestTopAllJetCorrect</var>
+        <var lBound= 0 uBound=10 nBins=20 units="">njetW</var>
+        <var lBound= 0 uBound=800 nBins=20 units="GeV">bestTopPt</var>
+         <var lBound= 0 uBound=3000 nBins=15 units="GeV" >SumJetMassX</var>
+        <var lBound= 0 uBound=1600 nBins=16 units="GeV" >HTX</var>
+        <var lBound= 20 uBound=300 nBins=36 units="GeV">LeptonPt</var> -->
+         <var lBound= 1.5 uBound=7.5 nBins=6 units="">nMtags</var> 
 <!--         <var lBound= 1.5 uBound=11.5 nBins=10 units="">nLtags</var>
         <var lBound= -0.5 uBound=5.5 nBins=6 units="">nTtags</var>
         <var lBound= -0.5 uBound=30.5 nBins=31 units="">PU</var> 
@@ -114,9 +112,9 @@
         <lepton>Electron</lepton>
         <leptoAbbr>El</leptoAbbr>
         <chan>ttttel</chan>
-        <fileName>config/Run2SingleLepton_samples76_El_v3.xml</fileName>
+        <fileName>config/Run2SingleLepton_samples76_El_v3_cutflow.xml</fileName>
         <fileNameSys>config/Run2SingleLepton_samples_Sys74_El.xml</fileNameSys>
-        <craneenPath>/user/lbeck/CMSSW_7_6_3/src/V3/TopBrussels/FourTops/Craneens_El/Craneens17_8_2016/merge/Craneen_</craneenPath> 
+        <craneenPath>/user/lbeck/CMSSW_7_6_3/src/V3/TopBrussels/FourTops/Craneens_El/Craneens29_7_2016/merge/Craneen_</craneenPath> 
 
         <!-- 3_6 for 13tev top reco-->
         <!-- 10_6 for 13tev top reco-->
@@ -137,29 +135,28 @@
         <datacardVar>BDT_ElApril16th2016</datacardVar> <!-- variable for which datacard will be produced -->
 
 
-         <!-- <var lBound= -0.4 uBound=1.0 nBins=14 units="">BDT_El3rdJune_adaBoost_alphaSTune_subAll_noMinEvents</var> <!-- actually all --> -->
-         <var lBound= -1 uBound=1.0 nBins=20 units="">BDT_El3rdJune_adaBoost_alphaSTune_subAll_noMinEvents</var> <!-- actually all -->
+         <!-- <var lBound= -1.0 uBound=1.0 nBins=20 units="">BDT_El3rdJune_adaBoost_alphaSTune_subAll_noMinEvents</var> <!-- actually all --> -->
         <!-- <var lBound= -1.0 uBound=1.0 nBins=20 units="">BDT_El3rdJune_adaBoost_alphaSTune2</var> -->
 
         <!-- <var lBound= 5.5 uBound=15.5 nBins=10 units="" >nJets</var> -->
-        <!-- <var lBound= -0.7 uBound=0.4 nBins=22 units="">BDT_trijet2</var> -->
+        <!-- <var lBound= -0.9 uBound=0.4 nBins=26 units="">BDT_trijet2</var> -->
        <!-- <var lBound= 0 uBound=10 nBins=20 units="" >njetW</var> -->
         <!-- <var lBound= 0 uBound=2500 nBins=25 units="GeV" >HT</var> -->
         <!-- <var lBound= 20 uBound=300 nBins=36 units="GeV" >LeptonPt</var> -->
-        <!-- <var lBound= 1.5 uBound=7.5 nBins=6 units="" >nMtags</var> -->
+        <var lBound= 1.5 uBound=7.5 nBins=6 units="" >nMtags</var>
 <!--         <var lBound= 1.5 uBound=11.5 nBins=10 units="" >nLtags</var>
         <var lBound= -0.5 uBound=5.5 nBins=6 units="" >nTtags</var>
         <var lBound= -0.5 uBound=30.5 nBins=31 units="" >PU</var>
-        <var lBound= 0 uBound=800 nBins=16 units="GeV" >LeadingBJetPt</var> -->
-        <!-- <var lBound= 0 uBound=1.0 nBins=20 units="">angleBestTopAllJetCorrect</var> -->
-        <!-- <var lBound= 0 uBound=800 nBins=20 units="GeV" >bestTopPt</var> -->
-        <!-- <var lBound= 0 uBound=3000 nBins=15 units="GeV" >SumJetMassX</var> -->
-        <!-- <var lBound= 0 uBound=1600 nBins=16 units="GeV" >HTX</var> -->
-        <!-- <var lBound= 0 uBound=1000 nBins=20 units="GeV" >HTb</var> -->
-        <!-- <var lBound= 0.1 uBound=1.1 nBins=20 units="GeV" >HTH</var> -->
-        <!-- <var lBound= 0 uBound=0.6 nBins=18 units="GeV" >HTRat</var> -->
-        <!-- <var lBound= 0 uBound=0.1 nBins=10 units="" >leptonIso</var> -->
-        <!-- <var lBound= -2.1 uBound=2.1 nBins=21 units="" >LeptonEta</var> -->
+        <var lBound= 0 uBound=800 nBins=16 units="GeV" >LeadingBJetPt</var>
+        <var lBound= 0 uBound=1.0 nBins=20 units="">angleBestTopAllJetCorrect</var>
+        <var lBound= 0 uBound=800 nBins=20 units="GeV" >bestTopPt</var>
+        <var lBound= 0 uBound=3000 nBins=15 units="GeV" >SumJetMassX</var>
+        <var lBound= 0 uBound=1600 nBins=16 units="GeV" >HTX</var>
+        <var lBound= 0 uBound=1000 nBins=20 units="GeV" >HTb</var>
+        <var lBound= 0.1 uBound=1.1 nBins=20 units="GeV" >HTH</var>
+        <var lBound= 0 uBound=0.6 nBins=18 units="GeV" >HTRat</var>
+        <var lBound= 0 uBound=0.1 nBins=10 units="" >leptonIso</var>
+        <var lBound= -2.1 uBound=2.1 nBins=21 units="" >LeptonEta</var> -->
 
 
                 <!-- <var lBound= -1 uBound=0.5 nBins=30 units="">BDT_trijet2</var> -->
