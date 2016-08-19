@@ -4797,60 +4797,61 @@ void DataCardProducer(string VoI,
         }
     card << "\n";
     card << "btagWeightCSVLFStats1                shape           ";
-        for(int d = 0; d < howmanyMC; d++) {
-            dataSetName = MCdatasets[d];
-            if(dataSetName.find(mainTTbarsample) != string::npos) {
-                card << "1                  ";
-            }
-            else if(dataSetName.find("tttt") != string::npos) {
-                card << "1                  ";
-            }            
-            else {
-                 card << "-                  ";
-            }
-        }    card << "\n";
-    card << "btagWeightCSVLFStats2                shape           ";
-        for(int d = 0; d < howmanyMC; d++) {
-            dataSetName = MCdatasets[d];
-            if(dataSetName.find(mainTTbarsample) != string::npos) {
-                card << "1                  ";
-            }
-            else if(dataSetName.find("tttt") != string::npos) {
-                card << "1                  ";
-            }            
-            else {
-                 card << "-                  ";
-            }
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
+            card << "1                  ";
         }
-    } 
-    card << "\n";
-    card << "btagWeightCSVCFErr1                shape           ";
-        for(int d = 0; d < howmanyMC; d++) {
-            dataSetName = MCdatasets[d];
-            if(dataSetName.find(mainTTbarsample) != string::npos) {
-                card << "1                  ";
-            }
-            else if(dataSetName.find("tttt") != string::npos) {
-                card << "1                  ";
-            }            
-            else {
-                 card << "-                  ";
-            }
-        }    card << "\n";
-    card << "btagWeightCSVCFErr2                shape           ";
-        for(int d = 0; d < howmanyMC; d++) {
-            dataSetName = MCdatasets[d];
-            if(dataSetName.find(mainTTbarsample) != string::npos) {
-                card << "1                  ";
-            }
-            else if(dataSetName.find("tttt") != string::npos) {
-                card << "1                  ";
-            }            
-            else {
-                 card << "-                  ";
-            }
+        else if(dataSetName.find("tttt") != string::npos) {
+            card << "1                  ";
+        }            
+        else {
+             card << "-                  ";
         }
     }  
+    card << "\n";
+    card << "btagWeightCSVLFStats2                shape           ";
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
+            card << "1                  ";
+        }
+        else if(dataSetName.find("tttt") != string::npos) {
+            card << "1                  ";
+        }            
+        else {
+             card << "-                  ";
+        }
+    }
+    card << "\n";
+    card << "btagWeightCSVCFErr1                shape           ";
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
+            card << "1                  ";
+        }
+        else if(dataSetName.find("tttt") != string::npos) {
+            card << "1                  ";
+        }            
+        else {
+             card << "-                  ";
+        }
+    }
+    card << "\n";
+    card << "btagWeightCSVCFErr2                shape           ";
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find(mainTTbarsample) != string::npos) {
+            card << "1                  ";
+        }
+        else if(dataSetName.find("tttt") != string::npos) {
+            card << "1                  ";
+        }            
+        else {
+             card << "-                  ";
+        }
+    }
+
 
 
     card.close();
@@ -5690,38 +5691,6 @@ void Split2_DataCardProducer(string VoI,
             }
         }
     }
-   // card << "\n";
-   //  card << "btag_light                shape           ";
-   //  for(int c = 0; c < nChannels; c++) {
-   //      for(int d = 0; d < howmanyMC; d++) {
-   //          dataSetName = MCdatasets[d];
-   //          if(dataSetName.find(mainTTbarsample) != string::npos) {
-   //              card << "1                  ";
-   //          }
-   //          else if(dataSetName.find("tttt") != string::npos) {
-   //              card << "1                  ";
-   //          }
-   //          else {
-   //               card << "-                  ";
-   //          }
-   //      }
-   //  }
-   //  card << "\n";
-   //  card << "btag_heavy                shape           ";
-   //  for(int c = 0; c < nChannels; c++) {
-   //      for(int d = 0; d < howmanyMC; d++) {
-   //          dataSetName = MCdatasets[d];
-   //          if(dataSetName.find(mainTTbarsample) != string::npos) {
-   //              card << "1                  ";
-   //          }
-   //          else if(dataSetName.find("tttt") != string::npos) {
-   //              card << "1                  ";
-   //          }
-   //          else {
-   //               card << "-                  ";
-   //          }
-   //      }
-   //  }
     card << "\n";
     card << "PU                shape           ";
     for(int c = 0; c < nChannels; c++) {
@@ -5809,7 +5778,38 @@ void Split2_DataCardProducer(string VoI,
             }
         }
     }
-
+   card << "\n";
+    card << "btag_light                shape           ";
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
+            }
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
+        }
+    }
+    card << "\n";
+    card << "btag_heavy                shape           ";
+    for(int c = 0; c < nChannels; c++) {
+        for(int d = 0; d < howmanyMC; d++) {
+            dataSetName = MCdatasets[d];
+            if(dataSetName.find(mainTTbarsample) != string::npos) {
+                card << "1                  ";
+            }
+            else if(dataSetName.find("tttt") != string::npos) {
+                card << "1                  ";
+            }
+            else {
+                 card << "-                  ";
+            }
+        }
+    }
     card << "\n";
     card << "btagWeightCSVHF                shape           ";
     for(int c = 0; c < nChannels; c++) {
