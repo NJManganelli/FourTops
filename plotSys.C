@@ -2,707 +2,1189 @@
 	gROOT->SetBatch(kTRUE);
 	gStyle->SetOptStat(0);
 	gStyle->SetLineStyleString(11,"400 200");
+	//
+	TFile *_file0 = TFile::Open("shapefileMu_DATA_BDT_Mu3rdJune_adaBoost_alphaSTune_subAll_noMinEvents_inc.root");
+	TH1F* nominal = (TH1F*)_file0->Get("ttttmu__TTJets_powheg__nominal");
+	TH1F* MLM = (TH1F*)_file0->Get("ttttmu__TTJets_MLM__nominal");
+	TH1F* FXFX = (TH1F*)_file0->Get("ttttmu__TTJets_aMCatNLO__nominal");
+	TH1F* MLMorig = (TH1F*)_file0->Get("ttttmu__TTJets_MLM__nominal");
+	// TH1F* FXFXorig = (TH1F*)_file0->Get("ttttmu__TTJets_aMCatNLO__nominal");
 
-	TFile *_file0 = TFile::Open("shapefileMuEl_DATA_BDT_DilepCombined22ndJune2016_13TeVHadTop_inc.root");
-	TH1F* nominal = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__nominal");
-//	TH1F* MLM = (TH1F*)_file0->Get("ttttmuel__TTJets_MLM__nominal");
-//	TH1F* FXFX = (TH1F*)_file0->Get("ttttmuel__TTJets_aMCatNLO__nominal");
-//	TH1F* MLMorig = (TH1F*)_file0->Get("ttttmuel__TTJets_MLM__nominal");
-//	TH1F* FXFXorig = (TH1F*)_file0->Get("ttttmuel__TTJets_aMCatNLO__nominal");
+	TH1F* PUUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__PUUp");
+	TH1F* PUDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__PUDown");
+	TH1F* PUUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__PUUp");
+	TH1F* PUDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__PUDown");
 
-	TH1F* PUUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__PUUp");
-	TH1F* PUDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__PUDown");
-	TH1F* PUUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__PUUp");
-	TH1F* PUDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__PUDown");
+	TH1F* btag_lightDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btag_lightDown");
+	TH1F* btag_lightUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btag_lightUp");
+	TH1F* btag_lightDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btag_lightDown");
+	TH1F* btag_lightUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btag_lightUp");
 
-	TH1F* btag_lightDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__btag_lightDown");
-	TH1F* btag_lightUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__btag_lightUp");
-	TH1F* btag_lightDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__btag_lightDown");
-	TH1F* btag_lightUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__btag_lightUp");
+	TH1F* btag_heavyDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btag_heavyDown");
+	TH1F* btag_heavyUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btag_heavyUp");
+	TH1F* btag_heavyDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btag_heavyDown");
+	TH1F* btag_heavyUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btag_heavyUp");
 
-	TH1F* btag_heavyDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__btag_heavyDown");
-	TH1F* btag_heavyUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__btag_heavyUp");
-	TH1F* btag_heavyDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__btag_heavyDown");
-	TH1F* btag_heavyUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__btag_heavyUp");
+	TH1F* btag_CSVLFDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFDown");
+	TH1F* btag_CSVLFUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFUp");
+	TH1F* btag_CSVLFDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFDown");
+	TH1F* btag_CSVLFUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFUp");
 
-	TH1F* MEScaleDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ttMEScaleDown");
-	TH1F* MEScaleUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ttMEScaleUp");
-	TH1F* MEScaleDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ttMEScaleDown");
-	TH1F* MEScaleUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ttMEScaleUp");
+	TH1F* btag_CSVHFDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFDown");
+	TH1F* btag_CSVHFUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFUp");
+	TH1F* btag_CSVHFDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFDown");
+	TH1F* btag_CSVHFUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFUp");
 
-    TH1F* ScaleHDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ScaleHDown");
-    TH1F* ScaleHUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ScaleHUp");
-    TH1F* ScaleHDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ScaleHDown");
-    TH1F* ScaleHUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ScaleHUp");
+	TH1F* btag_CSVHFStats1Down = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFStats1Down");
+	TH1F* btag_CSVHFStats1Up = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFStats1Up");
+	TH1F* btag_CSVHFStats1DownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFStats1Down");
+	TH1F* btag_CSVHFStats1UpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFStats1Up");
 
-	TH1F* JESUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__JESUp");
-	TH1F* JESDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__JESDown");
-	TH1F* JESUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__JESUp");
-	TH1F* JESDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__JESDown");
+	TH1F* btag_CSVHFStats2Down = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFStats2Down");
+	TH1F* btag_CSVHFStats2Up = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFStats2Up");
+	TH1F* btag_CSVHFStats2DownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFStats2Down");
+	TH1F* btag_CSVHFStats2UpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVHFStats2Up");
 
-	TH1F* JERUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__JERUp");
-	TH1F* JERDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__JERDown");
-	TH1F* JERUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__JERUp");
-	TH1F* JERDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__JERDown"); 				
+	TH1F* btag_CSVLFStats1Down = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFStats1Down");
+	TH1F* btag_CSVLFStats1Up = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFStats1Up");
+	TH1F* btag_CSVLFStats1DownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFStats1Down");
+	TH1F* btag_CSVLFStats1UpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFStats1Up");
 
-	TH1F* ttGeneratorUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ttGeneratorUp");
-	TH1F* ttGeneratorDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ttGeneratorDown");
-	TH1F* ttGeneratorUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ttGeneratorUp");
-	TH1F* ttGeneratorDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__ttGeneratorDown"); 
+	TH1F* btag_CSVLFStats2Down = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFStats2Down");
+	TH1F* btag_CSVLFStats2Up = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFStats2Up");
+	TH1F* btag_CSVLFStats2DownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFStats2Down");
+	TH1F* btag_CSVLFStats2UpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVLFStats2Up");
 
-	TH1F* ttHFUp = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__heavyFlavUp");
-	TH1F* ttHFDown = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__heavyFlavDown");
-	TH1F* ttHFUpOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__heavyFlavUp");
-	TH1F* ttHFDownOrig = (TH1F*)_file0->Get("ttttmuel__ttbarTTX__heavyFlavDown"); 	
+	TH1F* btag_CSVCFErr1Down = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVCFErr1Down");
+	TH1F* btag_CSVCFErr1Up = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVCFErr1Up");
+	TH1F* btag_CSVCFErr1DownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVCFErr1Down");
+	TH1F* btag_CSVCFErr1UpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVCFErr1Up");
+
+	TH1F* btag_CSVCFErr2Down = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVCFErr2Down");
+	TH1F* btag_CSVCFErr2Up = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVCFErr2Up");
+	TH1F* btag_CSVCFErr2DownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVCFErr2Down");
+	TH1F* btag_CSVCFErr2UpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__btagWeightCSVCFErr2Up");
+
+	TH1F* MEScaleDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ttMEScaleDown");
+	TH1F* MEScaleUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ttMEScaleUp");
+	TH1F* MEScaleDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ttMEScaleDown");
+	TH1F* MEScaleUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ttMEScaleUp");
+
+    TH1F* ScaleHDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ScaleHDown");
+    TH1F* ScaleHUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ScaleHUp");
+    TH1F* ScaleHDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ScaleHDown");
+    TH1F* ScaleHUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ScaleHUp");
+
+	TH1F* JESUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__JESUp");
+	TH1F* JESDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__JESDown");
+	TH1F* JESUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__JESUp");
+	TH1F* JESDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__JESDown");
+
+	TH1F* JERUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__JERUp");
+	TH1F* JERDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__JERDown");
+	TH1F* JERUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__JERUp");
+	TH1F* JERDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__JERDown"); 				
+
+	TH1F* ttGeneratorUp = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ttGeneratorUp");
+	TH1F* ttGeneratorDown = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ttGeneratorDown");
+	TH1F* ttGeneratorUpOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ttGeneratorUp");
+	TH1F* ttGeneratorDownOrig = (TH1F*)_file0->Get("ttttmu__ttbarTTX__ttGeneratorDown"); 	
 	
 	// gStyle->SetHistLineStyle(3);
 
 
+        // TCanvas *c1ttbar = new TCanvas();
+	// TPad *ttbar_pad = new TPad("ttbar_pad","ttbar_pad",0,0.3,1,1);
+	// c1ttbar->cd();
+	// ttbar_pad->SetBottomMargin(0);
+	// ttbar_pad->Draw();
+	// ttbar_pad->cd();
 
-  	//HF
+	// // nominal->Sumw2();
+	// // MLM->Sumw2();
+	// // FXFX->Sumw2();
+	// cout<<"powheg: "<<nominal->GetSumOfWeights()<<endl;
+	// cout<<"MLM: "<<MLM->GetSumOfWeights()<<endl;
+	// cout<<"aMCatNLOFXFX: "<<FXFX->GetSumOfWeights()<<endl;
 
- 	TCanvas *chf1 = new TCanvas();
- 	TPad *padhf1 = new TPad("padhf1","padhf1",0,0.3,1,1);
- 	chf1->cd();
- 	padhf1->SetBottomMargin(0);
- 	padhf1->Draw();
- 	padhf1->cd();
 
- 	ttHFUp->SetLineColor(kRed);
- 	ttHFDown->SetLineColor(kCyan);
- 	ttHFUp->SetLineStyle(1);
- 	ttHFDown->SetLineStyle(1);
- 	ttHFUpOrig->SetLineStyle(1);
- 	ttHFDownOrig->SetLineStyle(1);
-	ttHFUp->SetLineWidth(2);
- 	ttHFDown->SetLineWidth(2);
- 	ttHFUpOrig->SetLineWidth(2);
- 	ttHFDownOrig->SetLineWidth(2);
+	// nominal->SetLineWidth(2);
+	// MLM->SetLineWidth(2);
+	// FXFX->SetLineWidth(2);
 
- 	ttHFUpOrig->SetLineColor(kRed);
- 	ttHFDownOrig->SetLineColor(kCyan);
+	// MLM->SetLineColor(kRed);
+	// FXFX->SetLineColor(kGreen);	
 
- 	ttHFUpOrig->SetTitle("TTbar BDT disciminator");
- 	ttHFUpOrig->Draw("hist");
- 	ttHFDownOrig->Draw("histsame");
- 	nominal->SetLineWidth(2);
+	// MLMorig->SetLineWidth(2);
+	// FXFXorig->SetLineWidth(2);
 
- 	nominal->Draw("histsame");
+	// MLMorig->SetLineColor(kRed);
+	// FXFXorig->SetLineColor(kGreen);
 
- 	TLegend *leghf = new TLegend(0.5,0.7,0.9,0.9);
- 	leghf->AddEntry(ttHFUp,"ttHF Up","l");
- 	leghf->AddEntry(nominal,"nominal ttbar","l");
- 	leghf->AddEntry(ttHFDown,"ttHF Down","l");
- 	leghf->Draw();
- 	chf1->cd();
 
- 	TPad *padhf2 = new TPad("padhf2","padhf2",0,0,1,0.3);
+	// MLM->SetTitle("TTbar BDT disciminator");
+	// MLMorig->Draw("hist");
+	// FXFXorig->Draw("histsame");
 
- 	padhf2->SetTopMargin(0);
- 	padhf2->SetGridy();
- 	padhf2->Draw();
+	// nominal->SetLineWidth(2);
 
- 	ttHFUp->SetTitle("");
+	// nominal->Draw("histsame");
 
- 	padhf2->cd();
- 	// btag_lightUp->Sumw2();
- 	ttHFUp->SetStats(0);
- 	ttHFUp->SetMinimum(0.5);
- 	ttHFUp->SetMaximum(1.5);
- 	ttHFUp->Divide(nominal);
- 	ttHFUp->SetMarkerStyle(1);
- 	ttHFUp->Draw("ep");
- 	// btag_lightDown>Sumw2();
- 	ttHFDown->SetStats(0);
- 	ttHFDown->Divide(nominal);
- 	ttHFDown->SetMarkerStyle(1);
- 	ttHFDown->Draw("epsame");
- 	chf1->cd();
- 	chf1->SaveAs("ttHFsystt.pdf");
+	// TLegend *leg_ttbar = new TLegend(0.5,0.7,0.9,0.9);
+	// leg_ttbar->AddEntry(MLM,"MLM","l");
+	// leg_ttbar->AddEntry(nominal,"nominal ttbar","l");
+	// leg_ttbar->AddEntry(FXFX,"FXFX","l");
+	// leg_ttbar->Draw();
+	// c1ttbar->cd();
 
- 	cout<<"ttHF done"<<endl;
+	// TPad *padttbarAlt2 = new TPad("pad2","pad2",0,0,1,0.3);
 
-//  	//btag_light
+	// padttbarAlt2->SetTopMargin(0);
+	// padttbarAlt2->SetGridy();
+	// padttbarAlt2->Draw();
 
- 	TCanvas *c1 = new TCanvas();
- 	TPad *pad1 = new TPad("pad1","pad1",0,0.3,1,1);
- 	c1->cd();
- 	pad1->SetBottomMargin(0);
- 	pad1->Draw();
- 	pad1->cd();
+	// nominal->SetTitle("");
 
- 	btag_lightUp->SetLineColor(kRed);
- 	btag_lightDown->SetLineColor(kCyan);
- 	btag_lightUp->SetLineStyle(1);
- 	btag_lightDown->SetLineStyle(1);
- 	btag_lightUpOrig->SetLineStyle(1);
- 	btag_lightDownOrig->SetLineStyle(1);
+	// padttbarAlt2->cd();
+	// // btag_lightUp->Sumw2();
+	// MLM->SetStats(0);
+	// MLM->SetMinimum(0.6);
+	// MLM->SetMaximum(1.4);
+	// MLM->Divide(nominal);
+	// MLM->SetMarkerStyle(1);
+	// MLM->Draw("ep");
+	// // btag_lightDown>Sumw2();
+	// FXFX->SetStats(0);
+	// FXFX->Divide(nominal);
+	// FXFX->SetMarkerStyle(1);
+	// FXFX->Draw("epsame");
+	// c1ttbar->cd();
+	// c1ttbar->SaveAs("MLMFXFX.png");
+
+	// cout<<"MLMFXFX"<<endl;
+
+
+	//btag_CSVLF
+
+	TCanvas *cCSVLF = new TCanvas();
+	TPad *pad1CSVLF = new TPad("pad1CSVLF","pad1CSVLF",0,0.3,1,1);
+	cCSVLF->cd();
+	pad1CSVLF->SetBottomMargin(0);
+	pad1CSVLF->Draw();
+	pad1CSVLF->cd();
+
+	btag_CSVLFUp->SetLineColor(kRed);
+	btag_CSVLFDown->SetLineColor(kCyan);
+	btag_CSVLFUp->SetLineStyle(1);
+	btag_CSVLFDown->SetLineStyle(1);
+	btag_CSVLFUpOrig->SetLineStyle(1);
+	btag_CSVLFDownOrig->SetLineStyle(1);
+
+	btag_CSVLFUp->SetLineWidth(2);
+	btag_CSVLFDown->SetLineWidth(2);
+	btag_CSVLFUpOrig->SetLineWidth(2);
+	btag_CSVLFDownOrig->SetLineWidth(2);
+
+	btag_CSVLFUpOrig->SetLineColor(kRed);
+	btag_CSVLFDownOrig->SetLineColor(kCyan);
+
+	btag_CSVLFUpOrig->SetTitle("TTbar BDT disciminator");
+	btag_CSVLFUpOrig->Draw("hist");
+	btag_CSVLFDownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
+
+	nominal->Draw("histsame");
+
+	TLegend *legCSVLF = new TLegend(0.5,0.7,0.9,0.9);
+	legCSVLF->AddEntry(btag_CSVLFUp,"btag_CSVLF Up","l");
+	legCSVLF->AddEntry(nominal,"nominal ttbar","l");
+	legCSVLF->AddEntry(btag_CSVLFDown,"btag_CSVLF Down","l");
+	legCSVLF->Draw();
+	cCSVLF->cd();
+
+	TPad *pad2CSVLF = new TPad("pad2CSVLF","pad2CSVLF",0,0,1,0.3);
+
+	pad2CSVLF->SetTopMargin(0);
+	pad2CSVLF->SetGridy();
+	pad2CSVLF->Draw();
+
+	btag_CSVLFUp->SetTitle("");
+
+	pad2CSVLF->cd();
+	// btag_CSVLFUp->Sumw2();
+	btag_CSVLFUp->SetStats(0);
+	btag_CSVLFUp->SetMinimum(0.5);
+	btag_CSVLFUp->SetMaximum(1.5);
+	btag_CSVLFUp->Divide(nominal);
+	btag_CSVLFUp->SetMarkerStyle(1);
+	btag_CSVLFUp->Draw("ep");
+	// btag_CSVLFDown>Sumw2();
+	btag_CSVLFDown->SetStats(0);
+	btag_CSVLFDown->Divide(nominal);
+	btag_CSVLFDown->SetMarkerStyle(1);
+	btag_CSVLFDown->Draw("epsame");
+	cCSVLF->cd();
+	cCSVLF->SaveAs("btag_CSVLFsystt.png");
+
+	cout<<"btag_CSVLF done"<<endl;
+
+	//btag_CSVHF
+
+	TCanvas *cCSVHF = new TCanvas();
+	TPad *pad1CSVHF = new TPad("pad1CSVHF","pad1CSVHF",0,0.3,1,1);
+	cCSVHF->cd();
+	pad1CSVHF->SetBottomMargin(0);
+	pad1CSVHF->Draw();
+	pad1CSVHF->cd();
+
+	btag_CSVHFUp->SetLineColor(kRed);
+	btag_CSVHFDown->SetLineColor(kCyan);
+	btag_CSVHFUp->SetLineStyle(1);
+	btag_CSVHFDown->SetLineStyle(1);
+	btag_CSVHFUpOrig->SetLineStyle(1);
+	btag_CSVHFDownOrig->SetLineStyle(1);
+
+	btag_CSVHFUp->SetLineWidth(2);
+	btag_CSVHFDown->SetLineWidth(2);
+	btag_CSVHFUpOrig->SetLineWidth(2);
+	btag_CSVHFDownOrig->SetLineWidth(2);
+
+	btag_CSVHFUpOrig->SetLineColor(kRed);
+	btag_CSVHFDownOrig->SetLineColor(kCyan);
+
+	btag_CSVHFUpOrig->SetTitle("TTbar BDT disciminator");
+	btag_CSVHFUpOrig->Draw("hist");
+	btag_CSVHFDownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
+
+	nominal->Draw("histsame");
+
+	TLegend *legCSVHF = new TLegend(0.5,0.7,0.9,0.9);
+	legCSVHF->AddEntry(btag_CSVHFUp,"btag_CSVHF Up","l");
+	legCSVHF->AddEntry(nominal,"nominal ttbar","l");
+	legCSVHF->AddEntry(btag_CSVHFDown,"btag_CSVHF Down","l");
+	legCSVHF->Draw();
+	cCSVHF->cd();
+
+	TPad *pad2CSVHF = new TPad("pad2CSVHF","pad2CSVHF",0,0,1,0.3);
+
+	pad2CSVHF->SetTopMargin(0);
+	pad2CSVHF->SetGridy();
+	pad2CSVHF->Draw();
+
+	btag_CSVHFUp->SetTitle("");
+
+	pad2CSVHF->cd();
+	// btag_CSVHFUp->Sumw2();
+	btag_CSVHFUp->SetStats(0);
+	btag_CSVHFUp->SetMinimum(0.5);
+	btag_CSVHFUp->SetMaximum(1.5);
+	btag_CSVHFUp->Divide(nominal);
+	btag_CSVHFUp->SetMarkerStyle(1);
+	btag_CSVHFUp->Draw("ep");
+	// btag_CSVHFDown>Sumw2();
+	btag_CSVHFDown->SetStats(0);
+	btag_CSVHFDown->Divide(nominal);
+	btag_CSVHFDown->SetMarkerStyle(1);
+	btag_CSVHFDown->Draw("epsame");
+	cCSVHF->cd();
+	cCSVHF->SaveAs("btag_CSVHFsystt.png");
+
+	cout<<"btag_CSVHF done"<<endl;
+
+
+	//btag_CSVHFStats1
+
+	TCanvas *cCSVHFStats1 = new TCanvas();
+	TPad *pad1CSVHFStats1 = new TPad("pad1CSVHFStats1","pad1CSVHFStats1",0,0.3,1,1);
+	cCSVHFStats1->cd();
+	pad1CSVHFStats1->SetBottomMargin(0);
+	pad1CSVHFStats1->Draw();
+	pad1CSVHFStats1->cd();
+
+	btag_CSVHFStats1Up->SetLineColor(kRed);
+	btag_CSVHFStats1Down->SetLineColor(kCyan);
+	btag_CSVHFStats1Up->SetLineStyle(1);
+	btag_CSVHFStats1Down->SetLineStyle(1);
+	btag_CSVHFStats1UpOrig->SetLineStyle(1);
+	btag_CSVHFStats1DownOrig->SetLineStyle(1);
+
+	btag_CSVHFStats1Up->SetLineWidth(2);
+	btag_CSVHFStats1Down->SetLineWidth(2);
+	btag_CSVHFStats1UpOrig->SetLineWidth(2);
+	btag_CSVHFStats1DownOrig->SetLineWidth(2);
+
+	btag_CSVHFStats1UpOrig->SetLineColor(kRed);
+	btag_CSVHFStats1DownOrig->SetLineColor(kCyan);
+
+	btag_CSVHFStats1UpOrig->SetTitle("TTbar BDT disciminator");
+	btag_CSVHFStats1UpOrig->Draw("hist");
+	btag_CSVHFStats1DownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
+
+	nominal->Draw("histsame");
+
+	TLegend *legCSVHFStats1 = new TLegend(0.5,0.7,0.9,0.9);
+	legCSVHFStats1->AddEntry(btag_CSVHFStats1Up,"btag_CSVHFStats1 Up","l");
+	legCSVHFStats1->AddEntry(nominal,"nominal ttbar","l");
+	legCSVHFStats1->AddEntry(btag_CSVHFStats1Down,"btag_CSVHFStats1 Down","l");
+	legCSVHFStats1->Draw();
+	cCSVHFStats1->cd();
+
+	TPad *pad2CSVHFStats1 = new TPad("pad2CSVHFStats1","pad2CSVHFStats1",0,0,1,0.3);
+
+	pad2CSVHFStats1->SetTopMargin(0);
+	pad2CSVHFStats1->SetGridy();
+	pad2CSVHFStats1->Draw();
+
+	btag_CSVHFStats1Up->SetTitle("");
+
+	pad2CSVHFStats1->cd();
+	// btag_CSVHFStats1Up->Sumw2();
+	btag_CSVHFStats1Up->SetStats(0);
+	btag_CSVHFStats1Up->SetMinimum(0.5);
+	btag_CSVHFStats1Up->SetMaximum(1.5);
+	btag_CSVHFStats1Up->Divide(nominal);
+	btag_CSVHFStats1Up->SetMarkerStyle(1);
+	btag_CSVHFStats1Up->Draw("ep");
+	// btag_CSVHFStats1Down>Sumw2();
+	btag_CSVHFStats1Down->SetStats(0);
+	btag_CSVHFStats1Down->Divide(nominal);
+	btag_CSVHFStats1Down->SetMarkerStyle(1);
+	btag_CSVHFStats1Down->Draw("epsame");
+	cCSVHFStats1->cd();
+	cCSVHFStats1->SaveAs("btag_CSVHFStats1systt.png");
+
+	cout<<"btag_CSVHFStats1 done"<<endl;
+
+	//btag_CSVHFStats2
+	TCanvas *cCSVHFStats2 = new TCanvas();
+	TPad *pad1CSVHFStats2 = new TPad("pad1CSVHFStats2","pad1CSVHFStats2",0,0.3,1,1);
+	cCSVHFStats2->cd();
+	pad1CSVHFStats2->SetBottomMargin(0);
+	pad1CSVHFStats2->Draw();
+	pad1CSVHFStats2->cd();
+
+	btag_CSVHFStats2Up->SetLineColor(kRed);
+	btag_CSVHFStats2Down->SetLineColor(kCyan);
+	btag_CSVHFStats2Up->SetLineStyle(1);
+	btag_CSVHFStats2Down->SetLineStyle(1);
+	btag_CSVHFStats2UpOrig->SetLineStyle(1);
+	btag_CSVHFStats2DownOrig->SetLineStyle(1);
+
+	btag_CSVHFStats2Up->SetLineWidth(2);
+	btag_CSVHFStats2Down->SetLineWidth(2);
+	btag_CSVHFStats2UpOrig->SetLineWidth(2);
+	btag_CSVHFStats2DownOrig->SetLineWidth(2);
+
+	btag_CSVHFStats2UpOrig->SetLineColor(kRed);
+	btag_CSVHFStats2DownOrig->SetLineColor(kCyan);
+
+	btag_CSVHFStats2UpOrig->SetTitle("TTbar BDT disciminator");
+	btag_CSVHFStats2UpOrig->Draw("hist");
+	btag_CSVHFStats2DownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
+
+	nominal->Draw("histsame");
+
+	TLegend *legCSVHFStats2 = new TLegend(0.5,0.7,0.9,0.9);
+	legCSVHFStats2->AddEntry(btag_CSVHFStats2Up,"btag_CSVHFStats2 Up","l");
+	legCSVHFStats2->AddEntry(nominal,"nominal ttbar","l");
+	legCSVHFStats2->AddEntry(btag_CSVHFStats2Down,"btag_CSVHFStats2 Down","l");
+	legCSVHFStats2->Draw();
+	cCSVHFStats2->cd();
+
+	TPad *pad2CSVHFStats2 = new TPad("pad2CSVHFStats2","pad2CSVHFStats2",0,0,1,0.3);
+
+	pad2CSVHFStats2->SetTopMargin(0);
+	pad2CSVHFStats2->SetGridy();
+	pad2CSVHFStats2->Draw();
+
+	btag_CSVHFStats2Up->SetTitle("");
+
+	pad2CSVHFStats2->cd();
+	// btag_CSVHFStats2Up->Sumw2();
+	btag_CSVHFStats2Up->SetStats(0);
+	btag_CSVHFStats2Up->SetMinimum(0.5);
+	btag_CSVHFStats2Up->SetMaximum(1.5);
+	btag_CSVHFStats2Up->Divide(nominal);
+	btag_CSVHFStats2Up->SetMarkerStyle(1);
+	btag_CSVHFStats2Up->Draw("ep");
+	// btag_CSVHFStats2Down>Sumw2();
+	btag_CSVHFStats2Down->SetStats(0);
+	btag_CSVHFStats2Down->Divide(nominal);
+	btag_CSVHFStats2Down->SetMarkerStyle(1);
+	btag_CSVHFStats2Down->Draw("epsame");
+	cCSVHFStats2->cd();
+	cCSVHFStats2->SaveAs("btag_CSVHFStats2systt.png");
+
+	cout<<"btag_CSVHFStats2 done"<<endl;
+
+	//btag_CSVHFStats1
+
+	TCanvas *cCSVLFStats1 = new TCanvas();
+	TPad *pad1CSVLFStats1 = new TPad("pad1CSVLFStats1","pad1CSVLFStats1",0,0.3,1,1);
+	cCSVLFStats1->cd();
+	pad1CSVLFStats1->SetBottomMargin(0);
+	pad1CSVLFStats1->Draw();
+	pad1CSVLFStats1->cd();
+
+	btag_CSVLFStats1Up->SetLineColor(kRed);
+	btag_CSVLFStats1Down->SetLineColor(kCyan);
+	btag_CSVLFStats1Up->SetLineStyle(1);
+	btag_CSVLFStats1Down->SetLineStyle(1);
+	btag_CSVLFStats1UpOrig->SetLineStyle(1);
+	btag_CSVLFStats1DownOrig->SetLineStyle(1);
+
+	btag_CSVLFStats1Up->SetLineWidth(2);
+	btag_CSVLFStats1Down->SetLineWidth(2);
+	btag_CSVLFStats1UpOrig->SetLineWidth(2);
+	btag_CSVLFStats1DownOrig->SetLineWidth(2);
+
+	btag_CSVLFStats1UpOrig->SetLineColor(kRed);
+	btag_CSVLFStats1DownOrig->SetLineColor(kCyan);
+
+	btag_CSVLFStats1UpOrig->SetTitle("TTbar BDT disciminator");
+	btag_CSVLFStats1UpOrig->Draw("hist");
+	btag_CSVLFStats1DownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
+
+	nominal->Draw("histsame");
+
+	TLegend *legCSVLFStats1 = new TLegend(0.5,0.7,0.9,0.9);
+	legCSVLFStats1->AddEntry(btag_CSVLFStats1Up,"btag_CSVLFStats1 Up","l");
+	legCSVLFStats1->AddEntry(nominal,"nominal ttbar","l");
+	legCSVLFStats1->AddEntry(btag_CSVLFStats1Down,"btag_CSVLFStats1 Down","l");
+	legCSVLFStats1->Draw();
+	cCSVLFStats1->cd();
+
+	TPad *pad2CSVLFStats1 = new TPad("pad2CSVLFStats1","pad2CSVLFStats1",0,0,1,0.3);
+
+	pad2CSVLFStats1->SetTopMargin(0);
+	pad2CSVLFStats1->SetGridy();
+	pad2CSVLFStats1->Draw();
+
+	btag_CSVLFStats1Up->SetTitle("");
+
+	pad2CSVLFStats1->cd();
+	// btag_CSVLFStats1Up->Sumw2();
+	btag_CSVLFStats1Up->SetStats(0);
+	btag_CSVLFStats1Up->SetMinimum(0.5);
+	btag_CSVLFStats1Up->SetMaximum(1.5);
+	btag_CSVLFStats1Up->Divide(nominal);
+	btag_CSVLFStats1Up->SetMarkerStyle(1);
+	btag_CSVLFStats1Up->Draw("ep");
+	// btag_CSVLFStats1Down>Sumw2();
+	btag_CSVLFStats1Down->SetStats(0);
+	btag_CSVLFStats1Down->Divide(nominal);
+	btag_CSVLFStats1Down->SetMarkerStyle(1);
+	btag_CSVLFStats1Down->Draw("epsame");
+	cCSVLFStats1->cd();
+	cCSVLFStats1->SaveAs("btag_CSVLFStats1systt.png");
+
+	cout<<"btag_CSVLFStats1 done"<<endl;
+
+
+	//btag_CSVLFStats2
+
+	TCanvas *cCSVLFStats2 = new TCanvas();
+	TPad *pad1CSVLFStats2 = new TPad("pad1CSVLFStats2","pad1CSVLFStats2",0,0.3,1,1);
+	cCSVLFStats2->cd();
+	pad1CSVLFStats2->SetBottomMargin(0);
+	pad1CSVLFStats2->Draw();
+	pad1CSVLFStats2->cd();
+
+	btag_CSVLFStats2Up->SetLineColor(kRed);
+	btag_CSVLFStats2Down->SetLineColor(kCyan);
+	btag_CSVLFStats2Up->SetLineStyle(1);
+	btag_CSVLFStats2Down->SetLineStyle(1);
+	btag_CSVLFStats2UpOrig->SetLineStyle(1);
+	btag_CSVLFStats2DownOrig->SetLineStyle(1);
+
+	btag_CSVLFStats2Up->SetLineWidth(2);
+	btag_CSVLFStats2Down->SetLineWidth(2);
+	btag_CSVLFStats2UpOrig->SetLineWidth(2);
+	btag_CSVLFStats2DownOrig->SetLineWidth(2);
+
+	btag_CSVLFStats2UpOrig->SetLineColor(kRed);
+	btag_CSVLFStats2DownOrig->SetLineColor(kCyan);
+
+	btag_CSVLFStats2UpOrig->SetTitle("TTbar BDT disciminator");
+	btag_CSVLFStats2UpOrig->Draw("hist");
+	btag_CSVLFStats2DownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
+
+	nominal->Draw("histsame");
+
+	TLegend *legCSVLFStats2 = new TLegend(0.5,0.7,0.9,0.9);
+	legCSVLFStats2->AddEntry(btag_CSVLFStats2Up,"btag_CSVLFStats2 Up","l");
+	legCSVLFStats2->AddEntry(nominal,"nominal ttbar","l");
+	legCSVLFStats2->AddEntry(btag_CSVLFStats2Down,"btag_CSVLFStats2 Down","l");
+	legCSVLFStats2->Draw();
+	cCSVLFStats2->cd();
+
+	TPad *pad2CSVLFStats2 = new TPad("pad2CSVLFStats2","pad2CSVLFStats2",0,0,1,0.3);
+
+	pad2CSVLFStats2->SetTopMargin(0);
+	pad2CSVLFStats2->SetGridy();
+	pad2CSVLFStats2->Draw();
+
+	btag_CSVLFStats2Up->SetTitle("");
+
+	pad2CSVLFStats2->cd();
+	// btag_CSVLFStats2Up->Sumw2();
+	btag_CSVLFStats2Up->SetStats(0);
+	btag_CSVLFStats2Up->SetMinimum(0.5);
+	btag_CSVLFStats2Up->SetMaximum(1.5);
+	btag_CSVLFStats2Up->Divide(nominal);
+	btag_CSVLFStats2Up->SetMarkerStyle(1);
+	btag_CSVLFStats2Up->Draw("ep");
+	// btag_CSVLFStats2Down>Sumw2();
+	btag_CSVLFStats2Down->SetStats(0);
+	btag_CSVLFStats2Down->Divide(nominal);
+	btag_CSVLFStats2Down->SetMarkerStyle(1);
+	btag_CSVLFStats2Down->Draw("epsame");
+	cCSVLFStats2->cd();
+	cCSVLFStats2->SaveAs("btag_CSVLFStats2systt.png");
+
+	cout<<"btag_CSVLFStats2 done"<<endl;
+
+	//btag_CSVHFStats1
+
+	TCanvas *cCSVCFErr1 = new TCanvas();
+	TPad *pad1CSVCFErr1 = new TPad("pad1CSVCFErr1","pad1CSVCFErr1",0,0.3,1,1);
+	cCSVCFErr1->cd();
+	pad1CSVCFErr1->SetBottomMargin(0);
+	pad1CSVCFErr1->Draw();
+	pad1CSVCFErr1->cd();
+
+	btag_CSVCFErr1Up->SetLineColor(kRed);
+	btag_CSVCFErr1Down->SetLineColor(kCyan);
+	btag_CSVCFErr1Up->SetLineStyle(1);
+	btag_CSVCFErr1Down->SetLineStyle(1);
+	btag_CSVCFErr1UpOrig->SetLineStyle(1);
+	btag_CSVCFErr1DownOrig->SetLineStyle(1);
+
+	btag_CSVCFErr1Up->SetLineWidth(2);
+	btag_CSVCFErr1Down->SetLineWidth(2);
+	btag_CSVCFErr1UpOrig->SetLineWidth(2);
+	btag_CSVCFErr1DownOrig->SetLineWidth(2);
+
+	btag_CSVCFErr1UpOrig->SetLineColor(kRed);
+	btag_CSVCFErr1DownOrig->SetLineColor(kCyan);
+
+	btag_CSVCFErr1UpOrig->SetTitle("TTbar BDT disciminator");
+	btag_CSVCFErr1UpOrig->Draw("hist");
+	btag_CSVCFErr1DownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
+
+	nominal->Draw("histsame");
+
+	TLegend *legCSVCFErr1 = new TLegend(0.5,0.7,0.9,0.9);
+	legCSVCFErr1->AddEntry(btag_CSVCFErr1Up,"btag_CSVCFErr1 Up","l");
+	legCSVCFErr1->AddEntry(nominal,"nominal ttbar","l");
+	legCSVCFErr1->AddEntry(btag_CSVCFErr1Down,"btag_CSVCFErr1 Down","l");
+	legCSVCFErr1->Draw();
+	cCSVCFErr1->cd();
+
+	TPad *pad2CSVCFErr1 = new TPad("pad2CSVCFErr1","pad2CSVCFErr1",0,0,1,0.3);
+
+	pad2CSVCFErr1->SetTopMargin(0);
+	pad2CSVCFErr1->SetGridy();
+	pad2CSVCFErr1->Draw();
+
+	btag_CSVCFErr1Up->SetTitle("");
+
+	pad2CSVCFErr1->cd();
+	// btag_CSVCFErr1Up->Sumw2();
+	btag_CSVCFErr1Up->SetStats(0);
+	btag_CSVCFErr1Up->SetMinimum(0.5);
+	btag_CSVCFErr1Up->SetMaximum(1.5);
+	btag_CSVCFErr1Up->Divide(nominal);
+	btag_CSVCFErr1Up->SetMarkerStyle(1);
+	btag_CSVCFErr1Up->Draw("ep");
+	// btag_CSVCFErr1Down>Sumw2();
+	btag_CSVCFErr1Down->SetStats(0);
+	btag_CSVCFErr1Down->Divide(nominal);
+	btag_CSVCFErr1Down->SetMarkerStyle(1);
+	btag_CSVCFErr1Down->Draw("epsame");
+	cCSVCFErr1->cd();
+	cCSVCFErr1->SaveAs("btag_CSVCFErr1systt.png");
+
+	cout<<"btag_CSVCFErr1 done"<<endl;
+
+	//btag_CSVCFErr2
+
+	TCanvas *cCSVCFErr2 = new TCanvas();
+	TPad *pad1CSVCFErr2 = new TPad("pad1CSVCFErr2","pad1CSVCFErr2",0,0.3,1,1);
+	cCSVCFErr2->cd();
+	pad1CSVCFErr2->SetBottomMargin(0);
+	pad1CSVCFErr2->Draw();
+	pad1CSVCFErr2->cd();
+
+	btag_CSVCFErr2Up->SetLineColor(kRed);
+	btag_CSVCFErr2Down->SetLineColor(kCyan);
+	btag_CSVCFErr2Up->SetLineStyle(1);
+	btag_CSVCFErr2Down->SetLineStyle(1);
+	btag_CSVCFErr2UpOrig->SetLineStyle(1);
+	btag_CSVCFErr2DownOrig->SetLineStyle(1);
+
+	btag_CSVCFErr2Up->SetLineWidth(2);
+	btag_CSVCFErr2Down->SetLineWidth(2);
+	btag_CSVCFErr2UpOrig->SetLineWidth(2);
+	btag_CSVCFErr2DownOrig->SetLineWidth(2);
+
+	btag_CSVCFErr2UpOrig->SetLineColor(kRed);
+	btag_CSVCFErr2DownOrig->SetLineColor(kCyan);
+
+	btag_CSVCFErr2UpOrig->SetTitle("TTbar BDT disciminator");
+	btag_CSVCFErr2UpOrig->Draw("hist");
+	btag_CSVCFErr2DownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
+
+	nominal->Draw("histsame");
+
+	TLegend *legCSVCFErr2 = new TLegend(0.5,0.7,0.9,0.9);
+	legCSVCFErr2->AddEntry(btag_CSVCFErr2Up,"btag_CSVCFErr2 Up","l");
+	legCSVCFErr2->AddEntry(nominal,"nominal ttbar","l");
+	legCSVCFErr2->AddEntry(btag_CSVCFErr2Down,"btag_CSVCFErr2 Down","l");
+	legCSVCFErr2->Draw();
+	cCSVCFErr2->cd();
+
+	TPad *pad2CSVCFErr2 = new TPad("pad2CSVCFErr2","pad2CSVCFErr2",0,0,1,0.3);
+
+	pad2CSVCFErr2->SetTopMargin(0);
+	pad2CSVCFErr2->SetGridy();
+	pad2CSVCFErr2->Draw();
+
+	btag_CSVCFErr2Up->SetTitle("");
+
+	pad2CSVCFErr2->cd();
+	// btag_CSVCFErr2Up->Sumw2();
+	btag_CSVCFErr2Up->SetStats(0);
+	btag_CSVCFErr2Up->SetMinimum(0.5);
+	btag_CSVCFErr2Up->SetMaximum(1.5);
+	btag_CSVCFErr2Up->Divide(nominal);
+	btag_CSVCFErr2Up->SetMarkerStyle(1);
+	btag_CSVCFErr2Up->Draw("ep");
+	// btag_CSVCFErr2Down>Sumw2();
+	btag_CSVCFErr2Down->SetStats(0);
+	btag_CSVCFErr2Down->Divide(nominal);
+	btag_CSVCFErr2Down->SetMarkerStyle(1);
+	btag_CSVCFErr2Down->Draw("epsame");
+	cCSVCFErr2->cd();
+	cCSVCFErr2->SaveAs("btag_CSVCFErr2systt.png");
+
+	cout<<"btag_CSVCFErr2 done"<<endl;
+
+ 	//btag_light
+
+	TCanvas *c1 = new TCanvas();
+	TPad *pad1 = new TPad("pad1","pad1",0,0.3,1,1);
+	c1->cd();
+	pad1->SetBottomMargin(0);
+	pad1->Draw();
+	pad1->cd();
+
+	btag_lightUp->SetLineColor(kRed);
+	btag_lightDown->SetLineColor(kCyan);
+	btag_lightUp->SetLineStyle(1);
+	btag_lightDown->SetLineStyle(1);
+	btag_lightUpOrig->SetLineStyle(1);
+	btag_lightDownOrig->SetLineStyle(1);
 
 	btag_lightUp->SetLineWidth(2);
- 	btag_lightDown->SetLineWidth(2);
- 	btag_lightUpOrig->SetLineWidth(2);
- 	btag_lightDownOrig->SetLineWidth(2);
+	btag_lightDown->SetLineWidth(2);
+	btag_lightUpOrig->SetLineWidth(2);
+	btag_lightDownOrig->SetLineWidth(2);
 
- 	btag_lightUpOrig->SetLineColor(kRed);
- 	btag_lightDownOrig->SetLineColor(kCyan);
+	btag_lightUpOrig->SetLineColor(kRed);
+	btag_lightDownOrig->SetLineColor(kCyan);
 
- 	btag_lightUpOrig->SetTitle("t#bar{t} BDT disciminator");
-    btag_lightUpOrig->GetYaxis()->SetLabelSize(0.08);
-    btag_lightUpOrig->SetMinimum(0.001);
- 	btag_lightUpOrig->Draw("hist");
- 	btag_lightDownOrig->Draw("histsame");
- 	nominal->SetLineWidth(2);
+	btag_lightUpOrig->SetTitle("TTbar BDT disciminator");
+	btag_lightUpOrig->Draw("hist");
+	btag_lightDownOrig->Draw("histsame");
+	nominal->SetLineWidth(2);
 
- 	nominal->Draw("histsame");
+	nominal->Draw("histsame");
 
- 	TLegend *leg = new TLegend(0.5,0.7,0.9,0.9);
- 	leg->AddEntry(btag_lightUp,"btag_light Up","l");
- 	leg->AddEntry(nominal,"nominal ttbar","l");
- 	leg->AddEntry(btag_lightDown,"btag_light Down","l");
- 	leg->Draw();
- 	c1->cd();
+	TLegend *leg = new TLegend(0.5,0.7,0.9,0.9);
+	leg->AddEntry(btag_lightUp,"btag_light Up","l");
+	leg->AddEntry(nominal,"nominal ttbar","l");
+	leg->AddEntry(btag_lightDown,"btag_light Down","l");
+	leg->Draw();
+	c1->cd();
 
- 	TPad *pad2 = new TPad("pad2","pad2",0,0,1,0.3);
+	TPad *pad2 = new TPad("pad2","pad2",0,0,1,0.3);
 
- 	pad2->SetTopMargin(0);
-    pad2->SetBottomMargin(0.25);
- 	pad2->SetGridy();
-    pad2->SetFillColor(0);
-    pad2->SetFillStyle(0);
- 	pad2->Draw();
+	pad2->SetTopMargin(0);
+	pad2->SetGridy();
+	pad2->Draw();
 
- 	btag_lightUp->SetTitle("");
+	btag_lightUp->SetTitle("");
 
- 	pad2->cd();
- 	// btag_lightUp->Sumw2();
- 	btag_lightUp->SetStats(0);
- 	btag_lightUp->SetMinimum(0.5);
- 	btag_lightUp->SetMaximum(1.5);
- 	btag_lightUp->Divide(nominal);
- 	btag_lightUp->SetMarkerStyle(1);
-    btag_lightUp->GetXaxis()->SetLabelSize(0.12);
-    btag_lightUp->GetYaxis()->SetLabelSize(0.12);
-    btag_lightUp->GetYaxis()->SetNdivisions(5);
-    btag_lightUp->GetXaxis()->SetTitle("BDT");
-    btag_lightUp->GetXaxis()->SetTitleSize(0.15);
-    btag_lightUp->GetXaxis()->SetTitleOffset(0.7);
- 	btag_lightUp->Draw("ep");
- 	// btag_lightDown>Sumw2();
- 	btag_lightDown->SetStats(0);
- 	btag_lightDown->Divide(nominal);
- 	btag_lightDown->SetMarkerStyle(1);
- 	btag_lightDown->Draw("epsame");
- 	c1->cd();
- 	c1->SaveAs("btag_lightsystt.eps");
+	pad2->cd();
+	// btag_lightUp->Sumw2();
+	btag_lightUp->SetStats(0);
+	btag_lightUp->SetMinimum(0.5);
+	btag_lightUp->SetMaximum(1.5);
+	btag_lightUp->Divide(nominal);
+	btag_lightUp->SetMarkerStyle(1);
+	btag_lightUp->Draw("ep");
+	// btag_lightDown>Sumw2();
+	btag_lightDown->SetStats(0);
+	btag_lightDown->Divide(nominal);
+	btag_lightDown->SetMarkerStyle(1);
+	btag_lightDown->Draw("epsame");
+	c1->cd();
+	c1->SaveAs("btag_lightsystt.png");
 
- 	cout<<"btag_light done"<<endl;
+	cout<<"btag_light done"<<endl;
 
 
-  	//btag_heavy
+ 	//btag_heavy
 
- 	TCanvas *c1h = new TCanvas();
- 	TPad *pad1h = new TPad("pad1h","pad1h",0,0.3,1,1);
- 	c1h->cd();
- 	pad1h->SetBottomMargin(0);
- 	pad1h->Draw();
- 	pad1h->cd();
+	TCanvas *c1h = new TCanvas();
+	TPad *pad1h = new TPad("pad1h","pad1h",0,0.3,1,1);
+	c1h->cd();
+	pad1h->SetBottomMargin(0);
+	pad1h->Draw();
+	pad1h->cd();
 
- 	btag_heavyUp->SetLineColor(kRed);
- 	btag_heavyDown->SetLineColor(kCyan);
- 	btag_heavyUp->SetLineStyle(1);
- 	btag_heavyDown->SetLineStyle(1);
- 	btag_heavyUpOrig->SetLineStyle(1);
- 	btag_heavyDownOrig->SetLineStyle(1);
- 	btag_heavyUp->SetLineWidth(2);
- 	btag_heavyDown->SetLineWidth(2);
- 	btag_heavyUpOrig->SetLineWidth(2);
- 	btag_heavyDownOrig->SetLineWidth(2);
- 	btag_heavyUpOrig->SetLineColor(kRed);
- 	btag_heavyDownOrig->SetLineColor(kCyan);
+	btag_heavyUp->SetLineColor(kRed);
+	btag_heavyDown->SetLineColor(kCyan);
+	btag_heavyUp->SetLineStyle(1);
+	btag_heavyDown->SetLineStyle(1);
+	btag_heavyUpOrig->SetLineStyle(1);
+	btag_heavyDownOrig->SetLineStyle(1);
+	btag_heavyUp->SetLineWidth(2);
+	btag_heavyDown->SetLineWidth(2);
+	btag_heavyUpOrig->SetLineWidth(2);
+	btag_heavyDownOrig->SetLineWidth(2);
+	btag_heavyUpOrig->SetLineColor(kRed);
+	btag_heavyDownOrig->SetLineColor(kCyan);
 
- 	btag_heavyUpOrig->SetTitle("t#bar{t} BDT disciminator");
-    btag_heavyUpOrig->GetYaxis()->SetLabelSize(0.08);
-    btag_heavyUpOrig->SetMinimum(0.001);
- 	btag_heavyUpOrig->Draw("hist");
- 	btag_heavyDownOrig->Draw("histsame");
- 	nominal->Draw("histsame");
+	btag_heavyUpOrig->SetTitle("TTbar BDT disciminator");
+	btag_heavyUpOrig->Draw("hist");
+	btag_heavyDownOrig->Draw("histsame");
+	nominal->Draw("histsame");
 
- 	TLegend *legh = new TLegend(0.5,0.7,0.9,0.9);
- 	legh->AddEntry(btag_heavyUp,"btag_heavy Up","l");
- 	legh->AddEntry(nominal,"nominal ttbar","l");
- 	legh->AddEntry(btag_heavyDown,"btag_heavy Down","l");
- 	legh->Draw();
- 	c1h->cd();
+	TLegend *legh = new TLegend(0.5,0.7,0.9,0.9);
+	legh->AddEntry(btag_heavyUp,"btag_heavy Up","l");
+	legh->AddEntry(nominal,"nominal ttbar","l");
+	legh->AddEntry(btag_heavyDown,"btag_heavy Down","l");
+	legh->Draw();
+	c1h->cd();
 
- 	TPad *pad2h = new TPad("pad2h","pad2h",0,0,1,0.3);
+	TPad *pad2h = new TPad("pad2h","pad2h",0,0,1,0.3);
 
- 	pad2h->SetTopMargin(0);
-    pad2h->SetBottomMargin(0.25);
- 	pad2h->SetGridy();
- 	pad2h->Draw();
+	pad2h->SetTopMargin(0);
+	pad2h->SetGridy();
+	pad2h->Draw();
 
- 	btag_heavyUp->SetTitle("");
+	btag_heavyUp->SetTitle("");
 
 	pad2h->cd();
- 	// btag_heavyUp->Sumw2();
- 	btag_heavyUp->SetStats(0);
- 	btag_heavyUp->SetMinimum(0.5);
- 	btag_heavyUp->SetMaximum(1.5);
- 	btag_heavyUp->Divide(nominal);
- 	btag_heavyUp->SetMarkerStyle(1);
-    btag_heavyUp->GetXaxis()->SetLabelSize(0.12);
-    btag_heavyUp->GetYaxis()->SetLabelSize(0.12);
-    btag_heavyUp->GetYaxis()->SetNdivisions(5);
-    btag_heavyUp->GetXaxis()->SetTitle("BDT");
-    btag_heavyUp->GetXaxis()->SetTitleSize(0.15);
-    btag_heavyUp->GetXaxis()->SetTitleOffset(0.7);
- 	btag_heavyUp->Draw("ep");
- 	// btag_heavyDown>Sumw2();
- 	btag_heavyDown->SetStats(0);
- 	btag_heavyDown->Divide(nominal);
- 	btag_heavyDown->SetMarkerStyle(1);
- 	btag_heavyDown->Draw("epsame");
- 	c1h->cd();
- 	c1h->SaveAs("btag_heavysystt.eps");
+	// btag_heavyUp->Sumw2();
+	btag_heavyUp->SetStats(0);
+	btag_heavyUp->SetMinimum(0.5);
+	btag_heavyUp->SetMaximum(1.5);
+	btag_heavyUp->Divide(nominal);
+	btag_heavyUp->SetMarkerStyle(1);
+	btag_heavyUp->Draw("ep");
+	// btag_heavyDown>Sumw2();
+	btag_heavyDown->SetStats(0);
+	btag_heavyDown->Divide(nominal);
+	btag_heavyDown->SetMarkerStyle(1);
+	btag_heavyDown->Draw("epsame");
+	c1h->cd();
+	c1h->SaveAs("btag_heavysystt.png");
 
- 	cout<<"btag_heavy done"<<endl;
+	cout<<"btag_heavy done"<<endl;
 
-  	// PU
- 	TCanvas *cPU1 = new TCanvas();
- 	TPad *padPU1 = new TPad("pad1","pad1",0,0.3,1,1);
- 	cPU1->cd();
- 	padPU1->SetBottomMargin(0);
- 	padPU1->Draw();
- 	padPU1->cd();
+ 	// PU
+	TCanvas *cPU1 = new TCanvas();
+	TPad *padPU1 = new TPad("pad1","pad1",0,0.3,1,1);
+	cPU1->cd();
+	padPU1->SetBottomMargin(0);
+	padPU1->Draw();
+	padPU1->cd();
 
- 	PUUp->SetLineColor(kRed);
- 	PUDown->SetLineColor(kCyan);
+	PUUp->SetLineColor(kRed);
+	PUDown->SetLineColor(kCyan);
 
- 	PUUpOrig->SetLineColor(kRed);
- 	PUDownOrig->SetLineColor(kCyan);
- 	PUUp->SetLineStyle(1);
- 	PUDown->SetLineStyle(1);
- 	PUUpOrig->SetLineStyle(1);
- 	PUDownOrig->SetLineStyle(1);
- 	PUUp->SetLineWidth(2);
- 	PUDown->SetLineWidth(2);
- 	PUUpOrig->SetLineWidth(2);
- 	PUDownOrig->SetLineWidth(2);
- 	PUDownOrig->SetTitle("t#bar{t} BDT disciminator");
-    PUDownOrig->GetYaxis()->SetLabelSize(0.08);
-    PUDownOrig->SetMinimum(0.001);
- 	PUDownOrig->Draw("hist");
- 	PUUpOrig->Draw("histsame");
- 	nominal->Draw("histsame");
+	PUUpOrig->SetLineColor(kRed);
+	PUDownOrig->SetLineColor(kCyan);
+	PUUp->SetLineStyle(1);
+	PUDown->SetLineStyle(1);
+	PUUpOrig->SetLineStyle(1);
+	PUDownOrig->SetLineStyle(1);
+	PUUp->SetLineWidth(2);
+	PUDown->SetLineWidth(2);
+	PUUpOrig->SetLineWidth(2);
+	PUDownOrig->SetLineWidth(2);
+	PUDownOrig->SetTitle("TTbar BDT disciminator");
+	PUDownOrig->Draw("hist");
+	PUUpOrig->Draw("histsame");
+	nominal->Draw("histsame");
 
- 	TLegend *legPU = new TLegend(0.5,0.7,0.9,0.9);
- 	legPU->AddEntry(PUUp,"PU Up","l");
- 	legPU->AddEntry(nominal,"nominal ttbar","l");
- 	legPU->AddEntry(PUDown,"PU Down","l");
+	TLegend *legPU = new TLegend(0.5,0.7,0.9,0.9);
+	legPU->AddEntry(PUUp,"PU Up","l");
+	legPU->AddEntry(nominal,"nominal ttbar","l");
+	legPU->AddEntry(PUDown,"PU Down","l");
 
- 	legPU->Draw();
- 	cPU1->cd();
+	legPU->Draw();
+	cPU1->cd();
 
- 	TPad *padPU2 = new TPad("pad2","pad2",0,0,1,0.3);
+	TPad *padPU2 = new TPad("pad2","pad2",0,0,1,0.3);
 
- 	padPU2->SetTopMargin(0);
-    padPU2->SetBottomMargin(0.25);
- 	padPU2->SetGridy();
- 	padPU2->Draw();
+	padPU2->SetTopMargin(0);
+	padPU2->SetGridy();
+	padPU2->Draw();
 
- 	PUUp->SetTitle("");
+	PUUp->SetTitle("");
 
- 	padPU2->cd();
- 	// PUUp->Sumw2();
- 	PUUp->SetStats(0);
- 	PUUp->SetMinimum(0.5);
- 	PUUp->SetMaximum(1.5);
- 	PUUp->Divide(nominal);
- 	PUUp->SetMarkerStyle(1);
-    PUUp->GetXaxis()->SetLabelSize(0.12);
-    PUUp->GetYaxis()->SetLabelSize(0.12);
-    PUUp->GetYaxis()->SetNdivisions(5);
-    PUUp->GetXaxis()->SetTitle("BDT");
-    PUUp->GetXaxis()->SetTitleSize(0.15);
-    PUUp->GetXaxis()->SetTitleOffset(0.7);
- 	PUUp->Draw("ep");
- 	// PUDown->Sumw2();
- 	PUDown->SetStats(0);
- 	PUDown->Divide(nominal);
- 	PUDown->SetMarkerStyle(1);
- 	PUDown->Draw("epsame");
- 	cPU1->cd();
- 	cPU1->SaveAs("PUsystt.eps");
+	padPU2->cd();
+	// PUUp->Sumw2();
+	PUUp->SetStats(0);
+	PUUp->SetMinimum(0.5);
+	PUUp->SetMaximum(1.5);
+	PUUp->Divide(nominal);
+	PUUp->SetMarkerStyle(1);
+	PUUp->Draw("ep");
+	// PUDown->Sumw2();
+	PUDown->SetStats(0);
+	PUDown->Divide(nominal);
+	PUDown->SetMarkerStyle(1);
+	PUDown->Draw("epsame");
+	cPU1->cd();
+	cPU1->SaveAs("PUsystt.png");
 
- 	cout<<"PU done"<<endl;
+	cout<<"PU done"<<endl;
 
 
- 	//MEScale
+	//MEScale
 
- 	TCanvas *cMEScale1 = new TCanvas();
- 	TPad *padMEScale1 = new TPad("pad1","pad1",0,0.3,1,1);
- 	cMEScale1->cd();
- 	padMEScale1->SetBottomMargin(0);
- 	padMEScale1->Draw();
- 	padMEScale1->cd();
+	TCanvas *cMEScale1 = new TCanvas();
+	TPad *padMEScale1 = new TPad("pad1","pad1",0,0.3,1,1);
+	cMEScale1->cd();
+	padMEScale1->SetBottomMargin(0);
+	padMEScale1->Draw();
+	padMEScale1->cd();
 
- 	MEScaleUp->SetLineColor(kRed);
- 	MEScaleDown->SetLineColor(kCyan);
+	MEScaleUp->SetLineColor(kRed);
+	MEScaleDown->SetLineColor(kCyan);
 
- 	MEScaleUpOrig->SetLineColor(kRed);
- 	MEScaleDownOrig->SetLineColor(kCyan);
+	MEScaleUpOrig->SetLineColor(kRed);
+	MEScaleDownOrig->SetLineColor(kCyan);
 
- 	MEScaleUp->SetLineStyle(1);
- 	MEScaleDown->SetLineStyle(1);
- 	MEScaleUpOrig->SetLineStyle(1);
- 	MEScaleDownOrig->SetLineStyle(1);
- 	MEScaleUp->SetLineWidth(2);
- 	MEScaleDown->SetLineWidth(2);
- 	MEScaleUpOrig->SetLineWidth(2);
- 	MEScaleDownOrig->SetLineWidth(2);
+	MEScaleUp->SetLineStyle(1);
+	MEScaleDown->SetLineStyle(1);
+	MEScaleUpOrig->SetLineStyle(1);
+	MEScaleDownOrig->SetLineStyle(1);
+	MEScaleUp->SetLineWidth(2);
+	MEScaleDown->SetLineWidth(2);
+	MEScaleUpOrig->SetLineWidth(2);
+	MEScaleDownOrig->SetLineWidth(2);
 
- 	MEScaleUpOrig->SetTitle("t#bar{t} BDT disciminator");
-    MEScaleUpOrig->GetYaxis()->SetLabelSize(0.08);
-    MEScaleUpOrig->SetMinimum(0.001);
- 	MEScaleUpOrig->Draw("hist");
- 	MEScaleDownOrig->Draw("histsame");
- 	nominal->Draw("histsame");
+	MEScaleUpOrig->SetTitle("TTbar BDT disciminator");
+	MEScaleUpOrig->Draw("hist");
+	MEScaleDownOrig->Draw("histsame");
+	nominal->Draw("histsame");
 
 
- 	TLegend *legMEScale = new TLegend(0.5,0.7,0.9,0.9);
- 	legMEScale->AddEntry(MEScaleUp,"MEScale Up","l");
- 	legMEScale->AddEntry(nominal,"nominal ttbar","l");
- 	legMEScale->AddEntry(MEScaleDown,"MEScale Down","l");
- 	legMEScale->Draw();
- 	cMEScale1->cd();
+	TLegend *legMEScale = new TLegend(0.5,0.7,0.9,0.9);
+	legMEScale->AddEntry(MEScaleUp,"MEScale Up","l");
+	legMEScale->AddEntry(nominal,"nominal ttbar","l");
+	legMEScale->AddEntry(MEScaleDown,"MEScale Down","l");
+	legMEScale->Draw();
+	cMEScale1->cd();
 
- 	TPad *pad2MEScale = new TPad("pad2","pad2",0,0,1,0.3);
+	TPad *pad2MEScale = new TPad("pad2","pad2",0,0,1,0.3);
 
- 	pad2MEScale->SetTopMargin(0);
-    pad2MEScale->SetBottomMargin(0.25);
- 	pad2MEScale->SetGridy();
- 	pad2MEScale->Draw();
+	pad2MEScale->SetTopMargin(0);
+	pad2MEScale->SetGridy();
+	pad2MEScale->Draw();
 
- 	MEScaleUp->SetTitle("");
+	MEScaleUp->SetTitle("");
 
- 	pad2MEScale->cd();
+	pad2MEScale->cd();
 
- 	// MEScaleUp->Sumw2();
- 	MEScaleUp->SetStats(0);
- 	MEScaleUp->SetMinimum(0.5);
- 	MEScaleUp->SetMaximum(1.5);
- 	MEScaleUp->Divide(nominal);
- 	MEScaleUp->SetMarkerStyle(1);
-    MEScaleUp->GetXaxis()->SetLabelSize(0.12);
-    MEScaleUp->GetYaxis()->SetLabelSize(0.12);
-    MEScaleUp->GetYaxis()->SetNdivisions(5);
-    MEScaleUp->GetXaxis()->SetTitle("BDT");
-    MEScaleUp->GetXaxis()->SetTitleSize(0.15);
-    MEScaleUp->GetXaxis()->SetTitleOffset(0.7);
- 	MEScaleUp->Draw("ep");
- 	MEScaleUp->SetAxisRange(0.5,1.5,"Y");
- 	MEScaleUp->Draw("ep");
+	// MEScaleUp->Sumw2();
+	MEScaleUp->SetStats(0);
+	MEScaleUp->SetMinimum(0.5);
+	MEScaleUp->SetMaximum(1.5);
+	MEScaleUp->Divide(nominal);
+	MEScaleUp->SetMarkerStyle(1);
 
- 	// MEScaleDown>Sumw2();
- 	MEScaleDown->SetStats(0);
- 	MEScaleDown->Divide(nominal);
- 	MEScaleDown->SetMarkerStyle(1);
- 	MEScaleDown->Draw("epsame");
- 	cMEScale1->cd();
- 	cMEScale1->SaveAs("MEScalesystt.eps");
- 	cout<<"MEScale done"<<endl;
+	MEScaleUp->Draw("ep");
+	MEScaleUp->SetAxisRange(0,2,"Y");
+	MEScaleUp->Draw("ep");
+
+	// MEScaleDown>Sumw2();
+	MEScaleDown->SetStats(0);
+	MEScaleDown->Divide(nominal);
+	MEScaleDown->SetMarkerStyle(1);
+	MEScaleDown->Draw("epsame");
+	cMEScale1->cd();
+	cMEScale1->SaveAs("MEScalesystt.png");
+	cout<<"MEScale done"<<endl;
 
 	
 
- 	//JES
- 	TCanvas *cJES1 = new TCanvas();
- 	TPad *padJES1 = new TPad("pad1","pad1",0,0.3,1,1);
- 	cJES1->cd();
- 	padJES1->SetBottomMargin(0);
- 	padJES1->Draw();
- 	padJES1->cd();
+	//JES
+	TCanvas *cJES1 = new TCanvas();
+	TPad *padJES1 = new TPad("pad1","pad1",0,0.3,1,1);
+	cJES1->cd();
+	padJES1->SetBottomMargin(0);
+	padJES1->Draw();
+	padJES1->cd();
 
- 	JESUp->SetLineColor(kRed);
- 	JESDown->SetLineColor(kCyan);
+	JESUp->SetLineColor(kRed);
+	JESDown->SetLineColor(kCyan);
 
- 	JESUpOrig->SetLineColor(kRed);
- 	JESDownOrig->SetLineColor(kCyan);
- 	JESUp->SetLineStyle(1);
- 	JESDown->SetLineStyle(1);
- 	JESUpOrig->SetLineStyle(1);
- 	JESDownOrig->SetLineStyle(1);
- 	JESUp->SetLineWidth(2);
- 	JESDown->SetLineWidth(2);
- 	JESUpOrig->SetLineWidth(2);
- 	JESDownOrig->SetLineWidth(2);
- 	JESUpOrig->SetTitle("t#bar{t} BDT disciminator");
-    JESUpOrig->GetYaxis()->SetLabelSize(0.08);
-    JESUpOrig->SetMinimum(0.001);
- 	JESUpOrig->Draw("hist");
- 	JESDownOrig->Draw("histsame");
- 	nominal->Draw("histsame");
+	JESUpOrig->SetLineColor(kRed);
+	JESDownOrig->SetLineColor(kCyan);
+	JESUp->SetLineStyle(1);
+	JESDown->SetLineStyle(1);
+	JESUpOrig->SetLineStyle(1);
+	JESDownOrig->SetLineStyle(1);
+	JESUp->SetLineWidth(2);
+	JESDown->SetLineWidth(2);
+	JESUpOrig->SetLineWidth(2);
+	JESDownOrig->SetLineWidth(2);
+	JESUpOrig->SetTitle("TTbar BDT disciminator");
+	JESUpOrig->Draw("hist");
+	JESDownOrig->Draw("histsame");
+	nominal->Draw("histsame");
 
- 	TLegend *legJES = new TLegend(0.5,0.7,0.9,0.9);
- 	legJES->AddEntry(JESUp,"JES Up","l");
- 	legJES->AddEntry(nominal,"nominal ttbar","l");
- 	legJES->AddEntry(JESDown,"JES Down","l");
+	TLegend *legJES = new TLegend(0.5,0.7,0.9,0.9);
+	legJES->AddEntry(JESUp,"JES Up","l");
+	legJES->AddEntry(nominal,"nominal ttbar","l");
+	legJES->AddEntry(JESDown,"JES Down","l");
 
- 	legJES->Draw();
- 	cJES1->cd();
+	legJES->Draw();
+	cJES1->cd();
 
- 	TPad *padJES2 = new TPad("pad2","pad2",0,0,1,0.3);
+	TPad *padJES2 = new TPad("pad2","pad2",0,0,1,0.3);
 
- 	padJES2->SetTopMargin(0);
-    padJES2->SetBottomMargin(0.25);
- 	padJES2->SetGridy();
- 	padJES2->Draw();
+	padJES2->SetTopMargin(0);
+	padJES2->SetGridy();
+	padJES2->Draw();
 
- 	JESUp->SetTitle("");
+	JESUp->SetTitle("");
 
- 	padJES2->cd();
- 	// JESUp->Sumw2();
- 	JESUp->SetStats(0);
- 	JESUp->SetMinimum(0.5);
- 	JESUp->SetMaximum(1.5);	
- 	JESUp->Divide(nominal);
+	padJES2->cd();
+	// JESUp->Sumw2();
+	JESUp->SetStats(0);
+	JESUp->SetMinimum(0.5);
+	JESUp->SetMaximum(1.5);	
+	JESUp->Divide(nominal);
 
- 	JESUp->SetMarkerStyle(1);
-    JESUp->GetXaxis()->SetLabelSize(0.12);
-    JESUp->GetYaxis()->SetLabelSize(0.12);
-    JESUp->GetYaxis()->SetNdivisions(5);
-    JESUp->GetXaxis()->SetTitle("BDT");
-    JESUp->GetXaxis()->SetTitleSize(0.15);
-    JESUp->GetXaxis()->SetTitleOffset(0.7);
- 	JESUp->Draw("ep");
- 	// JESDown>Sumw2();
- 	JESDown->SetStats(0);
- 	JESDown->Divide(nominal);
- 	JESDown->SetMarkerStyle(1);
- 	JESDown->Draw("epsame");
- 	cJES1->cd();
- 	cJES1->SaveAs("JESsystt.eps");
+	JESUp->SetMarkerStyle(1);
+	JESUp->Draw("ep");
+	// JESDown>Sumw2();
+	JESDown->SetStats(0);
+	JESDown->Divide(nominal);
+	JESDown->SetMarkerStyle(1);
+	JESDown->Draw("epsame");
+	cJES1->cd();
+	cJES1->SaveAs("JESsystt.png");
 
- 	cout<<"JES done"<<endl;
+	cout<<"JES done"<<endl;
 
- 	//JER
- 	TCanvas *cJER1 = new TCanvas();
- 	TPad *padJER1 = new TPad("pad1","pad1",0,0.3,1,1);
- 	cJER1->cd();
- 	padJER1->SetBottomMargin(0);
- 	padJER1->Draw();
- 	padJER1->cd();
+	//JER
+	TCanvas *cJER1 = new TCanvas();
+	TPad *padJER1 = new TPad("pad1","pad1",0,0.3,1,1);
+	cJER1->cd();
+	padJER1->SetBottomMargin(0);
+	padJER1->Draw();
+	padJER1->cd();
 
- 	JERUp->SetLineColor(kRed);
- 	JERDown->SetLineColor(kCyan);
+	JERUp->SetLineColor(kRed);
+	JERDown->SetLineColor(kCyan);
 
- 	JERUpOrig->SetLineColor(kRed);
- 	JERDownOrig->SetLineColor(kCyan);
+	JERUpOrig->SetLineColor(kRed);
+	JERDownOrig->SetLineColor(kCyan);
 
- 	JERUp->SetLineStyle(1);
- 	JERDown->SetLineStyle(1);
- 	JERUpOrig->SetLineStyle(1);
- 	JERDownOrig->SetLineStyle(1);
- 	JERUp->SetLineWidth(2);
- 	JERDown->SetLineWidth(2);
- 	JERUpOrig->SetLineWidth(2);
- 	JERDownOrig->SetLineWidth(2);
- 	JERDownOrig->SetTitle("t#bar{t} BDT disciminator");
-    JERDownOrig->GetYaxis()->SetLabelSize(0.08);
-    JERDownOrig->SetMinimum(0.001);
- 	JERDownOrig->Draw("hist");
- 	JERUpOrig->Draw("histsame");
- 	nominal->Draw("histsame");
+	JERUp->SetLineStyle(1);
+	JERDown->SetLineStyle(1);
+	JERUpOrig->SetLineStyle(1);
+	JERDownOrig->SetLineStyle(1);
+	JERUp->SetLineWidth(2);
+	JERDown->SetLineWidth(2);
+	JERUpOrig->SetLineWidth(2);
+	JERDownOrig->SetLineWidth(2);
+	JERDownOrig->SetTitle("TTbar BDT disciminator");
+	JERDownOrig->Draw("hist");
+	JERUpOrig->Draw("histsame");
+	nominal->Draw("histsame");
 
- 	TLegend *legJER = new TLegend(0.5,0.7,0.9,0.9);
- 	legJER->AddEntry(JERUp,"JER Up","l");
- 	legJER->AddEntry(nominal,"nominal ttbar","l");
- 	legJER->AddEntry(JERDown,"JER Down","l");
+	TLegend *legJER = new TLegend(0.5,0.7,0.9,0.9);
+	legJER->AddEntry(JERUp,"JER Up","l");
+	legJER->AddEntry(nominal,"nominal ttbar","l");
+	legJER->AddEntry(JERDown,"JER Down","l");
 
- 	legJER->Draw();
- 	cJER1->cd();
+	legJER->Draw();
+	cJER1->cd();
 
- 	TPad *padJER2 = new TPad("pad2","pad2",0,0,1,0.3);
+	TPad *padJER2 = new TPad("pad2","pad2",0,0,1,0.3);
 
- 	padJER2->SetTopMargin(0);
-    padJER2->SetBottomMargin(0.25);
- 	padJER2->SetGridy();
- 	padJER2->Draw();
+	padJER2->SetTopMargin(0);
+	padJER2->SetGridy();
+	padJER2->Draw();
 
- 	JERUp->SetTitle("");
+	JERUp->SetTitle("");
 
- 	padJER2->cd();
- 	// JERUp->Sumw2();
- 	JERUp->SetMinimum(0.5);
- 	JERUp->SetMaximum(1.5);
- 	JERUp->SetStats(0);
- 	JERUp->Divide(nominal);
+	padJER2->cd();
+	// JERUp->Sumw2();
+	JERUp->SetMinimum(0.5);
+	JERUp->SetMaximum(1.5);
+	JERUp->SetStats(0);
+	JERUp->Divide(nominal);
 
- 	JERUp->SetMarkerStyle(1);
-    JERUp->GetXaxis()->SetLabelSize(0.12);
-    JERUp->GetYaxis()->SetLabelSize(0.12);
-    JERUp->GetYaxis()->SetNdivisions(5);
-    JERUp->GetXaxis()->SetTitle("BDT");
-    JERUp->GetXaxis()->SetTitleSize(0.15);
-    JERUp->GetXaxis()->SetTitleOffset(0.7);
- 	JERUp->Draw("ep");
- 	// JERDown>Sumw2();
- 	JERDown->SetStats(0);
- 	JERDown->Divide(nominal);
- 	JERDown->SetMarkerStyle(1);
- 	JERDown->Draw("epsame");
- 	cJER1->cd();
- 	cJER1->SaveAs("JERsystt.eps");	
- 	cout<<"JER done"<<endl;
+	JERUp->SetMarkerStyle(1);
+	JERUp->Draw("ep");
+	// JERDown>Sumw2();
+	JERDown->SetStats(0);
+	JERDown->Divide(nominal);
+	JERDown->SetMarkerStyle(1);
+	JERDown->Draw("epsame");
+	cJER1->cd();
+	cJER1->SaveAs("JERsystt.png");	
+	cout<<"JER done"<<endl;
 
 
- 	//ttGenerator
- 	TCanvas *cttGenerator1 = new TCanvas();
- 	TPad *padttGenerator1 = new TPad("pad1","pad1",0,0.3,1,1);
- 	cttGenerator1->cd();
- 	padttGenerator1->SetBottomMargin(0);
- 	padttGenerator1->Draw();
- 	padttGenerator1->cd();
+	//ttGenerator
+	TCanvas *cttGenerator1 = new TCanvas();
+	TPad *padttGenerator1 = new TPad("pad1","pad1",0,0.3,1,1);
+	cttGenerator1->cd();
+	padttGenerator1->SetBottomMargin(0);
+	padttGenerator1->Draw();
+	padttGenerator1->cd();
 
- 	ttGeneratorUp->SetLineColor(kRed);
- 	ttGeneratorDown->SetLineColor(kCyan);
+	ttGeneratorUp->SetLineColor(kRed);
+	ttGeneratorDown->SetLineColor(kCyan);
 
- 	ttGeneratorUpOrig->SetLineColor(kRed);
- 	ttGeneratorDownOrig->SetLineColor(kCyan);
+	ttGeneratorUpOrig->SetLineColor(kRed);
+	ttGeneratorDownOrig->SetLineColor(kCyan);
 
- 	ttGeneratorUp->SetLineStyle(1);
- 	ttGeneratorDown->SetLineStyle(1);
- 	ttGeneratorUpOrig->SetLineStyle(1);
- 	ttGeneratorDownOrig->SetLineStyle(1);
- 	ttGeneratorUp->SetLineWidth(2);
- 	ttGeneratorDown->SetLineWidth(2);
- 	ttGeneratorUpOrig->SetLineWidth(2);
- 	ttGeneratorDownOrig->SetLineWidth(2);
- 	ttGeneratorUpOrig->SetTitle("t#bar{t} BDT disciminator");
-    ttGeneratorUpOrig->GetYaxis()->SetLabelSize(0.08);
-    ttGeneratorUpOrig->SetMinimum(0.001);
- 	ttGeneratorUpOrig->Draw("hist");
- 	ttGeneratorDownOrig->Draw("histsame");
- 	nominal->Draw("histsame");
+	ttGeneratorUp->SetLineStyle(1);
+	ttGeneratorDown->SetLineStyle(1);
+	ttGeneratorUpOrig->SetLineStyle(1);
+	ttGeneratorDownOrig->SetLineStyle(1);
+	ttGeneratorUp->SetLineWidth(2);
+	ttGeneratorDown->SetLineWidth(2);
+	ttGeneratorUpOrig->SetLineWidth(2);
+	ttGeneratorDownOrig->SetLineWidth(2);
+	ttGeneratorUpOrig->SetTitle("TTbar BDT disciminator");
+	ttGeneratorUpOrig->Draw("hist");
+	ttGeneratorDownOrig->Draw("histsame");
+	nominal->Draw("histsame");
 
- 	TLegend *legttGenerator = new TLegend(0.5,0.7,0.9,0.9);
- 	legttGenerator->AddEntry(ttGeneratorUp,"ttGenerator Up","l");
- 	legttGenerator->AddEntry(nominal,"nominal ttbar","l");
- 	legttGenerator->AddEntry(ttGeneratorDown,"ttGenerator Down","l");
+	TLegend *legttGenerator = new TLegend(0.5,0.7,0.9,0.9);
+	legttGenerator->AddEntry(ttGeneratorUp,"ttGenerator Up","l");
+	legttGenerator->AddEntry(nominal,"nominal ttbar","l");
+	legttGenerator->AddEntry(ttGeneratorDown,"ttGenerator Down","l");
 
- 	legttGenerator->Draw();
- 	cttGenerator1->cd();
+	legttGenerator->Draw();
+	cttGenerator1->cd();
 
- 	TPad *padttGenerator2 = new TPad("pad2","pad2",0,0,1,0.3);
+	TPad *padttGenerator2 = new TPad("pad2","pad2",0,0,1,0.3);
 
- 	padttGenerator2->SetTopMargin(0);
-    padttGenerator2->SetBottomMargin(0.25);
- 	padttGenerator2->SetGridy();
- 	padttGenerator2->Draw();
+	padttGenerator2->SetTopMargin(0);
+	padttGenerator2->SetGridy();
+	padttGenerator2->Draw();
 
- 	ttGeneratorUp->SetTitle("");
+	ttGeneratorUp->SetTitle("");
 
- 	padttGenerator2->cd();
- 	// ttGeneratorUp->Sumw2();
- 	ttGeneratorUp->SetStats(0);
- 	ttGeneratorUp->SetMinimum(0.5);
- 	ttGeneratorUp->SetMaximum(1.5);
- 	ttGeneratorUp->Divide(nominal);
- 	ttGeneratorUp->SetMarkerStyle(1);
-    ttGeneratorUp->GetXaxis()->SetLabelSize(0.12);
-    ttGeneratorUp->GetYaxis()->SetLabelSize(0.12);
-    ttGeneratorUp->GetYaxis()->SetNdivisions(5);
-    ttGeneratorUp->GetXaxis()->SetTitle("BDT");
-    ttGeneratorUp->GetXaxis()->SetTitleSize(0.15);
-    ttGeneratorUp->GetXaxis()->SetTitleOffset(0.7);
- 	ttGeneratorUp->Draw("ep");
- 	// ttGeneratorDown>Sumw2();
- 	ttGeneratorDown->SetStats(0);
- 	ttGeneratorDown->Divide(nominal);
- 	ttGeneratorDown->SetMarkerStyle(1);
- 	ttGeneratorDown->Draw("epsame");
- 	cttGenerator1->cd();
- 	cttGenerator1->SaveAs("ttGeneratorsystt.eps");	
- 	cout<<"ttGenerator done"<<endl;
+	padttGenerator2->cd();
+	// ttGeneratorUp->Sumw2();
+	ttGeneratorUp->SetStats(0);
+	ttGeneratorUp->SetMinimum(0.5);
+	ttGeneratorUp->SetMaximum(1.5);
+	ttGeneratorUp->Divide(nominal);
+	ttGeneratorUp->SetMarkerStyle(1);
+	ttGeneratorUp->Draw("ep");
+	// ttGeneratorDown>Sumw2();
+	ttGeneratorDown->SetStats(0);
+	ttGeneratorDown->Divide(nominal);
+	ttGeneratorDown->SetMarkerStyle(1);
+	ttGeneratorDown->Draw("epsame");
+	cttGenerator1->cd();
+	cttGenerator1->SaveAs("ttGeneratorsystt.png");	
+	cout<<"ttGenerator done"<<endl;
 
- 	//scale hadronisation
+	//scale hadronisation
 
- 	TCanvas *cScaleH1 = new TCanvas();
- 	TPad *padScaleH1 = new TPad("pad1","pad1",0,0.3,1,1);
- 	cScaleH1->cd();
- 	padScaleH1->SetBottomMargin(0);
- 	padScaleH1->Draw();
- 	padScaleH1->cd();
+	TCanvas *cScaleH1 = new TCanvas();
+	TPad *padScaleH1 = new TPad("pad1","pad1",0,0.3,1,1);
+	cScaleH1->cd();
+	padScaleH1->SetBottomMargin(0);
+	padScaleH1->Draw();
+	padScaleH1->cd();
 
- 	ScaleHUp->SetLineColor(kRed);
- 	ScaleHDown->SetLineColor(kCyan);
+	ScaleHUp->SetLineColor(kRed);
+	ScaleHDown->SetLineColor(kCyan);
 
- 	ScaleHUpOrig->SetLineColor(kRed);
- 	ScaleHDownOrig->SetLineColor(kCyan);
+	ScaleHUpOrig->SetLineColor(kRed);
+	ScaleHDownOrig->SetLineColor(kCyan);
 
- 	ScaleHUp->SetLineStyle(1);
- 	ScaleHDown->SetLineStyle(1);
- 	ScaleHUpOrig->SetLineStyle(1);
- 	ScaleHDownOrig->SetLineStyle(1);
+	ScaleHUp->SetLineStyle(1);
+	ScaleHDown->SetLineStyle(1);
+	ScaleHUpOrig->SetLineStyle(1);
+	ScaleHDownOrig->SetLineStyle(1);
 
 
- 	ScaleHUp->SetLineWidth(2);
- 	ScaleHDown->SetLineWidth(2);
- 	ScaleHUpOrig->SetLineWidth(2);
- 	ScaleHDownOrig->SetLineWidth(2);
+	ScaleHUp->SetLineWidth(2);
+	ScaleHDown->SetLineWidth(2);
+	ScaleHUpOrig->SetLineWidth(2);
+	ScaleHDownOrig->SetLineWidth(2);
 
- 	ScaleHUpOrig->SetTitle("t#bar{t} BDT disciminator");
-    ScaleHUpOrig->GetYaxis()->SetLabelSize(0.08);
-    ScaleHUpOrig->SetMinimum(0.001);
- 	ScaleHUpOrig->Draw("hist");
- 	ScaleHDownOrig->Draw("histsame");
- 	nominal->Draw("histsame");
- 	TLegend *legScaleH = new TLegend(0.5,0.7,0.9,0.9);
- 	legScaleH->AddEntry(ScaleHUp,"scaleH Up","l");
- 	legScaleH->AddEntry(nominal,"nominal ttbar","l");
- 	legScaleH->AddEntry(ScaleHDown,"scaleH Down","l");
- 	legScaleH->Draw();
- 	cScaleH1->cd();
+	ScaleHUpOrig->SetTitle("TTbar BDT disciminator");
+	ScaleHUpOrig->Draw("hist");
+	ScaleHDownOrig->Draw("histsame");
+	nominal->Draw("histsame");
+	TLegend *legScaleH = new TLegend(0.5,0.7,0.9,0.9);
+	legScaleH->AddEntry(ScaleHUp,"scaleH Up","l");
+	legScaleH->AddEntry(nominal,"nominal ttbar","l");
+	legScaleH->AddEntry(ScaleHDown,"scaleH Down","l");
+	legScaleH->Draw();
+	cScaleH1->cd();
 
- 	TPad *pad2ScaleH = new TPad("pad2","pad2",0,0,1,0.3);
+	TPad *pad2ScaleH = new TPad("pad2","pad2",0,0,1,0.3);
 
- 	pad2ScaleH->SetTopMargin(0);
-    pad2ScaleH->SetBottomMargin(0.25);
- 	pad2ScaleH->SetGridy();
- 	pad2ScaleH->Draw();
+	pad2ScaleH->SetTopMargin(0);
+	pad2ScaleH->SetGridy();
+	pad2ScaleH->Draw();
 
- 	ScaleHUp->SetTitle("");
+	ScaleHUp->SetTitle("");
 
- 	pad2ScaleH->cd();
- 	// ScaleHUp->Sumw2();
- 	ScaleHUp->SetStats(0);
- 	ScaleHUp->SetMinimum(0.5);
- 	ScaleHUp->SetMaximum(1.5);
- 	ScaleHUp->Divide(nominal);
- 	ScaleHUp->SetMarkerStyle(1);
-    ScaleHUp->GetXaxis()->SetLabelSize(0.12);
-    ScaleHUp->GetYaxis()->SetLabelSize(0.12);
-    ScaleHUp->GetYaxis()->SetNdivisions(5);
-    ScaleHUp->GetXaxis()->SetTitle("BDT");
-    ScaleHUp->GetXaxis()->SetTitleSize(0.15);
-    ScaleHUp->GetXaxis()->SetTitleOffset(0.7);
- 	ScaleHUp->SetAxisRange(0.5,1.5,"Y");
+	pad2ScaleH->cd();
+	// ScaleHUp->Sumw2();
+	ScaleHUp->SetStats(0);
+	ScaleHUp->SetMinimum(0.5);
+	ScaleHUp->SetMaximum(1.5);
+	ScaleHUp->Divide(nominal);
+	ScaleHUp->SetMarkerStyle(1);
+	ScaleHUp->SetAxisRange(0,2,"Y");
 
- 	ScaleHUp->Draw("ep");
+	ScaleHUp->Draw("ep");
 
- 	ScaleHUp->SetAxisRange(0.5,1.5,"Y");
+	ScaleHUp->SetAxisRange(0,2,"Y");
 
 
- 	ScaleHUp->Draw("ep");
- 	// ScaleHDown>Sumw2();
- 	ScaleHDown->SetStats(0);
- 	ScaleHDown->Divide(nominal);
- 	ScaleHDown->SetMarkerStyle(1);
- 	ScaleHDown->SetAxisRange(0.5,1.5,"Y");
+	ScaleHUp->Draw("ep");
+	// ScaleHDown>Sumw2();
+	ScaleHDown->SetStats(0);
+	ScaleHDown->Divide(nominal);
+	ScaleHDown->SetMarkerStyle(1);
+	ScaleHDown->SetAxisRange(0,2,"Y");
 
- 	ScaleHDown->Draw("epsame");
- 	cScaleH1->cd();
- 	cScaleH1->SaveAs("ScaleHsystt.eps");
- 	cout<<"had scale done"<<endl;
+	ScaleHDown->Draw("epsame");
+	cScaleH1->cd();
+	cScaleH1->SaveAs("ScaleHsystt.png");
+	cout<<"had scale done"<<endl;
 
 
 }
