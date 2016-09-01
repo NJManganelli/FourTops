@@ -33,29 +33,35 @@ void CombineCraneens()
 	string TTH = "Craneens_Comb/TTH_Run2_TopTree_Study.root";
 	string TTZ = "Craneens_Comb/TTZ_Run2_TopTree_Study.root";
 	string TTW = "Craneens_Comb/TTW_Run2_TopTree_Study.root";
+    string WW = "Craneens_Comb/WW_Run2_TopTree_Study.root";
+    string WZ = "Craneens_Comb/WZ_Run2_TopTree_Study.root";
+    string ZZ = "Craneens_Comb/ZZ_Run2_TopTree_Study.root";
 	string TTJets_SingleLept = "Craneens_Comb/TTJets_SingleLept_Run2_TopTree_Study.root";
 
 	vector < string > files;
 
-	files.push_back(Data);
-	files.push_back(NP_overlay_ttttNLO);
-	files.push_back(NP_overlay_ttttNLO_JERUp);
-	files.push_back(NP_overlay_ttttNLO_JERDown);
-	files.push_back(NP_overlay_ttttNLO_JESUp);
-	files.push_back(NP_overlay_ttttNLO_JESDown);
-	files.push_back(TTDileptMG);
-	files.push_back(TTDileptPowheg);
-	files.push_back(TTDileptPowheg_JERUp);
-	files.push_back(TTDileptPowheg_JERDown);
-	files.push_back(TTDileptPowheg_JESUp);
-	files.push_back(TTDileptPowheg_JESDown);
-	files.push_back(TTDileptPowheg_ScaleHUp);
-	files.push_back(TTDileptPowheg_ScaleHDown);
-	files.push_back(ST_tW);
-	files.push_back(DYJets);
-	files.push_back(TTH);
-	files.push_back(TTZ);
-	files.push_back(TTW);
+//	files.push_back(Data);
+//	files.push_back(NP_overlay_ttttNLO);
+//	files.push_back(NP_overlay_ttttNLO_JERUp);
+//	files.push_back(NP_overlay_ttttNLO_JERDown);
+//	files.push_back(NP_overlay_ttttNLO_JESUp);
+//	files.push_back(NP_overlay_ttttNLO_JESDown);
+//	files.push_back(TTDileptMG);
+//	files.push_back(TTDileptPowheg);
+//	files.push_back(TTDileptPowheg_JERUp);
+//	files.push_back(TTDileptPowheg_JERDown);
+//	files.push_back(TTDileptPowheg_JESUp);
+//	files.push_back(TTDileptPowheg_JESDown);
+//	files.push_back(TTDileptPowheg_ScaleHUp);
+//	files.push_back(TTDileptPowheg_ScaleHDown);
+//	files.push_back(ST_tW);
+//	files.push_back(DYJets);
+//	files.push_back(TTH);
+//	files.push_back(TTZ);
+//	files.push_back(TTW);
+    files.push_back(WW);
+//	files.push_back(WZ);
+	files.push_back(ZZ);
 	files.push_back(TTJets_SingleLept);
 
 

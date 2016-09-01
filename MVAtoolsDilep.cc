@@ -504,7 +504,7 @@ int main(int argc, char** argv)
         cout << " Initialized Eventcomputer_" << endl;
 
         string filepath_data, filepath_tttt, filepath_ttttJESUp, filepath_ttttJESDown, filepath_ttttJERUp, filepath_ttttJERDown, filepath_ttbarMG, filepath_ttbarPowhegJESUp, filepath_ttbarPowhegJESDown,
-            filepath_ttbarPowhegJERUp, filepath_ttbarPowhegJERDown, filepath_ttbarPowhegScaleHUp, filepath_ttbarPowhegScaleHDown, filepath_tW, filepath_tbarW, filepath_DY, filepath_ttbarPowheg, filepath_tth, filepath_ttz, filepath_ttw, filepath_ttsingle;
+            filepath_ttbarPowhegJERUp, filepath_ttbarPowhegJERDown, filepath_ttbarPowhegScaleHUp, filepath_ttbarPowhegScaleHDown, filepath_tW, filepath_tbarW, filepath_DY, filepath_ttbarPowheg, filepath_tth, filepath_ttz, filepath_ttw, filepath_ww, filepath_wz, filepath_zz, filepath_ttsingle;
 
         filepath_data = "/user/heilman/CMSSW_7_6_5/src/TopBrussels/FourTops/Craneens_Comb/Data_Run2_TopTree_Study.root";
         filepath_tttt = "/user/heilman/CMSSW_7_6_5/src/TopBrussels/FourTops/Craneens_Comb/"
@@ -543,6 +543,12 @@ int main(int argc, char** argv)
             "/user/heilman/CMSSW_7_6_5/src/TopBrussels/FourTops/Craneens_Comb/TTW_Run2_TopTree_Study.root";
         filepath_ttz =
             "/user/heilman/CMSSW_7_6_5/src/TopBrussels/FourTops/Craneens_Comb/TTZ_Run2_TopTree_Study.root";
+        filepath_ww =
+            "/user/heilman/CMSSW_7_6_5/src/TopBrussels/FourTops/Craneens_Comb/WW_Run2_TopTree_Study.root";
+        filepath_wz =
+            "/user/heilman/CMSSW_7_6_5/src/TopBrussels/FourTops/Craneens_Comb/WZ_Run2_TopTree_Study.root";
+        filepath_zz =
+            "/user/heilman/CMSSW_7_6_5/src/TopBrussels/FourTops/Craneens_Comb/ZZ_Run2_TopTree_Study.root";
         filepath_ttsingle =
             "/user/heilman/CMSSW_7_6_5/src/TopBrussels/FourTops/Craneens_Comb/TTJets_SingleLept_Run2_TopTree_Study.root";
 
@@ -567,6 +573,9 @@ int main(int argc, char** argv)
         files.push_back(TFile::Open(filepath_tth.c_str(), "UPDATE"));
         files.push_back(TFile::Open(filepath_ttw.c_str(), "UPDATE"));
         files.push_back(TFile::Open(filepath_ttz.c_str(), "UPDATE"));
+        files.push_back(TFile::Open(filepath_ww.c_str(), "UPDATE"));
+//        files.push_back(TFile::Open(filepath_wz.c_str(), "UPDATE"));
+        files.push_back(TFile::Open(filepath_zz.c_str(), "UPDATE"));
         files.push_back(TFile::Open(filepath_ttsingle.c_str(), "UPDATE"));
 
         for(int i = 0; i < files.size(); i++) { // loop through the samples

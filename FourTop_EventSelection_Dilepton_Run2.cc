@@ -2276,6 +2276,18 @@ int main(int argc, char* argv[])
                 alphaTune = PythiaTune(nJets + 3);
             } else if(dataSetName.find("Tbar_tW") != string::npos) {
                 alphaTune = PythiaTune(nJets + 3);
+            } else if(dataSetName.find("WW") != string::npos) {
+                alphaTune = PythiaTune(nJets + 4);
+            } else if(dataSetName.find("WZ") != string::npos) {
+                alphaTune = PythiaTune(nJets + 4);
+            } else if(dataSetName.find("ZZ") != string::npos) {
+                alphaTune = PythiaTune(nJets + 4);
+            } else if(dataSetName.find("TTH") != string::npos) {
+                alphaTune = PythiaTune(nJets);
+            } else if(dataSetName.find("TTZ") != string::npos) {
+                alphaTune = PythiaTune(nJets);
+            } else if(dataSetName.find("TTW") != string::npos) {
+                alphaTune = PythiaTune(nJets);
             }
 
             falphaTuneSF = (1.0 / alphaTune);
