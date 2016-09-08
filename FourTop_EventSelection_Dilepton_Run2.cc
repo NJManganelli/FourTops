@@ -98,12 +98,7 @@ map<string, MultiSamplePlot*> MSPlot;
 /// MultiPadPlot
 map<string, MultiSamplePlot*> MultiPadPlot;
 
-struct HighestTCHEBtag {
-    bool operator()(TRootJet* j1, TRootJet* j2) const
-    {
-        return j1->btag_trackCountingHighEffBJetTags() > j2->btag_trackCountingHighEffBJetTags();
-    }
-};
+
 struct HighestCVSBtag {
     bool operator()(TRootJet* j1, TRootJet* j2) const
     {
@@ -1820,8 +1815,8 @@ int main(int argc, char* argv[])
                         jflav = BTagEntry::FLAV_UDSG;
                         isLFlav = true;
                     }
-                    if( dataSetName.find("JESUp") )        bTagEff = reader_JESUp->eval(jflav, jeteta, jetpt, jetdisc);
-                    else if( dataSetName.find("JESDown") ) bTagEff = reader_JESDown->eval(jflav, jeteta, jetpt, jetdisc);
+                    if( dataSetName.find("JESUp") !=string::npos)        bTagEff = reader_JESUp->eval(jflav, jeteta, jetpt, jetdisc);
+                    else if( dataSetName.find("JESDown") !=string::npos) bTagEff = reader_JESDown->eval(jflav, jeteta, jetpt, jetdisc);
                     else bTagEff = reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);
 
                     if( isBFlav ) bTagEff_LFUp = reader_LFUp->eval(jflav, jeteta, jetpt, jetdisc);
@@ -1879,7 +1874,30 @@ int main(int argc, char* argv[])
                     btagWeightCSVCFErr2Down *= bTagEff_CFErr2Down; 
 
                     btagWeightCSV*=bTagEff;
-             
+                    if (debug){
+                        cout<<"hadron flavour: "<<jethadronflav<<"  jet eta: "<<jeteta<<" jet pt: "<<jetpt<<"  jet disc: "<<jetdisc<<endl;
+                        cout << " isBFlav " << isBFlav;
+                        cout << " isLFlav" << isLFlav;
+                        cout << " isCFlav" << isCFlav << endl;
+                        cout << " reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc);  " << reader_csvv2->eval(jflav, jeteta, jetpt, jetdisc) << endl;
+                        cout << " bTagEff " << bTagEff;
+                        cout << " bTagEff_LFUp " << bTagEff_LFUp;
+                        cout << " bTagEff_LFDown " << bTagEff_LFDown << endl;
+                        cout << " bTagEff_HFUp " << bTagEff_HFUp;
+                        cout << " bTagEff_HFDown " << bTagEff_HFDown << endl;
+                        cout << " bTagEff_HFStats1Up " << bTagEff_HFStats1Up;
+                        cout << " bTagEff_HFStats1Down " << bTagEff_HFStats1Down << endl;
+                        cout << " bTagEff_HFStats2Up " << bTagEff_HFStats2Up;
+                        cout << " bTagEff_HFStats2Down " << bTagEff_HFStats2Down << endl;
+                        cout << " bTagEff_LFStats1Up " << bTagEff_LFStats1Up;
+                        cout << " bTagEff_LFStats1Down " << bTagEff_LFStats1Down << endl;
+                        cout << " bTagEff_LFStats2Up " << bTagEff_LFStats2Up;
+                        cout << " bTagEff_LFStats2Down " << bTagEff_LFStats2Down << endl;
+                        cout << " bTagEff_CFErr1Up " << bTagEff_CFErr1Up;
+                        cout << " bTagEff_CFErr1Down " << bTagEff_CFErr1Down << endl;
+                        cout << " bTagEff_CFErr2Up " << bTagEff_CFErr2Up;
+                        cout << " bTagEff_CFErr2Down " << bTagEff_CFErr2Down << endl;
+                    }
                     if(debug)cout<<"btag efficiency = "<<bTagEff<<endl;       
                 }      
 
