@@ -32,6 +32,8 @@ map<string, TNtuple*> nTuple;
 map<string, MultiSamplePlot*> MSPlot;
 map<std::string, std::string> MessageMap;
 
+bool prelim_ = false;  //controls the appearance of "preliminary on the plots"
+
 std::string intToStr(int number);
 void dump_to_stdout(const char* pFilename);
 
@@ -225,6 +227,7 @@ int main(int argc, char** argv)
     int NumberOfBins;     // fixed width nBins
     float lumiScale = -1; // Amount of luminosity to MEScale to in fb^-1
     bool jetSplit = false, jetTagsplit = false, split_ttbar = false, postfitplots= false;
+    
     int isplit_ttbar = 0;
     float lBound, uBound, bSplit, tSplit, wSplit, bSplit1, tSplit1, wSplit1, bSplit2, tSplit2,
         wSplit2; // + the bottom, top, and width of the splitting for 1 & 2 variables
@@ -735,7 +738,7 @@ void GetScaleEnvelopeSplit(int nBins,
         histo1D[("weight0_tt" + numStr).c_str()]->Write("Nominal");
         cout << "wrote weights in errorfile" << endl;
         shapefile->cd();
-        string MEScalesysname = channel + numStr + sSplitVar + "__" + mainTTbarSample + "__ttMEScale";
+        string MEScalesysname = channel + numStr + sSplitVar + "__ttbarTTX__ttMEScale";
         cout << MEScalesysname << endl;
         histo1D[("weightMinus" + numStr).c_str()]->Write((MEScalesysname + "Down").c_str());
         histo1D[("weightPlus" + numStr).c_str()]->Write((MEScalesysname + "Up").c_str());
@@ -1261,6 +1264,7 @@ void DatasetPlotter(int nBins,
     }
     MSPlot[plotname] = new MultiSamplePlot(
         datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events", chanText.c_str());
+    MSPlot[plotname]->setPreliminary(prelim_);  //toggels the preliminary text
     histo1D["ttbarTTX"] = new TH1F("ttbarTTX", "ttbarTTX", nBins, plotLow, plotHigh);
     // instantiating these plots outside the dataset loop so that they can be combined between multiple channels of the
     // same main ttbar sample
@@ -1966,7 +1970,7 @@ void DatasetPlotter(int nBins,
     MSPlot[plotname.c_str()]->setErrorBandFile(
         (MEScaleFileName).c_str()); // set error file for uncertainty bands on multisample plot
     MSPlot[plotname.c_str()]->setDataLumi(2600);
-    MSPlot[plotname.c_str()]->setMaxY(100000);
+    //MSPlot[plotname.c_str()]->setMaxY(100000);
 
     for(map<string, MultiSamplePlot*>::const_iterator it = MSPlot.begin(); it != MSPlot.end(); it++) {
         string name = it->first;
@@ -2021,6 +2025,7 @@ void CutFlowPlotter(TFile* cffile,
           SFbtag_heavyUp = 1, SFbtag_heavyDown = 1, SFPU = 1, SFPU_up = 1, SFPU_down = 1, SFTopPt = 1, SFbehrends = 1,
           alphaTune = 1, nJets = 0;
     MultiSamplePlot* cutFlowPlot = new MultiSamplePlot(datasets, plotname.c_str(), nCuts, 0, nCuts, "Cut Number");
+    cutFlowPlot->setPreliminary(prelim_);
     std::vector<float> cuts(nCuts);
 
     if(lScale > 0) // artificial Lumi
@@ -2249,6 +2254,7 @@ void SplitDatasetPlotter(int nBins,
         plotname = sVarofinterest + numStr + sSplitVar;
         MSPlot[plotname.c_str()] = new MultiSamplePlot(
             datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events"", chanText.c_str()", units);
+        MSPlot[plotname.c_str()]->setPreliminary(prelim_);
     }
     plotname = "";
 
@@ -3449,6 +3455,7 @@ void Split2DatasetPlotter(int nBins,
             
             MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh,
                 plotaxis.c_str(), "Events", (chanText+ " " + numStr1 + textplot1 + numStr2 + textplot2).c_str(), units);
+            MSPlot[plotname.c_str()]->setPreliminary(prelim_);
 
 
             histo1D[("ttbarTTX"+plotname).c_str()] = new TH1F(("ttbarTTX"+plotname).c_str(), ("ttbarTTX"+plotname).c_str(), nBins, plotLow, plotHigh);
