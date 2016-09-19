@@ -428,11 +428,11 @@ int main(int argc, char** argv)
             }
         }
     }
-    //    string cffileName = "Cut_Flow_" + leptoAbbr + ".root";
-    //    cout << cffileName << endl;
-    //    TFile* cffile = new TFile((cffileName).c_str(), "RECREATE");
-    //    CutFlowPlotter(cffile, leptoAbbr, channel, xmlFileName, CraneenPath, 9, lumiScale);
-    //    delete cffile;
+//        string cffileName = "Cut_Flow_" + leptoAbbr + ".root";
+//        cout << cffileName << endl;
+//        TFile* cffile = new TFile((cffileName).c_str(), "RECREATE");
+//        CutFlowPlotter(cffile, leptoAbbr, channel, xmlFileName, CraneenPath, 9, lumiScale);
+//        delete cffile;
     cout << " DONE !! " << endl;
 }
 
@@ -1977,6 +1977,7 @@ void DatasetPlotter(int nBins,
         MultiSamplePlot* temp = it->second;
         temp->Draw(sVarofinterest.c_str(), 2, true, true, true, 20);
         temp->Write(shapefile, name, true, pathPNG, "eps");
+        temp->Write(shapefile, name, true, pathPNG, "root");
     }
     MSPlot.erase(plotname);
     for(map<string, TH1F*>::const_iterator it = histo1D.begin(); it != histo1D.end(); it++) {
@@ -2245,16 +2246,21 @@ void SplitDatasetPlotter(int nBins,
     // PLOTS****************************************************
     string plotname; ///// Jet Split plot
     string plotaxis = plotVarNames(sVarofinterest);
-    string numStr;
+    string numStr, numstrplusone;
     string sbSplit = static_cast<ostringstream*>(&(ostringstream() << fbSplit))->str();
     string stSplit = static_cast<ostringstream*>(&(ostringstream() << ftSplit))->str();
     string swSplit = static_cast<ostringstream*>(&(ostringstream() << fwSplit))->str();
     for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
         numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
+        numstrplusone = static_cast<ostringstream*>(&(ostringstream() << (s+fwSplit-1)))->str();
         plotname = sVarofinterest + numStr + sSplitVar;
-        MSPlot[plotname.c_str()] = new MultiSamplePlot(
-            datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events"", chanText.c_str()", units);
-        MSPlot[plotname.c_str()]->setPreliminary(prelim_);
+        if(s < ftSplit) MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events", ( chanText+ " " + numStr + "-" + numstrplusone + " Jets").c_str(), units);
+        else MSPlot[plotname.c_str()] = new MultiSamplePlot(datasets, plotname.c_str(), nBins, plotLow, plotHigh, plotaxis.c_str(), "Events", (chanText+ " " + numStr + "+ Jets").c_str(), units);
+        
+        histo1D[("ttbarTTX" + plotname).c_str()] =
+            new TH1F(("ttbarTTX" + plotname).c_str(), ("ttbarTTX" + plotname).c_str(), nBins, plotLow, plotHigh);
+        histo1D[("EW" + plotname).c_str()] =
+            new TH1F(("EW" + plotname).c_str(), ("EW" + plotname).c_str(), nBins, plotLow, plotHigh);
     }
     plotname = "";
 
@@ -2690,6 +2696,9 @@ void SplitDatasetPlotter(int nBins,
                     MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
                             SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
                             ttbbReweight * LumiFactor * GenWeight);
+                    histo1D[("ttbarTTX" + plotname).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
+                            SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            GenWeight * eqlumi * ttbbReweight * LumiFactor);
                 } else if(dataSetName.find("tttt") != string::npos && dataSetName.find("Scale") == string::npos &&
                     dataSetName.find("JES") == string::npos &&
                     dataSetName.find("JER") ==
@@ -2798,6 +2807,22 @@ void SplitDatasetPlotter(int nBins,
                             ttbbReweight);
                     // cout<<dataSetName<<" "<<varofInterest<<"  "<<NormFactor<<"  "<<SFlepton<<"  "<<SFbtag<<"
                     // "<<SFPU<<"  "<<Luminosity<<"  "<<ttbbReweight<<"  "<<LumiFactor<<"  "<<GenWeight<<endl;
+                } else if(dataSetName.find("TTZ") != string::npos || dataSetName.find("TTW") != string::npos ||
+                    dataSetName.find("TTH") != string::npos || dataSetName.find("TTJets_SingleLept") != string::npos) {
+                    histo1D["ttbarTTX" + plotname]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
+                            SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi *
+                            ttbbReweight * LumiFactor);
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
+                            SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            ttbbReweight * LumiFactor * GenWeight);
+                } else if(dataSetName.find("DYJets") != string::npos || dataSetName.find("WW") != string::npos ||
+                    dataSetName.find("WZ") != string::npos || dataSetName.find("ZZ") != string::npos) {
+                    histo1D["EW" + plotname]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
+                            SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight * eqlumi *
+                            ttbbReweight * LumiFactor);
+                    MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
+                            SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
+                            ttbbReweight * LumiFactor * GenWeight);
                 } else if(dataSetName.find(otherTTbarsample) == string::npos && dataSetName.find("TTJets_aMCatNLO")==string::npos &&
                     dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos &&
                     dataSetName.find("JER") ==
@@ -2934,9 +2959,9 @@ void SplitDatasetPlotter(int nBins,
 		                    histo1D[("btagWeightCSVCFErr2_Down"+numStr).c_str()]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton *
 		                            btagWeightCSVCFErr2Down * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity *
 		                            GenWeight * eqlumi * ttbbReweight * LumiFactor);
-
-
-
+                            histo1D[("ttbarTTX" + plotname).c_str()]->Fill(varofInterest, NormFactor * SFtrigger *
+                                    SFlepton * SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                                    Luminosity * GenWeight * eqlumi * ttbbReweight * LumiFactor);
                             histo1D[histoName]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
                                     SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * GenWeight * Luminosity *
                                     eqlumi * ttbbReweight);
@@ -3050,6 +3075,24 @@ void SplitDatasetPlotter(int nBins,
                                     eqlumi * ttbbReweight);
                             // cout<<dataSetName<<" "<<varofInterest<<"  "<<NormFactor<<"  "<<SFlepton<<"  "<<SFbtag<<"
                             // "<<SFPU<<"  "<<Luminosity<<"  "<<ttbbReweight<<"  "<<LumiFactor<<"  "<<GenWeight<<endl;
+                        } else if(dataSetName.find("TTZ") != string::npos || dataSetName.find("TTW") != string::npos ||
+                            dataSetName.find("TTH") != string::npos ||
+                            dataSetName.find("TTJets_SingleLept") != string::npos) {
+                                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
+                                    SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                                    Luminosity * ttbbReweight * LumiFactor * GenWeight);
+                            histo1D["ttbarTTX" + plotname]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
+                                    SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight *
+                                    eqlumi * ttbbReweight * LumiFactor);
+                        } else if(dataSetName.find("DYJets") != string::npos || dataSetName.find("WW") != string::npos ||
+                            dataSetName.find("WZ") != string::npos ||
+                            dataSetName.find("ZZ") != string::npos) {
+                                MSPlot[plotname]->Fill(varofInterest, datasets[d], true, NormFactor * SFtrigger * SFlepton *
+                                    SFbtag_light * SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends *
+                                    Luminosity * ttbbReweight * LumiFactor * GenWeight);
+                            histo1D["EW" + plotname]->Fill(varofInterest, NormFactor * SFtrigger * SFlepton * SFbtag_light *
+                                    SFbtag_heavy * SFalphaTune * SFPU * SFTopPt * SFbehrends * Luminosity * GenWeight *
+                                    eqlumi * ttbbReweight * LumiFactor);
                         } else if(dataSetName.find(otherTTbarsample) == string::npos && dataSetName.find("TTJets_aMCatNLO")==string::npos &&
                             dataSetName.find("Scale") == string::npos && dataSetName.find("JES") == string::npos &&
                             dataSetName.find("JER") ==
@@ -3211,7 +3254,12 @@ void SplitDatasetPlotter(int nBins,
             }
         }
     } // end of dataset for loop
-
+for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
+        numStr = static_cast<ostringstream*>(&(ostringstream() << s))->str();
+        plotname = sVarofinterest + numStr + sSplitVar;
+        histo1D[("ttbarTTX" + plotname).c_str()]->Write((channel + numStr + sSplitVar + "__ttbarTTX__nominal").c_str());
+        histo1D[("EW" + plotname).c_str()]->Write((channel + numStr + sSplitVar + "__EW__nominal").c_str());
+    }
     
     
     GetScaleEnvelopeSplit(nBins, lScale, plotLow, plotHigh, leptoAbbr, shapefile, errorfile, channel, sVarofinterest,
@@ -3237,6 +3285,7 @@ void SplitDatasetPlotter(int nBins,
         temp->setErrorBandFile(MEScaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 0, false, true, true, 20);
         temp->Write(shapefile, name, true, pathPNG, "eps");
+        temp->Write(shapefile, name, true, pathPNG, "root");
     }
 
     for(int s = fbSplit; s <= ftSplit; s += fwSplit) {
@@ -4391,6 +4440,7 @@ void Split2DatasetPlotter(int nBins,
         temp->setErrorBandFile(MEScaleFileName.c_str()); // set error file for uncertainty bands on multisample plot
         temp->Draw(sVarofinterest.c_str(), 0, false, true, true, 20);
         temp->Write(shapefile, name, true, pathPNG, "eps");
+        temp->Write(shapefile, name, true, pathPNG, "root");
     }
     for(int s = fbSplit1; s <= ftSplit1; s += fwSplit1) {
         numStr1 = static_cast<ostringstream*>(&(ostringstream() << s))->str();
@@ -4592,6 +4642,18 @@ void DataCardProducer(string VoI,
                 }
             }
             card << "\n";
+        } else if(dataSetName.find("DYJets") != string::npos || dataSetName.find("WW") != string::npos || dataSetName.find("WZ") != string::npos || dataSetName.find("ZZ") != string::npos) {
+            card << "EW_norm              lnN          ";
+            for(int k = 0; k < nChannels; k++) {
+                for(int dash1 = 0; dash1 < d; dash1++) {
+                    card << "-                  ";
+                }
+                card << "0.95/1.05                    ";
+                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
+                    card << "-                  ";
+                }
+            }
+            card << "\n";
         } else {
             card << dataSetName + "_norm      lnN           ";
             if(dataSetName.find("DYJets") != string::npos || dataSetName.find("WJets") != string::npos)
@@ -4617,6 +4679,24 @@ void DataCardProducer(string VoI,
             card << "-                      ";
         } else {
             card << "1.15/0.86                      ";
+        }
+    }
+    card << "\n";
+    
+    card << "leptonSF                lnN           "; // applied to all MC datasets
+    for(int d = 0; d < howmanyMC; d++) {
+        dataSetName = MCdatasets[d];
+        if(dataSetName.find("Data") != string::npos || dataSetName.find("data") != string::npos ||
+            dataSetName.find("DATA") != string::npos) {
+            card << "-                      ";
+        } else if(leptoAbbr.find("MuEl") != string::npos) {
+            card << "1.046                      ";
+        } else if(leptoAbbr.find("MuMu") != string::npos) {
+            card << "1.043                      ";
+        } else if(leptoAbbr.find("ElEl") != string::npos) {
+            card << "1.048                      ";
+        } else {
+            card << "-                      ";
         }
     }
     card << "\n";
@@ -4919,7 +4999,8 @@ void Split_DataCardProducer(string VoI,
             dataSetName.find("MEScale") != string::npos || dataSetName.find("Scale") != string::npos ||
             dataSetName.find(otherTTbarsample) != string::npos || dataSetName.find("TTJets_aMCatNLO") != string::npos ||
             dataSetName.find("TTW") != string::npos || dataSetName.find("TTZ") != string::npos ||
-            dataSetName.find("TTH") != string::npos || dataSetName.find("TTJets_SingleLept") != string::npos) {
+            dataSetName.find("TTH") != string::npos || dataSetName.find("TTJets_SingleLept") != string::npos || dataSetName.find("WW") != string::npos ||
+            dataSetName.find("WZ") != string::npos || dataSetName.find("ZZ") != string::npos) {
             continue;
         } else {
             MCdatasets.push_back(dataSetName);
@@ -4985,14 +5066,16 @@ void Split_DataCardProducer(string VoI,
             } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
                 dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos ||
                 dataSetName.find("TTW") != string::npos || dataSetName.find("TTZ") != string::npos ||
-                dataSetName.find("TTH") != string::npos || dataSetName.find("TTJets_SingleLept") != string::npos) {
+                dataSetName.find("TTH") != string::npos || dataSetName.find("TTJets_SingleLept") != string::npos || dataSetName.find("WW") != string::npos ||
+            dataSetName.find("WZ") != string::npos || dataSetName.find("ZZ") != string::npos) {
                 continue;
             } else if(dataSetName.find(otherTTbarsample) != string::npos ||
                 dataSetName.find("TTJets_aMCatNLO") != string::npos) {
                 continue;
             } else if(dataSetName.find(mainTTbarsample) != string::npos) {
                 card << "ttbarTTX           ";
-
+            } else if(dataSetName.find("DYJets") != string::npos) {
+                card << "EW           ";
             } else {
                 card << dataSetName + "           ";
             }
@@ -5022,13 +5105,19 @@ void Split_DataCardProducer(string VoI,
             } else if(dataSetName.find("JER") != string::npos || dataSetName.find("JES") != string::npos ||
                 dataSetName.find("Scale") != string::npos || dataSetName.find("MLM") != string::npos ||
                 dataSetName.find("TTW") != string::npos || dataSetName.find("TTZ") != string::npos ||
-                dataSetName.find("TTH") != string::npos || dataSetName.find("TTJets_SingleLept") != string::npos) {
+                dataSetName.find("TTH") != string::npos || dataSetName.find("TTJets_SingleLept") != string::npos || dataSetName.find("WW") != string::npos ||
+                dataSetName.find("WZ") != string::npos || dataSetName.find("ZZ") != string::npos) {
                 continue;
             } else if(dataSetName.find(otherTTbarsample) != string::npos ||
                 dataSetName.find("TTJets_aMCatNLO") != string::npos) {
                 continue;
             } else if(dataSetName.find(mainTTbarsample) != string::npos) {
                 histoName = channel + numStr1 + sSplitVar1 + "__" + "ttbarTTX" + "__nominal";
+                tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
+                tempEntries = tempHisto->GetSumOfWeights();
+                card << static_cast<ostringstream*>(&(ostringstream() << tempEntries))->str() + " ";
+            } else if(dataSetName.find("DYJets") != string::npos) {
+                histoName = channel + numStr1 + sSplitVar1 + "__" + "EW" + "__nominal";
                 tempHisto = (TH1F*)shapefile->Get(histoName.c_str());
                 tempEntries = tempHisto->GetSumOfWeights();
                 card << static_cast<ostringstream*>(&(ostringstream() << tempEntries))->str() + " ";
@@ -5087,6 +5176,18 @@ void Split_DataCardProducer(string VoI,
                     card << "-                  ";
                 }
                 card << "0.95/1.05                    ";
+                for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
+                    card << "-                  ";
+                }
+            }
+            card << "\n";
+        } else if(dataSetName.find("DYJets") != string::npos) {
+            card << "EW_norm              lnN          ";
+            for(int k = 0; k < nChannels; k++) {
+                for(int dash1 = 0; dash1 < d; dash1++) {
+                    card << "-                  ";
+                }
+                card << "1.04                    ";
                 for(int dash2 = howmanyMC; dash2 > d + 1; dash2--) {
                     card << "-                  ";
                 }
