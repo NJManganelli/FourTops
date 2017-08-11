@@ -72,7 +72,6 @@ y_complete=np.concatenate((y_completeA,y_completeB))
 ##################################
 # open the samples:
 
-
 X_train, X_test, y_train, y_test = train_test_split(pd.DataFrame(X_complete), y_complete, test_size=0.3) #use 32% for testing and the rest for training
 
 
@@ -98,7 +97,7 @@ print "starting the training with ",n_iter," iterations and ",len(y_train)," eve
 
 estimator = AdaBoostClassifier(DecisionTreeClassifier(max_depth=n_max_depth,presort=True, random_state=True),
                          algorithm="SAMME",
-                         n_estimators=n_iter,learning_rate=0.5)
+                         n_estimators=n_iter,learning_rate=0.1)
 
 estimator=estimator.fit(X_train,y_train)
 
@@ -164,27 +163,42 @@ for ii in  range(len(twoclass_output_train)) :
     else:
         bgdisttrain.append(twoclass_output_train[ii])
 
+nbins=20
 
 plt.hist(sigdisttrain,
-        bins=50,
-        range=plot_range,
-        facecolor='b',normed=True,
-         alpha=.2)
+         bins=nbins,
+         label='sig, train',
+         range=plot_range,
+         histtype='step',
+         linestyle='dashed',
+         color='b',normed=True#,
+         #         alpha=.2
+         )
 plt.hist(bgdisttrain,
-        bins=50,
+         label='bg, train',
+        bins=nbins,
         range=plot_range,
-        facecolor='r',normed=True,
-        alpha=.2)
+         histtype='step',
+         linestyle='dashed',
+         color='r',normed=True#,
+         #        alpha=.2
+         )
 plt.hist(sigdist,
-         bins=50,
+         label='sig, test',
+         bins=nbins,
          range=plot_range,
-         facecolor='b',normed=True,
-         alpha=.2)
+         histtype='step',
+         color='b',normed=True#,
+         #         alpha=.2
+         )
 plt.hist(bgdist,
-         bins=50,
+         label='bg, test',
+         bins=nbins,
          range=plot_range,
-         facecolor='r',normed=True,
-         alpha=.2)
+         histtype='step',
+         color='r',normed=True#,
+         #         alpha=.2
+         )
 x1, x2, y1, y2 = plt.axis()
 plt.axis((x1, x2, y1, y2 * 1.2))
 plt.legend(loc='best')
