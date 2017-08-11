@@ -23,6 +23,8 @@ namejets ="njets6"
 parser.add_argument('-nj','--njets',help='number of jets, used to pick the input files', required=True)
 parser.add_argument('-e','--epochs',help='number of epochs', required=True)
 parser.add_argument('-d','--depth',help='tree depth', required=False)
+parser.add_argument('-rm','--removevar',help='remove variable, name of variable', required=False)
+
 
 # parsing the arguments
 args = parser.parse_args()
@@ -66,7 +68,22 @@ X_complete=np.concatenate((X_completeA,X_completeB))
 y_complete=np.concatenate((y_completeA,y_completeB))
 #print X_complete
 
+
+##################################
+# open the samples:
+
+
 X_train, X_test, y_train, y_test = train_test_split(pd.DataFrame(X_complete), y_complete, test_size=0.3) #use 32% for testing and the rest for training
+
+
+##################################
+# this is where one removes a variable...
+print " plan is to remove ",args.removevar," from training"
+#    newbranchlist = X_complete.index(checkvar)
+#    print newbranchlist
+X_train = X_train.drop(args.removevar,1)
+X_test = X_test.drop(args.removevar,1)
+
 
 #print len(X_train), len(X_test),len(y_train),len(y_test)
 
@@ -82,7 +99,7 @@ print "starting the training with ",n_iter," iterations and ",len(y_train)," eve
 
 estimator = AdaBoostClassifier(DecisionTreeClassifier(max_depth=n_max_depth,presort=True, random_state=True),
                          algorithm="SAMME",
-                         n_estimators=n_iter)
+                         n_estimators=n_iter,learning_rate=0.5)
 
 estimator=estimator.fit(X_train,y_train)
 
