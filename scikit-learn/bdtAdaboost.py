@@ -78,11 +78,10 @@ X_train, X_test, y_train, y_test = train_test_split(pd.DataFrame(X_complete), y_
 
 ##################################
 # this is where one removes a variable...
-print " plan is to remove ",args.removevar," from training"
-#    newbranchlist = X_complete.index(checkvar)
-#    print newbranchlist
-X_train = X_train.drop(args.removevar,1)
-X_test = X_test.drop(args.removevar,1)
+if len(args.removevar) > 0 :
+    print " plan is to remove ",args.removevar," from training"
+    X_train.drop(args.removevar,1,inplace=True)
+    X_test.drop(args.removevar,1,inplace=True)
 
 
 #print len(X_train), len(X_test),len(y_train),len(y_test)
